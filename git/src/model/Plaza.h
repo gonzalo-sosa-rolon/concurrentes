@@ -8,13 +8,13 @@
 #ifndef PLAZA_H_
 #define PLAZA_H_
 
-#include "util/Mutex.h"
+#include "../util/Mutex.h"
 
 class Plaza {
 private:
 	int id;
 	int horaIngreso;
-	boolean ocupado;
+	bool ocupado;
 	Mutex llaveOcupado;
 
 public:
@@ -33,9 +33,9 @@ public:
 		return id;
 	}
 
-	boolean getOcupado() const {
+	bool getOcupado() {
 
-		boolean resultado;
+		bool resultado;
 
 		llaveOcupado.lock();
 		resultado =  ocupado;
@@ -52,7 +52,7 @@ public:
 		this->id = id;
 	}
 
-	void setOcupado(boolean ocupado) {
+	void setOcupado(bool ocupado) {
 
 		llaveOcupado.lock();
 		this->ocupado = ocupado;
@@ -62,9 +62,9 @@ public:
 	/**
 	 * Devuelve True si pudo ocupar la plaza
 	 */
-	boolean ocupar() {
+	bool ocupar() {
 
-		boolean resultado = false;
+		bool resultado = false;
 
 		llaveOcupado.lock();
 
