@@ -19,6 +19,11 @@ private:
 
 public:
 
+	Plaza() {
+		this->id = 0;
+		this->ocupado = false;
+	}
+
 	Plaza(int id) {
 		this->id = id;
 		this->ocupado = false;
@@ -38,7 +43,7 @@ public:
 		bool resultado;
 
 		llaveOcupado.lock();
-		resultado =  ocupado;
+		resultado = ocupado;
 		llaveOcupado.unlock();
 
 		return resultado;
