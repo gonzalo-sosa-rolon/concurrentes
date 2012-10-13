@@ -23,7 +23,7 @@ struct Lugar {
 	int horaIngreso;
 };
 
-int main(int argc, char **argv) {
+int main2(int argc, char **argv) {
 
 	/*
 	 * Prueba con template de memoria que recibe entero
