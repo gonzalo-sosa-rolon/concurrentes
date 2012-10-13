@@ -1,63 +1,42 @@
 #include <iostream>
 #include <unistd.h>
 #include <stdlib.h>
-#include <getopt.h>
 #include <stdio.h>
+#include "util/ProcesoEntrada.h"
+#include "util/ProcesoSalida.h"
+#include "util/ParserParametros.h"
 
-#define TIEMPO 1500
-#define PRECIO_HORA 5
-#define CAPACIDAD 10
+#define CANTIDAD_ENTRADAS 3
+#define CANTIDAD_SALIDAS 2
 
 using namespace std;
 
-void parsearOpciones(int argc, char **argv, int* tiempo, int* precio, int* capacidad) {
-
-	char opcion = 0;
-	int tiempoPorParametro = TIEMPO;
-	int precioPorParametro = PRECIO_HORA;
-	int capacidadPorParametro = CAPACIDAD;
-
-	while ((opcion = getopt(argc, argv, "t:c:p:")) != -1) {
-
-		char* value = optarg;
-
-		if (opcion == -1) {
-			break;
-		}
-
-		if (!value) {
-			break;
-		}
-
-		switch (opcion) {
-		case 't':
-			tiempoPorParametro = atoi(value);
-			break;
-		case 'p':
-			precioPorParametro = atoi(value);
-			break;
-		case 'c':
-			capacidadPorParametro = atoi(value);
-			break;
-		default:
-			abort();
-					break;
-		}
-	}
-	*tiempo = tiempoPorParametro;
-	*precio = precioPorParametro;
-	*capacidad = capacidadPorParametro;
-}
-
-
 int main(int argc, char **argv) {
 
-	int tiempo, precio, capacidad;
-	parsearOpciones(argc, argv, &tiempo, &precio, &capacidad);
+	//TODO esto habria que pasar a una clase que lance los procesos
 
-	cout << "Tiempo " << tiempo << endl;
-	cout << "Costo " << precio << endl;
-	cout << "Espacio " << capacidad << endl;
+	pid_t id;
 
+	for (int i = 0; i < CANTIDAD_ENTRADAS; i++) {
+		id = fork();
+
+		if (!id) {
+			ProcesoEntrada procesoEntrada(i + 1);
+			procesoEntrada.ejecutar();
+			break;
+		}
+	}
+
+	if (!id) {
+		for (int i = 0; i < CANTIDAD_SALIDAS; i++) {
+			id = fork();
+
+			if (!id) {
+				ProcesoSalida procesoSalida(i + 1);
+				procesoSalida.ejecutar();
+				break;
+			}
+		}
+	}
 	return 0;
 }
