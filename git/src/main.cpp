@@ -27,7 +27,7 @@ int main(int argc, char **argv) {
 		}
 	}
 
-	if (!id) {
+	if (id) {
 		for (int i = 0; i < CANTIDAD_SALIDAS; i++) {
 			id = fork();
 
@@ -38,5 +38,7 @@ int main(int argc, char **argv) {
 			}
 		}
 	}
+
+	cout << "padre muere" << endl;
 	return 0;
 }
