@@ -31,17 +31,37 @@ void Estacionamiento::reducirCantidadDeAutos() {
 int Estacionamiento::getCantidadDeAutos() {
 	int resultado;
 
+	this->lockCantidadDeAutos->tomarLock();
 	resultado = this->cantidadDeAutos;
+	this->lockCantidadDeAutos->liberarLock();
 
 	return resultado;
 }
 
 double Estacionamiento::getCantidadFacturado() {
-	return this->cantidadFacturado;
+	double resultado;
+
+	this->lockCantidadDeAutos->tomarLock();
+	resultado = this->cantidadFacturado;
+	this->lockCantidadDeAutos->liberarLock();
+
+	return resultado;
 }
 
 bool Estacionamiento::estaLLeno() {
 	return this->getCantidadDeAutos() == this->tamanio;
+}
+
+bool Estacionamiento::ocuparLugar(int tiempo) {
+	bool resultado = false;
+
+	return resultado;
+}
+
+bool Estacionamiento::desocuparLugar() {
+	bool resultado = false;
+
+	return resultado;
 }
 
 void Estacionamiento::innitLocks() {

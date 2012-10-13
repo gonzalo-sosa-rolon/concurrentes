@@ -7,7 +7,9 @@
 #include "util/ParserParametros.h"
 #include "util/ProcesoConsulta.h"
 #include "util/Lock.h"
+#include "util/Log.h"
 #include "util/StringUtil.h"
+#include "util/NumberUtil.h"
 #include <string>
 
 #define CANTIDAD_ENTRADAS 3
@@ -17,6 +19,12 @@ using namespace std;
 
 int main(int argc, char **argv) {
 
+	Log* log = Log::getLog();
+
+	log->logMensaje("Hola");
+	log->logError("error :S");
+
+	cout << NumberUtil::getRandom(5) << endl;
 }
 
 int main3(int argc, char **argv) {

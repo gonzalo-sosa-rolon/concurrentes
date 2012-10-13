@@ -27,8 +27,22 @@ public:
 	int getCantidadDeAutos();
 	void incrementarCantidadDeAutos();
 	void reducirCantidadDeAutos();
+
 	double getCantidadFacturado();
 	bool estaLLeno();
+
+	/*
+	 * Se debe llamar a esta funcion para ocupar un lugar en el estacionamiento.
+	 *
+	 * @param tiempo el tiempo que se va a quedar el auto
+	 * @return devuelve true si pudo ocupar una plaza, false en caso contrario
+	 */
+	bool ocuparLugar(int tiempo);
+
+	/*	Se debe llamar a esta funcion para desocupar un lugar en el estacionamiento.
+	 *	@return devuelve true si desocupo un lugar.
+	 */
+	bool desocuparLugar();
 
 private:
 	void innitLocks();
