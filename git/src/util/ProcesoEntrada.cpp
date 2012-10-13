@@ -11,7 +11,7 @@ ProcesoEntrada::~ProcesoEntrada() {
 void ProcesoEntrada::ejecutar() {
 
 	while (true) {
-		cout << "ejecutando entrada " << this->numeroDeEntrada << endl;
+		//cout << "ejecutando entrada " << this->numeroDeEntrada << endl;
 		sleep(1);
 	}
 }

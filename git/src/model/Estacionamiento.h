@@ -2,21 +2,24 @@
 #define ESTACIONAMIENTO_H_
 
 #include "Plaza.h"
-#include "../util/Mutex.h"
+#include "../util/Lock.h"
+#include "../util/StringUtil.h"
 
 class Estacionamiento {
 
 private:
 	double cantidadFacturado;
-	Mutex mutexCantidadFacturado;
+	Lock* lockCantidadFacturado;
 
 	int cantidadDeAutos;
-	Mutex mutexCantidadDeAutos;
+	Lock* lockCantidadDeAutos;
 
 	int tamanio;
 	double precio;
+
 	Plaza* plazas;
-	Mutex* mutexPlazas;
+	Lock** lockPlazas;
+
 public:
 	Estacionamiento(int tamanio, double precio);
 	virtual ~Estacionamiento();
@@ -26,6 +29,10 @@ public:
 	void reducirCantidadDeAutos();
 	double getCantidadFacturado();
 	bool estaLLeno();
+
+private:
+	void innitLocks();
+	char* getNombreLockPlaza(int i);
 };
 
 

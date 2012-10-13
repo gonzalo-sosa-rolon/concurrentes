@@ -4,7 +4,6 @@
  *  Created on: 09/10/2012
  *      Author: miriamquintero
  */
-
 #ifndef EVENTO_H_
 #define EVENTO_H_
 

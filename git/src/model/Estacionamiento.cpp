@@ -6,11 +6,11 @@ Estacionamiento::Estacionamiento(int tamanio, double precio) {
 
 	if (tamanio > 0) {
 		this->plazas = new Plaza[tamanio];
-		this->mutexPlazas = new Mutex[tamanio];
 	} else {
 		this->plazas = NULL;
-		this->mutexPlazas = NULL;
 	}
+
+	innitLocks();
 }
 
 Estacionamiento::~Estacionamiento() {
@@ -21,23 +21,17 @@ Estacionamiento::~Estacionamiento() {
 }
 
 void Estacionamiento::incrementarCantidadDeAutos() {
-	this->mutexCantidadDeAutos.lock();
 	this->cantidadDeAutos++;
-	this->mutexCantidadDeAutos.unlock();
 }
 
 void Estacionamiento::reducirCantidadDeAutos() {
-	this->mutexCantidadDeAutos.lock();
 	this->cantidadDeAutos--;
-	this->mutexCantidadDeAutos.unlock();
 }
 
 int Estacionamiento::getCantidadDeAutos() {
 	int resultado;
 
-	this->mutexCantidadDeAutos.lock();
 	resultado = this->cantidadDeAutos;
-	this->mutexCantidadDeAutos.unlock();
 
 	return resultado;
 }
@@ -50,3 +44,20 @@ bool Estacionamiento::estaLLeno() {
 	return this->getCantidadDeAutos() == this->tamanio;
 }
 
+void Estacionamiento::innitLocks() {
+
+	lockCantidadFacturado = new Lock((char*)"lockCantidadFacturado");
+	lockCantidadDeAutos = new Lock((char*)"lockCantidadDeAutos");
+
+	lockPlazas = new Lock*[this->tamanio];
+
+	for (int i = 0; i < this->tamanio; i++) {
+		lockPlazas[i] = new Lock(getNombreLockPlaza(i));
+	}
+}
+
+char* Estacionamiento::getNombreLockPlaza(int i) {
+	string lockPlaza = "plaza_" + StringUtil::intToString(i + 1);
+
+	return (char*)lockPlaza.c_str();
+}

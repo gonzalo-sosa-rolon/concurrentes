@@ -10,7 +10,7 @@ ProcesoSalida::~ProcesoSalida() {
 
 void ProcesoSalida::ejecutar() {
 	while (true) {
-		cout << "ejecutando salida " << this->numeroDeSalida << endl;
+		//cout << "ejecutando salida " << this->numeroDeSalida << endl;
 		sleep(1);
 	}
 }
