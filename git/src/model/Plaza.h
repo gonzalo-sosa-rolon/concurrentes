@@ -7,6 +7,7 @@ class Plaza {
 private:
 	int id;
 	int horaIngreso;
+	int tiempoEstadia;
 	bool ocupado;
 
 public:
@@ -15,11 +16,15 @@ public:
 
 	int getHoraIngreso();
 	int getId();
+
+	int getTiempoEstadia();
 	bool getOcupado();
 	void setHoraIngreso(int horaIngreso);
 	void setId(int id);
 	void setOcupado(bool ocupado);
-	void ocupar();
+	void ocupar(int tiempoStadia, int horaDeIngreso);
+	bool deseaIrse(int tiempoActual);
+
 };
 
 #endif /* PLAZA_H_ */

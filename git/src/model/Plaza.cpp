@@ -34,7 +34,23 @@ void Plaza::setOcupado(bool ocupado) {
 	this->ocupado = ocupado;
 }
 
-void Plaza::ocupar() {
+void Plaza::ocupar(int tiempoStadia, int horaDeIngreso) {
 	this->ocupado = true;
-	//TODO set time
+	this->horaIngreso = horaDeIngreso;
+	this->tiempoEstadia = tiempoStadia;
+}
+
+int Plaza::getTiempoEstadia() {
+	return this->tiempoEstadia;
+}
+
+bool Plaza::deseaIrse(int tiempoActual) {
+
+	bool resultado = false;
+
+	if (this->getOcupado()) {
+		resultado = tiempoActual > (horaIngreso + tiempoEstadia);
+	}
+
+	return resultado;
 }

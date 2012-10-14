@@ -47,6 +47,8 @@ public:
 private:
 	void innitLocks();
 	char* getNombreLockPlaza(int i);
+	void facturar(int tiempo);
+	void incrementarFacturacion(double cantidadFacturada);
 };
 
 
