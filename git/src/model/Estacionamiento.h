@@ -4,6 +4,7 @@
 #include "Plaza.h"
 #include "../util/Lock.h"
 #include "../util/StringUtil.h"
+#include "../MemoriaCompartida.h"
 
 class Estacionamiento {
 
@@ -17,8 +18,8 @@ private:
 	int tamanio;
 	double precio;
 
-	Plaza* plazas;
-	Lock** lockPlazas;
+	MemoriaCompartida<Plaza> plazas;
+	Lock* lockPlazas;
 
 public:
 	Estacionamiento(int tamanio, double precio);
@@ -30,6 +31,8 @@ public:
 
 	double getCantidadFacturado();
 	bool estaLLeno();
+
+	int crearOAtacharte();
 
 	/*
 	 * Se debe llamar a esta funcion para ocupar un lugar en el estacionamiento.

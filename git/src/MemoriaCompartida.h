@@ -1,93 +1,92 @@
-/*
- * MemoriaCompartida.h
- *
- *  Created on: 09/10/2012
- *      Author: miriamquintero
- */
-
 #ifndef MEMORIACOMPARTIDA_H_
 #define MEMORIACOMPARTIDA_H_
 
+#define SHM_OK 			 0
+#define ERROR_FTOK 		-1
+#define ERROR_SHMGET 	-2
+#define	 ERROR_SHMAT 	-3
 
-#include <sys/ipc.h>
-#include <sys/shm.h>
-#include <sys/types.h>
-#include <string>
+#include	<sys/types.h>
+#include	<sys/ipc.h>
+#include	<sys/shm.h>
 
-#define ERROR_SHMGET 1
-#define ERROR_SHMAT 2
-#define ERROR_SHMCTL 3
-#define ERROR_SHMDT 4
+template<class T> class MemoriaCompartida {
 
+private:
 
-template <typename T>
-class MemoriaCompartida {
+	int shmId;
+	T* ptrDatos;
 
-	private:
-		int id;
-		key_t clave;
-		int size;
-		int flags;
-		T* dato;
+	int cantidadProcesosAdosados();
 
-	public:
+public:
 
-		MemoriaCompartida(key_t clave=0,int size=0,int flags=0){
-			this->clave = clave;
-			this->size = size;
-			this->flags = flags;
-		};
+	MemoriaCompartida();
+	~MemoriaCompartida();
+	int crear(char *archivo, char letra, int cant_registros);
+	void liberar();
+	void escribir(int pos, T dato);
+	T leer(int pos);
 
-		void setClave(key_t clave) {
-			this->clave = clave;
-		}
-
-		void setSize(int size){
-			this->size = size;
-		}
-
-		void setFlags(int flags){
-			this->flags = flags;
-		}
-
-		void inicializar(key_t clave,int size,int flags) {
-			this->clave = clave;
-			this->flags = flags;
-			this->size = size;
-		}
-
-		int reservarMemoria() {
-			if ((this->id = shmget(this->clave, this->size, this->flags)) == -1)
-				return ERROR_SHMGET;
-
-			if ((this->dato = (T*)shmat(this->id, NULL, 0)) == (T *) -1)
-				return ERROR_SHMAT;
-			return 0;
-		}
-
-		int liberarRecursos(){
-			if(shmctl(this->id, IPC_RMID ,NULL)==-1)
-				return ERROR_SHMCTL;
-			if(shmdt((T*) this->dato)== -1)
-				return ERROR_SHMDT;
-			return 0;
-		}
-
-		T& operator*() {
-			return *(this->dato);
-		}
-
-		T* operator->() {
-			return this->dato;
-		}
-
-		operator void*() {
-			return (void*)dato;
-		}
-
-		operator T*() {
-			return (T*)dato;
-		}
 };
+
+template<class T> MemoriaCompartida<T>::MemoriaCompartida() {
+	this->shmId = 0;
+	this->ptrDatos = NULL;
+}
+
+template<class T> MemoriaCompartida<T>::~MemoriaCompartida() {
+}
+
+template<class T> int MemoriaCompartida<T>::crear(char *archivo, char letra, int cant_registros) {
+
+	// generacion de la clave
+	key_t clave = ftok(archivo, letra);
+	if (clave == -1)
+		return ERROR_FTOK;
+	else {
+		// creacion de la memoria compartida
+		this->shmId = shmget(clave, sizeof(T) * cant_registros, 0644 | IPC_CREAT);
+
+		if (this->shmId == -1)
+			return ERROR_SHMGET;
+		else {
+			// attach del bloque de memoria al espacio de direcciones del proceso
+			void* ptrTemporal = shmat(this->shmId, NULL, 0);
+
+			if (ptrTemporal == (void *) -1) {
+				return ERROR_SHMAT;
+			} else {
+				this->ptrDatos = (T *) ptrTemporal;
+				return SHM_OK;
+			}
+		}
+	}
+}
+
+template<class T> void MemoriaCompartida<T>::liberar() {
+	// detach del bloque de memoria
+	shmdt((void *) this->ptrDatos);
+
+	int procAdosados = this->cantidadProcesosAdosados();
+
+	if (procAdosados == 0) {
+		shmctl(this->shmId, IPC_RMID, NULL);
+	}
+}
+
+template<class T> void MemoriaCompartida<T>::escribir(int pos, T dato) {
+	*(this->ptrDatos + pos) = dato;
+}
+
+template<class T> T MemoriaCompartida<T>::leer(int pos) {
+	return (*(this->ptrDatos + pos));
+}
+
+template<class T> int MemoriaCompartida<T>::cantidadProcesosAdosados() {
+	shmid_ds estado;
+	shmctl(this->shmId, IPC_STAT, &estado);
+	return estado.shm_nattch;
+}
 
 #endif /* MEMORIACOMPARTIDA_H_ */

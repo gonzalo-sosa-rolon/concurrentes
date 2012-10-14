@@ -4,20 +4,19 @@ Estacionamiento::Estacionamiento(int tamanio, double precio) {
 	this->tamanio = tamanio;
 	this->precio = precio;
 
-	if (tamanio > 0) {
-		this->plazas = new Plaza[tamanio];
-	} else {
-		this->plazas = NULL;
-	}
+	this->plazas.crear((char*)"README.md", 'S', tamanio);
 
 	innitLocks();
 }
 
+
+//TODO esto no se si va asi
+int Estacionamiento::crearOAtacharte() {
+	return this->plazas.crear((char*)"README.md", 'S', tamanio);
+}
+
 Estacionamiento::~Estacionamiento() {
-	if (this->plazas != NULL) {
-		delete[] this->plazas;
-		this->plazas = NULL;
-	}
+	this->plazas.liberar();
 }
 
 void Estacionamiento::incrementarCantidadDeAutos() {
@@ -55,40 +54,41 @@ bool Estacionamiento::estaLLeno() {
 bool Estacionamiento::ocuparLugar(int tiempo) {
 	bool resultado = false;
 
+	this->lockPlazas->tomarLock();
+
 	for (int i = 0; i < tamanio; i++) {
-		this->lockPlazas[i]->tomarLock();
-
-		if (!this->plazas[i].getOcupado()) {
-			this->plazas[i].ocupar(tiempo, 0); //ver el tema de la hora de ingreso
+		if (!this->plazas.leer(i).getOcupado()) {
+			this->plazas.leer(i).ocupar(tiempo, 0); //TODO ver el tema de la hora de ingreso
+			resultado = true;
 		}
-
-		this->lockPlazas[i]->liberarLock();
 	}
 
+	this->lockPlazas->liberarLock();
 	return resultado;
 }
 
+// TODO esto.... puede que no se haga asi
 bool Estacionamiento::desocuparLugar() {
 	bool resultado = false;
-	int tiempoAFacturar = 0;
-
-	for (int i = 0; i < tamanio; i++) {
-		this->lockPlazas[i]->tomarLock();
-
-		if (this->plazas[i].getOcupado()) {
-			if (this->plazas[i].deseaIrse(0)) { //TODO pasarle el tiempo actual
-				tiempoAFacturar = this->plazas[i].getTiempoEstadia();
-				resultado = true;
-			}
-		}
-
-		this->lockPlazas[i]->liberarLock();
-	}
-
-	if (resultado) {
-		this->facturar(tiempoAFacturar);
-	}
-
+//	int tiempoAFacturar = 0;
+//
+//	for (int i = 0; i < tamanio; i++) {
+//		this->lockPlazas[i]->tomarLock();
+//
+//		if (this->plazas[i].getOcupado()) {
+//			if (this->plazas[i].deseaIrse(0)) { //TODO pasarle el tiempo actual
+//				tiempoAFacturar = this->plazas[i].getTiempoEstadia();
+//				resultado = true;
+//			}
+//		}
+//
+//		this->lockPlazas[i]->liberarLock();
+//	}
+//
+//	if (resultado) {
+//		this->facturar(tiempoAFacturar);
+//	}
+//
 	return resultado;
 }
 
@@ -112,11 +112,7 @@ void Estacionamiento::innitLocks() {
 	lockCantidadFacturado = new Lock((char*) "lockCantidadFacturado");
 	lockCantidadDeAutos = new Lock((char*) "lockCantidadDeAutos");
 
-	lockPlazas = new Lock*[this->tamanio];
-
-	for (int i = 0; i < this->tamanio; i++) {
-		lockPlazas[i] = new Lock(getNombreLockPlaza(i));
-	}
+	lockPlazas = new Lock((char*) "lockPlazas");
 }
 
 char* Estacionamiento::getNombreLockPlaza(int i) {

@@ -2,7 +2,11 @@
 #define PROCESOENTRADA_H_
 
 #include "Proceso.h"
+#include "Estacionamiento.h"
 #include <iostream>
+#include "../signals/EventHandler.h"
+#include "../signals/SignalHandler.h"
+#include "../signals/SIGINT_Handler.h"
 
 using namespace std;
 
@@ -10,8 +14,11 @@ class ProcesoEntrada: public Proceso {
 
 private:
 	int numeroDeEntrada;
+	Estacionamiento* estacionamiento;
+	SIGINT_Handler sigint_handler;
+
 public:
-	ProcesoEntrada(int numeroDeEntrada);
+	ProcesoEntrada(int numeroDeEntrada, Estacionamiento* estacionamiento);
 	virtual ~ProcesoEntrada();
 
 	virtual void ejecutar();

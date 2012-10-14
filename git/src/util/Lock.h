@@ -11,16 +11,16 @@ private:
 
 	struct flock fl;
 	int fd;
-	char nombre [ 255 ];
+	char nombre[255];
 
 public:
 
-	Lock ( char* nombre );
+	Lock(char* nombre);
 	virtual ~Lock();
 
-	int tomarLock ();
-	int liberarLock ();
-	int escribir ( char* buffer,int buffsize );
+	int tomarLock();
+	int liberarLock();
+	int escribir(char* buffer, int buffsize);
 };
 
 #endif /* LOCK_H_ */

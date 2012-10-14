@@ -2,10 +2,14 @@
 #include <unistd.h>
 #include <stdlib.h>
 #include <stdio.h>
-#include "util/ProcesoEntrada.h"
-#include "util/ProcesoSalida.h"
+#include "model/ProcesoEntrada.h"
+#include "model/ProcesoSalida.h"
 #include "util/ParserParametros.h"
-#include "util/ProcesoConsulta.h"
+#include "model/ProcesoConsulta.h"
+#include "model/Estacionamiento.h"
+#include "signals/EventHandler.h"
+#include "signals/SignalHandler.h"
+#include "signals/SIGINT_Handler.h"
 #include "util/Lock.h"
 #include "util/Log.h"
 #include "util/StringUtil.h"
@@ -19,39 +23,49 @@ using namespace std;
 
 int main(int argc, char **argv) {
 
-	Log* log = Log::getLog();
-
-	log->logMensaje("Hola");
-	log->logError("error :S");
-
-	cout << NumberUtil::getRandom(5) << endl;
-}
-
-int main3(int argc, char **argv) {
-
 	//TODO esto habria que pasar a una clase que lance los procesos
 
 	pid_t id;
+	Estacionamiento estacionamiento(10, 20); //dummy values
+	pid_t entradas[CANTIDAD_ENTRADAS], salidas[CANTIDAD_SALIDAS];
 
+	cout << "Main Creando entradas" << endl;
 	for (int i = 0; i < CANTIDAD_ENTRADAS; i++) {
 		id = fork();
 
 		if (!id) {
-			ProcesoEntrada procesoEntrada(i + 1);
+			ProcesoEntrada procesoEntrada(i + 1, &estacionamiento);
 			procesoEntrada.ejecutar();
+			entradas[i] = id;
 			break;
 		}
 	}
 
+
 	if (id) {
+		cout << "Main creando salidas" << endl;
 		for (int i = 0; i < CANTIDAD_SALIDAS; i++) {
 			id = fork();
 
 			if (!id) {
-				ProcesoSalida procesoSalida(i + 1);
+				ProcesoSalida procesoSalida(i + 1, &estacionamiento);
 				procesoSalida.ejecutar();
+				salidas[i] = id;
 				break;
 			}
+		}
+	}
+
+	if (id) {
+		cout << "Main duerme 5 segundos" << endl;
+		sleep(5);
+		for (int i = 0; i < CANTIDAD_SALIDAS; i++) {
+			cout << "Enviando señal a salida [" << salidas[i] << "]" << endl;
+			kill(salidas[i], SIGINT);
+		}
+		for (int i = 0; i < CANTIDAD_ENTRADAS; i++) {
+			cout << "Enviando señal a entrada [" << entradas[i] << "]" << endl;
+			kill(entradas[i], SIGINT);
 		}
 	}
 
