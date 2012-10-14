@@ -44,9 +44,6 @@ void ProcesoSalida::liberarPlaza() {
 
 			stringstream info;
 			info << "Salida " << this->numeroDeSalida << ": Yay! libere la plaza [" << i << "] ; id del auto que se fue [" << idDelAutoDesocupado << "]";
-
-			cout << "chiau" << endl;
-			cout << "jugariamos " << info.str() << endl;
 			Log::getLog()->logMensaje(info.str());
 
 			info.clear();
