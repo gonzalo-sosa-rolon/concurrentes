@@ -40,6 +40,7 @@ int main(int argc, char **argv) {
 			procesoEntrada.ejecutar();
 			entradas[i] = id;
 			break;
+			sleep(1);
 		}
 	}
 
@@ -54,6 +55,7 @@ int main(int argc, char **argv) {
 				procesoSalida.ejecutar();
 				salidas[i] = id;
 				break;
+				sleep(1);
 			}
 		}
 	}

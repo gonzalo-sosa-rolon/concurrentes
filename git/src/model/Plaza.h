@@ -3,6 +3,7 @@
 
 #include "time.h"
 #include "../util/Lock.h"
+#include <string>
 
 class Plaza {
 private:
@@ -10,6 +11,7 @@ private:
 	int horaIngreso;
 	int tiempoEstadia;
 	bool ocupado;
+	long autoId;
 
 public:
 	Plaza();
@@ -18,12 +20,14 @@ public:
 	int getHoraIngreso();
 	int getId();
 
+	long getAutoId();
+
 	int getTiempoEstadia();
 	bool getOcupado();
 	void setHoraIngreso(int horaIngreso);
 	void setId(int id);
 	void setOcupado(bool ocupado);
-	void ocupar(int tiempoStadia, int horaDeIngreso);
+	void ocupar(int tiempoStadia, int horaDeIngreso, long autoId);
 	bool deseaIrse();
 	void incializar();
 

@@ -14,7 +14,7 @@ ProcesoSalida::~ProcesoSalida() {
 }
 
 void ProcesoSalida::ejecutar() {
-	while ((!this->sigint_handler.getGracefulQuit()) || this->estacionamiento->estaVacio()) {
+	while ((!this->sigint_handler.getGracefulQuit()) || (!this->estacionamiento->estaVacio())) {
 		std::cout << "Salida " << numeroDeSalida << ": Ejecutando proceso" << std::endl;
 		liberarPlaza();
 		sleep(1);
@@ -23,17 +23,23 @@ void ProcesoSalida::ejecutar() {
 }
 
 void ProcesoSalida::liberarPlaza() {
+	bool liberoAlgo = false;
 	this->estacionamiento->tomarLockPlazas();
 	Plaza plaza;
 	for (int i = 0; i < this->estacionamiento->getTamanio(); i++) {
-		plaza = this->estacionamiento->getPlaza(i);
-		if (plaza.deseaIrse()) {
-			this->estacionamiento->desocuparLugar(i);
-			std::cout << "Salida " << numeroDeSalida << ": Yay! libere la plaza [" << i << "]" << std::endl;
+		if (this->estacionamiento->getPlaza(i).deseaIrse()) {
+			long idDelAutoDesocupado = this->estacionamiento->desocuparLugar(i);
+			std::cout << "Salida " << numeroDeSalida << ": Yay! libere la plaza [" << i << "] ; id del auto que se fue [" << idDelAutoDesocupado << std::endl;
+			std::cout << "Salida " << numeroDeSalida << "Quedan " << this->estacionamiento->getCantidadDeAutos() << " autos en el estacionamiento" << endl;
+			liberoAlgo = true;
 			break;
-		} else {
-			std::cout << "Salida " << numeroDeSalida << ": Plaza [" << i << "] no se quiere ir" << std::endl;
 		}
 	}
+
 	this->estacionamiento->liberarLockPlazas();
+
+	if (!liberoAlgo) {
+		std::cout << "Salida " << numeroDeSalida << "No libere nada y quedan " << this->estacionamiento->getCantidadDeAutos() << " autos en el estacionamiento" << endl;
+		std::cout << "Salida " << numeroDeSalida << "El estacionamiento esta vacio? " << this->estacionamiento->estaVacio() << endl;
+	}
 }

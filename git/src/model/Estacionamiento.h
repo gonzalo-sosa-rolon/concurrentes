@@ -9,14 +9,14 @@
 class Estacionamiento {
 
 private:
-	double cantidadFacturado;
-	Lock* lockCantidadFacturado;
-
-	int cantidadDeAutos;
-	Lock* lockCantidadDeAutos;
-
 	int tamanio;
 	double precio;
+
+	MemoriaCompartida<double> cantidadFacturado;
+	Lock* lockCantidadFacturado;
+
+	MemoriaCompartida<int> cantidadDeAutos;
+	Lock* lockCantidadDeAutos;
 
 	MemoriaCompartida<Plaza> plazas;
 	Lock* lockPlazas;
@@ -38,15 +38,15 @@ public:
 	/*
 	 * Se debe llamar a esta funcion para ocupar un lugar en el estacionamiento.
 	 *
-	 * @param tiempo el tiempo que se va a quedar el auto
+	 * @param pos la posicion a ocupar en el estacionamiento
 	 * @return devuelve true si pudo ocupar una plaza, false en caso contrario
 	 */
-	bool ocuparPlaza(int tiempo);
+	bool ocuparPlaza(int pos, int tiempo, long autoId);
 
 	/*	Se debe llamar a esta funcion para desocupar un lugar en el estacionamiento.
 	 *	@return devuelve true si desocupo un lugar.
 	 */
-	bool desocuparLugar(int posicion);
+	long desocuparLugar(int posicion);
 
 	int tomarLockPlazas();
 	int liberarLockPlazas();

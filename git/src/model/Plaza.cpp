@@ -18,6 +18,10 @@ int Plaza::getId() {
 	return id;
 }
 
+long Plaza::getAutoId() {
+	return this->autoId;
+}
+
 bool Plaza::getOcupado() {
 	return ocupado;
 }
@@ -34,10 +38,11 @@ void Plaza::setOcupado(bool ocupado) {
 	this->ocupado = ocupado;
 }
 
-void Plaza::ocupar(int tiempoStadia, int horaDeIngreso) {
+void Plaza::ocupar(int tiempoStadia, int horaDeIngreso, long autoId) {
 	this->ocupado = true;
 	this->horaIngreso = horaDeIngreso;
 	this->tiempoEstadia = tiempoStadia;
+	this->autoId = autoId;
 }
 
 int Plaza::getTiempoEstadia() {

@@ -13,7 +13,7 @@ Log* Log::getLog() {
 	return instancia;
 }
 
-void Log::logMensaje(string mensaje) {
+void Log::logMensaje(const string mensaje) {
 
 	this->lock->tomarLock();
 	cout << "Info: " << mensaje << endl;
@@ -21,7 +21,7 @@ void Log::logMensaje(string mensaje) {
 	this->lock->liberarLock();
 }
 
-void Log::logError(string error) {
+void Log::logError(const string& error) {
 
 	this->lock->tomarLock();
 	cerr << "Error: " << error << endl;

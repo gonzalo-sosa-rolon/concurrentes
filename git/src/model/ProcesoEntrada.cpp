@@ -17,24 +17,43 @@ ProcesoEntrada::~ProcesoEntrada() {
 void ProcesoEntrada::ejecutar() {
 
 	while (!this->sigint_handler.getGracefulQuit()) {
-		int tiempo = NumberUtil::getRandom(1, 3);
-		cout << "Entrada " << this->numeroDeEntrada << "; Ocupando lugar por " << tiempo << " horas"<< endl;
 
-		this->estacionamiento->tomarLockPlazas();
-
-		if (!this->estacionamiento->ocuparPlaza(tiempo)) {
-			if (this->estacionamiento->estaLLeno()) {
-				cout << "Entrada " << this->numeroDeEntrada << " Se lleno el estacionamiento" << endl;
+		if (!this->estacionamiento->estaLLeno()) {
+			this->estacionamiento->tomarLockPlazas();
+			if (ocuparPlaza()) {
+				std::cout << "Entrada " << numeroDeEntrada << ": Acabo de ocupar una plaza, hay " << this->estacionamiento->getCantidadDeAutos() << " Autos en el estacionamiento" << std::endl;
 			} else {
-				cout << "Entrada " << this->numeroDeEntrada << " TERROR: algo anda mal, no pude ingresar el auto y el estacionamiento no esta lleno" << endl;
+				cout << "Entrada " << this->numeroDeEntrada << ": ERROR, algo anda mal, el estacionamiento no esta lleno pero no pude ingresar " << endl;
 			}
 
+			this->estacionamiento->liberarLockPlazas();
+		} else {
+			cout << "Entrada " << this->numeroDeEntrada << " Se lleno el estacionamiento" << endl;
 		}
-
-		this->estacionamiento->liberarLockPlazas();
 
 		sleep(NumberUtil::getRandom(1, 3));
 	}
 
 	std::cout << "Entrada: Se termino mi proceso, una lastima. Pid [" << getpid() << "]" << std::endl;
 }
+
+bool ProcesoEntrada::ocuparPlaza() {
+
+	bool resultado = false;
+
+	int tiempo = NumberUtil::getRandom(1, 3);
+	this->estacionamiento->tomarLockPlazas();
+
+	for (int i = 0; i < this->estacionamiento->getTamanio(); i++) {
+		if (this->estacionamiento->getPlaza(i).getOcupado()) {
+			long id = NumberUtil::getRandom(RAND_MAX);
+			this->estacionamiento->ocuparPlaza(i, tiempo, id);
+			std::cout << "Entrada " << numeroDeEntrada << ": Yay! ocupe la plaza [" << i << "] id del auto [" << id << "]" << std::endl;
+			resultado = true;;
+		}
+	}
+	this->estacionamiento->liberarLockPlazas();
+
+	return resultado;
+}
+

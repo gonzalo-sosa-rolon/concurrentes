@@ -16,8 +16,8 @@ private:
 
 public:
 	static Log* getLog();
-	void logMensaje(string mensaje);
-	void logError(string error);
+	void logMensaje(const string mensaje);
+	void logError(const string& error);
 
 	~Log();
 private:

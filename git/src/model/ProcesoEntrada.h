@@ -18,6 +18,7 @@ private:
 	Estacionamiento* estacionamiento;
 	SIGINT_Handler sigint_handler;
 
+	bool ocuparPlaza();
 public:
 	ProcesoEntrada(int numeroDeEntrada, Estacionamiento* estacionamiento);
 	virtual ~ProcesoEntrada();
