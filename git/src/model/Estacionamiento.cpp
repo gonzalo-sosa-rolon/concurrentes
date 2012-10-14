@@ -98,6 +98,7 @@ bool Estacionamiento::desocuparLugar(int posicion) {
 		this->facturar(plaza.getTiempoEstadia());
 		this->restarUnAuto();
 		plaza.setOcupado(false);
+		this->plazas.escribir(posicion, plaza);
 		return true;
 	}
 	return false;

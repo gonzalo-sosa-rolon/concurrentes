@@ -18,17 +18,21 @@ void ProcesoEntrada::ejecutar() {
 
 	while (!this->sigint_handler.getGracefulQuit()) {
 		int tiempo = NumberUtil::getRandom(1, 3);
-		cout << "ejecutando entrada " << this->numeroDeEntrada << "; Ocupando lugar por " << tiempo << " horas"<< endl;
+		cout << "Entrada " << this->numeroDeEntrada << "; Ocupando lugar por " << tiempo << " horas"<< endl;
+
 		this->estacionamiento->tomarLockPlazas();
+
 		if (!this->estacionamiento->ocuparPlaza(tiempo)) {
 			if (this->estacionamiento->estaLLeno()) {
-				cout << "Se lleno el estacionamiento" << endl;
+				cout << "Entrada " << this->numeroDeEntrada << " Se lleno el estacionamiento" << endl;
 			} else {
-				cout << "TERROR: algo anda mal, no pude ingresar el auto y el estacionamiento no esta lleno" << endl;
+				cout << "Entrada " << this->numeroDeEntrada << " TERROR: algo anda mal, no pude ingresar el auto y el estacionamiento no esta lleno" << endl;
 			}
 
 		}
+
 		this->estacionamiento->liberarLockPlazas();
+
 		sleep(NumberUtil::getRandom(1, 3));
 	}
 

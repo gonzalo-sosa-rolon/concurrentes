@@ -15,11 +15,11 @@ ProcesoSalida::~ProcesoSalida() {
 
 void ProcesoSalida::ejecutar() {
 	while ((!this->sigint_handler.getGracefulQuit()) || this->estacionamiento->estaVacio()) {
-		std::cout << "Salida: Ejecutando proceso" << std::endl;
+		std::cout << "Salida " << numeroDeSalida << ": Ejecutando proceso" << std::endl;
 		liberarPlaza();
 		sleep(1);
 	}
-	std::cout << "Salida: Se termino mi proceso, una lastima. Pid [" << getpid() << "]" << std::endl;
+	std::cout << "Salida " << numeroDeSalida << ": Se termino mi proceso, una lastima. Pid [" << getpid() << "]" << std::endl;
 }
 
 void ProcesoSalida::liberarPlaza() {
@@ -29,10 +29,10 @@ void ProcesoSalida::liberarPlaza() {
 		plaza = this->estacionamiento->getPlaza(i);
 		if (plaza.deseaIrse()) {
 			this->estacionamiento->desocuparLugar(i);
-			std::cout << "Salida: Yay! libere la plaza [" << i << "]" << std::endl;
+			std::cout << "Salida " << numeroDeSalida << ": Yay! libere la plaza [" << i << "]" << std::endl;
 			break;
 		} else {
-			std::cout << "Salida: Plaza [" << i << "] no se quiere ir" << std::endl;
+			std::cout << "Salida " << numeroDeSalida << ": Plaza [" << i << "] no se quiere ir" << std::endl;
 		}
 	}
 	this->estacionamiento->liberarLockPlazas();
