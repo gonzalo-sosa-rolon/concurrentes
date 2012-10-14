@@ -112,12 +112,8 @@ long Estacionamiento::desocuparLugar(int posicion) {
 	return 0;
 }
 
-int Estacionamiento::tomarLockPlazas() {
-	return this->lockPlazas->tomarLock();
-}
-
-int Estacionamiento::liberarLockPlazas(){
-	return this->lockPlazas->liberarLock();
+Lock* Estacionamiento::getLockPlaza(int pos) {
+	return this->lockPlazas[pos];
 }
 
 Plaza Estacionamiento::getPlaza(int pos) {
@@ -141,7 +137,11 @@ void Estacionamiento::innitLocks() {
 	lockCantidadFacturado = new Lock((char*) "lockCantidadFacturado");
 	lockCantidadDeAutos = new Lock((char*) "lockCantidadDeAutos");
 
-	lockPlazas = new Lock((char*) "lockPlazas");
+	lockPlazas = new Lock*[tamanio];
+
+	for (int i = 0; i < tamanio; i++) {
+		lockPlazas[i] = new Lock(getNombreLockPlaza(i));
+	}
 }
 
 char* Estacionamiento::getNombreLockPlaza(int i) {

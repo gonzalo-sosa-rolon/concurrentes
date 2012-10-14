@@ -21,7 +21,7 @@ private:
 	Lock* lockCantidadDeAutos;
 
 	MemoriaCompartida<Plaza> plazas;
-	Lock* lockPlazas;
+	Lock** lockPlazas;
 
 public:
 	Estacionamiento(int tamanio, double precio);
@@ -50,9 +50,8 @@ public:
 	 */
 	long desocuparLugar(int posicion);
 
-	int tomarLockPlazas();
-	int liberarLockPlazas();
 	Plaza getPlaza(int pos);
+	Lock* getLockPlaza(int pos);
 
 private:
 	void innitLocks();

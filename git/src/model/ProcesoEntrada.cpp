@@ -6,7 +6,6 @@ ProcesoEntrada::ProcesoEntrada(int numeroDeEntrada, Estacionamiento* estacionami
 
 	// se registra el event handler declarado antes
 	SignalHandler::getInstance()->registrarHandler(SIGINT, &sigint_handler);
-
 }
 
 ProcesoEntrada::~ProcesoEntrada() {
@@ -40,9 +39,11 @@ bool ProcesoEntrada::ocuparPlaza() {
 	bool resultado = false;
 
 	int tiempo = NumberUtil::getRandom(1, 3);
-	this->estacionamiento->tomarLockPlazas();
 
 	for (int i = 0; i < this->estacionamiento->getTamanio(); i++) {
+		Lock* lockPlaza = this->estacionamiento->getLockPlaza(i);
+
+		lockPlaza->tomarLock();
 		if (!this->estacionamiento->getPlaza(i).getOcupado()) {
 			long id = NumberUtil::getRandom(RAND_MAX);
 			this->estacionamiento->ocuparPlaza(i, tiempo, id);
@@ -50,8 +51,8 @@ bool ProcesoEntrada::ocuparPlaza() {
 			resultado = true;
 			break;
 		}
+		lockPlaza->liberarLock();
 	}
-	this->estacionamiento->liberarLockPlazas();
 
 	return resultado;
 }
