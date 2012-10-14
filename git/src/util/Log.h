@@ -5,10 +5,11 @@
 #include "Lock.h"
 #include <string>
 #include <sstream>
+#include <fstream>
 
 #define ARCHIVO_LOG "log.txt"
 
-#define LOG_CONSOLA false
+#define LOG_CONSOLA true
 #define LOG_ARCHIVO true
 
 using namespace std;
@@ -17,6 +18,7 @@ class Log {
 private:
 	static Log* instancia;
 	static Lock* lock;
+	static fstream* archivo;
 
 public:
 	static Log* getLog();

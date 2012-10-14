@@ -59,14 +59,9 @@ int main(int argc, char **argv) {
 
 	string opcion;
 
-	while (true) {
-		cout << "ingrese opcion " << endl;
-		cin >> opcion;
-	}
-
 	if (id) {
-		cout << "Main duerme 150 segundos" << endl;
-		sleep(150);
+		cout << "Main duerme 1 segundos" << endl;
+		sleep(15);
 		for (int i = 0; i < CANTIDAD_SALIDAS; i++) {
 			cout << "Enviando señal a salida [" << salidas[i] << "]" << endl;
 			kill(salidas[i], SIGINT);
