@@ -1,6 +1,8 @@
 #ifndef ESTACIONAMIENTO_H_
 #define ESTACIONAMIENTO_H_
 
+#define PATH_MEMORIA_COMPARTIDA "/bin/ls"
+
 #include "Plaza.h"
 #include "../util/Lock.h"
 #include "../util/StringUtil.h"

@@ -4,13 +4,13 @@ Estacionamiento::Estacionamiento(int tamanio, double precio) {
 	this->tamanio = tamanio;
 	this->precio = precio;
 
-	this->cantidadDeAutos.crear((char*)"README.md", 'a', 1);
+	this->cantidadDeAutos.crear((char*)PATH_MEMORIA_COMPARTIDA, 'a', 1);
 	this->cantidadDeAutos.escribir(0, 0);
 
-	this->cantidadFacturado.crear((char*)"README.md", 'b', 1);
+	this->cantidadFacturado.crear((char*)PATH_MEMORIA_COMPARTIDA, 'b', 1);
 	this->cantidadFacturado.escribir(0, 0);
 
-	this->plazas.crear((char*)"README.md", 'S', tamanio);
+	this->plazas.crear((char*)PATH_MEMORIA_COMPARTIDA, 'S', tamanio);
 	initPlazas();
 	innitLocks();
 }

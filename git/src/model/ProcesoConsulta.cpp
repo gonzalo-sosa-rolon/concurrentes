@@ -1,6 +1,7 @@
 #include "ProcesoConsulta.h"
 
-ProcesoConsulta::ProcesoConsulta() {
+ProcesoConsulta::ProcesoConsulta(Estacionamiento* estacionamiento) {
+	this->estacionamiento = estacionamiento;
 }
 
 ProcesoConsulta::~ProcesoConsulta() {
@@ -25,12 +26,7 @@ string ProcesoConsulta::leerOpcion() {
 
 		cin >> opcion;
 
-		cout << "Opcion leida ";
-		if (opcion == "a" || opcion == "b") {
-			break;
-		} else {
-			cout << "Opcion invalida" << opcion << endl;
-		}
+		this->ejecutarOpcion(opcion);
 	}
 
 	return opcion;
@@ -38,6 +34,26 @@ string ProcesoConsulta::leerOpcion() {
 
 void ProcesoConsulta::ejecutarOpcion(string opcion) {
 
+	char opcionElegida = opcion[0];
+
+	switch (opcionElegida) {
+	case 'a':
+		this->consultarCantidadDeAutos();
+		break;
+	case 'b':
+		this->consultarMontoFacturado();
+		break;
+	default:
+		cout << "Opcion incorrecta" << endl;
+	}
+}
+
+void ProcesoConsulta::consultarCantidadDeAutos() {
+	cout << "Cantidad actual de autos : " << this->estacionamiento->getCantidadDeAutos() << endl;
+}
+
+void ProcesoConsulta::consultarMontoFacturado() {
+	cout << "Monto facturado : " << this->estacionamiento->getCantidadFacturado() << endl;
 }
 
 void ProcesoConsulta::ejecutar() {

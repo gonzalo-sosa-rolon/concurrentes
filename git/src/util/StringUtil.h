@@ -10,7 +10,7 @@ class StringUtil {
 
 public:
 	int static stringToInt(string valor);
-	string static intToString(int valor);
+	static string intToString(int valor);
 };
 
 #endif /* STRINGUTIL_H_ */

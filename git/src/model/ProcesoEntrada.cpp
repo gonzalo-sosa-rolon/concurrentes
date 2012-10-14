@@ -45,7 +45,7 @@ bool ProcesoEntrada::ocuparPlaza() {
 	this->estacionamiento->tomarLockPlazas();
 
 	for (int i = 0; i < this->estacionamiento->getTamanio(); i++) {
-		if (this->estacionamiento->getPlaza(i).getOcupado()) {
+		if (!this->estacionamiento->getPlaza(i).getOcupado()) {
 			long id = NumberUtil::getRandom(RAND_MAX);
 			this->estacionamiento->ocuparPlaza(i, tiempo, id);
 			std::cout << "Entrada " << numeroDeEntrada << ": Yay! ocupe la plaza [" << i << "] id del auto [" << id << "]" << std::endl;
