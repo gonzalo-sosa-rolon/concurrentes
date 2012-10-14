@@ -145,7 +145,8 @@ void Estacionamiento::innitLocks() {
 }
 
 char* Estacionamiento::getNombreLockPlaza(int i) {
-	string lockPlaza = "plaza_" + StringUtil::intToString(i + 1);
+	stringstream lockPlaza;
+	lockPlaza << "plaza_" << i + 1;
 
-	return (char*) lockPlaza.c_str();
+	return (char*) lockPlaza.str().c_str();
 }

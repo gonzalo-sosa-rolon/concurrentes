@@ -12,7 +12,6 @@
 #include "signals/SIGINT_Handler.h"
 #include "util/Lock.h"
 #include "util/Log.h"
-#include "util/StringUtil.h"
 #include "util/NumberUtil.h"
 #include <string>
 
@@ -56,6 +55,13 @@ int main(int argc, char **argv) {
 				break;
 			}
 		}
+	}
+
+	string opcion;
+
+	while (true) {
+		cout << "ingrese opcion " << endl;
+		cin >> opcion;
 	}
 
 	if (id) {

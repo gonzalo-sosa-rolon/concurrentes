@@ -5,8 +5,10 @@
 
 #include "Plaza.h"
 #include "../util/Lock.h"
-#include "../util/StringUtil.h"
 #include "../MemoriaCompartida.h"
+#include<sstream>
+
+using namespace std;
 
 class Estacionamiento {
 

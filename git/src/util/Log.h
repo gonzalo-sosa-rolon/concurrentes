@@ -8,8 +8,8 @@
 
 #define ARCHIVO_LOG "log.txt"
 
-#define LOG_CONSOLA true
-#define LOG_ARCHIVO false
+#define LOG_CONSOLA false
+#define LOG_ARCHIVO true
 
 using namespace std;
 
