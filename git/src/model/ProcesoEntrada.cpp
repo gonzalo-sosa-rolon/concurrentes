@@ -18,14 +18,13 @@ void ProcesoEntrada::ejecutar() {
 	while (!this->sigint_handler.getGracefulQuit()) {
 
 		if (!this->estacionamiento->estaLLeno()) {
-			this->estacionamiento->tomarLockPlazas();
+
 			if (ocuparPlaza()) {
 				std::cout << "Entrada " << numeroDeEntrada << ": Acabo de ocupar una plaza, hay " << this->estacionamiento->getCantidadDeAutos() << " Autos en el estacionamiento" << std::endl;
 			} else {
 				cout << "Entrada " << this->numeroDeEntrada << ": ERROR, algo anda mal, el estacionamiento no esta lleno pero no pude ingresar " << endl;
 			}
 
-			this->estacionamiento->liberarLockPlazas();
 		} else {
 			cout << "Entrada " << this->numeroDeEntrada << ": Se lleno el estacionamiento" << endl;
 		}
