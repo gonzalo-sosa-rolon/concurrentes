@@ -7,6 +7,8 @@
 #include "../signals/EventHandler.h"
 #include "../signals/SignalHandler.h"
 #include "../signals/SIGINT_Handler.h"
+#include "../util/Log.h"
+#include <sstream>
 
 using namespace std;
 

@@ -31,7 +31,6 @@ int main(int argc, char **argv) {
 	Estacionamiento estacionamiento(10, 20); //dummy values
 	pid_t entradas[CANTIDAD_ENTRADAS], salidas[CANTIDAD_SALIDAS];
 
-	cout << "Main Creando entradas" << endl;
 	for (int i = 0; i < CANTIDAD_ENTRADAS; i++) {
 		srand(49 * i);//Para que generen distintos randoms
 		id = fork();
@@ -46,7 +45,6 @@ int main(int argc, char **argv) {
 
 
 	if (id) {
-		cout << "Main creando salidas" << endl;
 		for (int i = 0; i < CANTIDAD_SALIDAS; i++) {
 			srand(49 * (i+3));//Para que generen distintos randoms
 			id = fork();
@@ -61,8 +59,8 @@ int main(int argc, char **argv) {
 	}
 
 	if (id) {
-		cout << "Main duerme 15 segundos" << endl;
-		sleep(15);
+		cout << "Main duerme 150 segundos" << endl;
+		sleep(150);
 		for (int i = 0; i < CANTIDAD_SALIDAS; i++) {
 			cout << "Enviando señal a salida [" << salidas[i] << "]" << endl;
 			kill(salidas[i], SIGINT);

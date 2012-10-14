@@ -8,6 +8,9 @@
 #include "../signals/SignalHandler.h"
 #include "../signals/SIGINT_Handler.h"
 #include "../util/NumberUtil.h"
+#include "../util/StringUtil.h"
+#include "../util/Log.h"
+#include <sstream>
 
 using namespace std;
 

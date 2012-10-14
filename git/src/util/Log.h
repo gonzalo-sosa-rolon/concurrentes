@@ -4,8 +4,12 @@
 #include <iostream>
 #include "Lock.h"
 #include <string>
+#include <sstream>
 
 #define ARCHIVO_LOG "log.txt"
+
+#define LOG_CONSOLA true
+#define LOG_ARCHIVO false
 
 using namespace std;
 
@@ -22,6 +26,7 @@ public:
 	~Log();
 private:
 	Log();
+	string getTimeStamp();
 };
 
 #endif /* LOG_H_ */

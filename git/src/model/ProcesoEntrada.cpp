@@ -19,19 +19,29 @@ void ProcesoEntrada::ejecutar() {
 		if (!this->estacionamiento->estaLLeno()) {
 
 			if (ocuparPlaza()) {
-				std::cout << "Entrada " << numeroDeEntrada << ": Acabo de ocupar una plaza, hay " << this->estacionamiento->getCantidadDeAutos() << " Autos en el estacionamiento" << std::endl;
+
+				stringstream info;
+				info << "Entrada " << numeroDeEntrada << ": Acabo de ocupar una plaza, hay " << this->estacionamiento->getCantidadDeAutos() << " Autos en el estacionamiento";
+				Log::getLog()->logMensaje(info.str());
+
 			} else {
-				cout << "Entrada " << this->numeroDeEntrada << ": ERROR, algo anda mal, el estacionamiento no esta lleno pero no pude ingresar " << endl;
+				stringstream error;
+				error << "Entrada " << this->numeroDeEntrada << "algo anda mal, el estacionamiento no esta lleno pero no pude ingresar ";
+				Log::getLog()->logError(error.str());
 			}
 
 		} else {
-			cout << "Entrada " << this->numeroDeEntrada << ": Se lleno el estacionamiento" << endl;
+			stringstream info;
+			info << "Entrada " << this->numeroDeEntrada << ": Se lleno el estacionamiento";
+			Log::getLog()->logMensaje(info.str());
 		}
 
 		sleep(NumberUtil::getRandom(1, 3));
 	}
 
-	std::cout << "Entrada " << this->numeroDeEntrada << ": Se termino mi proceso, una lastima. Pid [" << getpid() << "]" << std::endl;
+	stringstream info;
+	info << "Entrada " << this->numeroDeEntrada << ": Fin del proceso. Pid [" << getpid() << "]";
+	Log::getLog()->logMensaje(info.str());
 }
 
 bool ProcesoEntrada::ocuparPlaza() {
@@ -44,11 +54,16 @@ bool ProcesoEntrada::ocuparPlaza() {
 		Lock* lockPlaza = this->estacionamiento->getLockPlaza(i);
 
 		lockPlaza->tomarLock();
+
 		if (!this->estacionamiento->getPlaza(i).getOcupado()) {
 			long id = NumberUtil::getRandom(RAND_MAX);
 			this->estacionamiento->ocuparPlaza(i, tiempo, id);
-			std::cout << "Entrada " << numeroDeEntrada << ": Yay! ocupe la plaza [" << i << "] id del auto [" << id << "]" << std::endl;
+
+			stringstream info;
+			info << "Entrada " << numeroDeEntrada << ": Yay! ocupe la plaza [" << i << "] id del auto [" << id << "]";
+			Log::getLog()->logMensaje(info.str());
 			resultado = true;
+			lockPlaza->liberarLock();
 			break;
 		}
 		lockPlaza->liberarLock();
