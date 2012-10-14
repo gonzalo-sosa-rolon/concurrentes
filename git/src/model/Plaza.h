@@ -1,6 +1,7 @@
 #ifndef PLAZA_H_
 #define PLAZA_H_
 
+#include "time.h"
 #include "../util/Lock.h"
 
 class Plaza {
@@ -23,7 +24,8 @@ public:
 	void setId(int id);
 	void setOcupado(bool ocupado);
 	void ocupar(int tiempoStadia, int horaDeIngreso);
-	bool deseaIrse(int tiempoActual);
+	bool deseaIrse();
+	void incializar();
 
 };
 

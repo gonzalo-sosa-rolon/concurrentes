@@ -44,13 +44,17 @@ int Plaza::getTiempoEstadia() {
 	return this->tiempoEstadia;
 }
 
-bool Plaza::deseaIrse(int tiempoActual) {
-
-	bool resultado = false;
+bool Plaza::deseaIrse() {
 
 	if (this->getOcupado()) {
-		resultado = tiempoActual > (horaIngreso + tiempoEstadia);
+		return time(NULL) >= (horaIngreso + tiempoEstadia);
 	}
 
-	return resultado;
+	return false;
+}
+void Plaza::incializar() {
+	this->ocupado = false;
+	this->id = 0;
+	this->tiempoEstadia = 0;
+	this->horaIngreso = 0;
 }

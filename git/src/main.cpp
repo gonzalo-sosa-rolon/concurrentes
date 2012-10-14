@@ -23,6 +23,8 @@ using namespace std;
 
 int main(int argc, char **argv) {
 
+	srand(time(NULL));
+
 	//TODO esto habria que pasar a una clase que lance los procesos
 
 	pid_t id;
@@ -57,8 +59,8 @@ int main(int argc, char **argv) {
 	}
 
 	if (id) {
-		cout << "Main duerme 5 segundos" << endl;
-		sleep(5);
+		cout << "Main duerme 15 segundos" << endl;
+		sleep(15);
 		for (int i = 0; i < CANTIDAD_SALIDAS; i++) {
 			cout << "Enviando señal a salida [" << salidas[i] << "]" << endl;
 			kill(salidas[i], SIGINT);
@@ -67,7 +69,15 @@ int main(int argc, char **argv) {
 			cout << "Enviando señal a entrada [" << entradas[i] << "]" << endl;
 			kill(entradas[i], SIGINT);
 		}
+
+		for (int i = 0; i < 5; i++) {
+			cout << "Hola, soy el padre y me pongo a esperar a mis hijos" << endl;
+			wait();
+			cout << "Padre: mis hijos murieron. Cantidad de autos en el estacionamiento: " << estacionamiento.getCantidadDeAutos() << endl;
+		}
+
 	}
+
 
 	return 0;
 }

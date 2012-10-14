@@ -26,11 +26,12 @@ public:
 	virtual ~Estacionamiento();
 
 	int getCantidadDeAutos();
-	void incrementarCantidadDeAutos();
-	void reducirCantidadDeAutos();
 
 	double getCantidadFacturado();
 	bool estaLLeno();
+	bool estaVacio();
+	int getTamanio();
+	void initPlazas();
 
 	int crearOAtacharte();
 
@@ -40,18 +41,24 @@ public:
 	 * @param tiempo el tiempo que se va a quedar el auto
 	 * @return devuelve true si pudo ocupar una plaza, false en caso contrario
 	 */
-	bool ocuparLugar(int tiempo);
+	bool ocuparPlaza(int tiempo);
 
 	/*	Se debe llamar a esta funcion para desocupar un lugar en el estacionamiento.
 	 *	@return devuelve true si desocupo un lugar.
 	 */
-	bool desocuparLugar();
+	bool desocuparLugar(int posicion);
+
+	int tomarLockPlazas();
+	int liberarLockPlazas();
+	Plaza getPlaza(int pos);
 
 private:
 	void innitLocks();
 	char* getNombreLockPlaza(int i);
 	void facturar(int tiempo);
 	void incrementarFacturacion(double cantidadFacturada);
+	void sumarUnAuto();
+	void restarUnAuto();
 };
 
 

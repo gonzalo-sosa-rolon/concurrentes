@@ -15,7 +15,7 @@ private:
 	int numeroDeSalida;
 	SIGINT_Handler sigint_handler;
 	Estacionamiento* estacionamiento;
-
+	void liberarPlaza();
 public:
 	ProcesoSalida(int numeroDeSalida, Estacionamiento* estacionamiento);
 	virtual ~ProcesoSalida();
