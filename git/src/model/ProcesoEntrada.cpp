@@ -7,7 +7,6 @@ ProcesoEntrada::ProcesoEntrada(int numeroDeEntrada, Estacionamiento* estacionami
 	// se registra el event handler declarado antes
 	SignalHandler::getInstance()->registrarHandler(SIGINT, &sigint_handler);
 
-	srand(time(NULL));
 }
 
 ProcesoEntrada::~ProcesoEntrada() {
@@ -28,13 +27,13 @@ void ProcesoEntrada::ejecutar() {
 
 			this->estacionamiento->liberarLockPlazas();
 		} else {
-			cout << "Entrada " << this->numeroDeEntrada << " Se lleno el estacionamiento" << endl;
+			cout << "Entrada " << this->numeroDeEntrada << ": Se lleno el estacionamiento" << endl;
 		}
 
 		sleep(NumberUtil::getRandom(1, 3));
 	}
 
-	std::cout << "Entrada: Se termino mi proceso, una lastima. Pid [" << getpid() << "]" << std::endl;
+	std::cout << "Entrada " << this->numeroDeEntrada << ": Se termino mi proceso, una lastima. Pid [" << getpid() << "]" << std::endl;
 }
 
 bool ProcesoEntrada::ocuparPlaza() {
@@ -49,7 +48,8 @@ bool ProcesoEntrada::ocuparPlaza() {
 			long id = NumberUtil::getRandom(RAND_MAX);
 			this->estacionamiento->ocuparPlaza(i, tiempo, id);
 			std::cout << "Entrada " << numeroDeEntrada << ": Yay! ocupe la plaza [" << i << "] id del auto [" << id << "]" << std::endl;
-			resultado = true;;
+			resultado = true;
+			break;
 		}
 	}
 	this->estacionamiento->liberarLockPlazas();

@@ -33,6 +33,7 @@ int main(int argc, char **argv) {
 
 	cout << "Main Creando entradas" << endl;
 	for (int i = 0; i < CANTIDAD_ENTRADAS; i++) {
+		srand(49 * i);//Para que generen distintos randoms
 		id = fork();
 
 		if (!id) {
@@ -40,7 +41,6 @@ int main(int argc, char **argv) {
 			procesoEntrada.ejecutar();
 			entradas[i] = id;
 			break;
-			sleep(1);
 		}
 	}
 
@@ -48,6 +48,7 @@ int main(int argc, char **argv) {
 	if (id) {
 		cout << "Main creando salidas" << endl;
 		for (int i = 0; i < CANTIDAD_SALIDAS; i++) {
+			srand(49 * (i+3));//Para que generen distintos randoms
 			id = fork();
 
 			if (!id) {
@@ -55,7 +56,6 @@ int main(int argc, char **argv) {
 				procesoSalida.ejecutar();
 				salidas[i] = id;
 				break;
-				sleep(1);
 			}
 		}
 	}
@@ -71,15 +71,7 @@ int main(int argc, char **argv) {
 			cout << "Enviando señal a entrada [" << entradas[i] << "]" << endl;
 			kill(entradas[i], SIGINT);
 		}
-
-		for (int i = 0; i < 5; i++) {
-			cout << "Hola, soy el padre y me pongo a esperar a mis hijos" << endl;
-			wait();
-			cout << "Padre: mis hijos murieron. Cantidad de autos en el estacionamiento: " << estacionamiento.getCantidadDeAutos() << endl;
-		}
-
 	}
-
 
 	return 0;
 }

@@ -29,8 +29,8 @@ void ProcesoSalida::liberarPlaza() {
 	for (int i = 0; i < this->estacionamiento->getTamanio(); i++) {
 		if (this->estacionamiento->getPlaza(i).deseaIrse()) {
 			long idDelAutoDesocupado = this->estacionamiento->desocuparLugar(i);
-			std::cout << "Salida " << numeroDeSalida << ": Yay! libere la plaza [" << i << "] ; id del auto que se fue [" << idDelAutoDesocupado << std::endl;
-			std::cout << "Salida " << numeroDeSalida << "Quedan " << this->estacionamiento->getCantidadDeAutos() << " autos en el estacionamiento" << endl;
+			std::cout << "Salida " << numeroDeSalida << ": Yay! libere la plaza [" << i << "] ; id del auto que se fue [" << idDelAutoDesocupado << "]" << std::endl;
+			std::cout << "Salida " << numeroDeSalida << ": Quedan " << this->estacionamiento->getCantidadDeAutos() << " autos en el estacionamiento" << endl;
 			liberoAlgo = true;
 			break;
 		}
@@ -39,7 +39,7 @@ void ProcesoSalida::liberarPlaza() {
 	this->estacionamiento->liberarLockPlazas();
 
 	if (!liberoAlgo) {
-		std::cout << "Salida " << numeroDeSalida << "No libere nada y quedan " << this->estacionamiento->getCantidadDeAutos() << " autos en el estacionamiento" << endl;
-		std::cout << "Salida " << numeroDeSalida << "El estacionamiento esta vacio? " << this->estacionamiento->estaVacio() << endl;
+		std::cout << "Salida " << numeroDeSalida << ": No libere nada y quedan " << this->estacionamiento->getCantidadDeAutos() << " autos en el estacionamiento" << endl;
+		std::cout << "Salida " << numeroDeSalida << ": El estacionamiento esta vacio? " << this->estacionamiento->estaVacio() << endl;
 	}
 }
