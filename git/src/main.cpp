@@ -1,5 +1,6 @@
 #include <iostream>
 #include <unistd.h>
+#include <sys/types.h>
 #include <stdlib.h>
 #include <stdio.h>
 #include "model/ProcesoEntrada.h"
@@ -57,8 +58,6 @@ int main(int argc, char **argv) {
 			}
 		}
 	}
-
-	string opcion;
 
 	if (id) {
 		id = fork();

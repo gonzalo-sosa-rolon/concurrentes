@@ -46,8 +46,9 @@ void ProcesoSalida::liberarPlaza() {
 			info << "Salida " << this->numeroDeSalida << ": Yay! libere la plaza [" << i << "] ; id del auto que se fue [" << idDelAutoDesocupado << "]";
 			Log::getLog()->logMensaje(info.str());
 
-			info.clear();
-			info << "Salida " << this->numeroDeSalida << this->numeroDeSalida << ": Quedan " << this->estacionamiento->getCantidadDeAutos()
+			info.str("");
+
+			info << "Salida " << this->numeroDeSalida << ": Quedan " << this->estacionamiento->getCantidadDeAutos()
 				 << " autos en el estacionamiento";
 
 			Log::getLog()->logMensaje(info.str());
@@ -65,7 +66,7 @@ void ProcesoSalida::liberarPlaza() {
 		info << "Salida "  << this->numeroDeSalida << ": No libere nada y quedan " << this->estacionamiento->getCantidadDeAutos() << " autos en el estacionamiento";
 
 		Log::getLog()->logMensaje(info.str());
-		info.clear();
+		info.str("");
 
 		info << "Salida "  << this->numeroDeSalida << ": El estacionamiento esta vacio? " << this->estacionamiento->estaVacio();
 		Log::getLog()->logMensaje(info.str());

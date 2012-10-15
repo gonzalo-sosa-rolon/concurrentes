@@ -39,7 +39,12 @@ void Log::logMensaje(const string mensaje) {
 	}
 
 	if (LOG_ARCHIVO) {
-		*this->archivo << getTimeStamp() << "INFO: " << mensaje << "\n";
+		//*this->archivo << getTimeStamp() << "INFO: " << mensaje << "\n";
+		stringstream ss;
+
+		ss << getTimeStamp() << "INFO: " << mensaje << "\n";
+		string mensajeAEscribir = ss.str();
+		this->archivo->write(mensajeAEscribir.c_str(), mensajeAEscribir.length());
 		this->archivo->flush();
 	}
 
