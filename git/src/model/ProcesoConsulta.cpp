@@ -20,15 +20,13 @@ string ProcesoConsulta::leerOpcion() {
 
 	string opcion;
 
-	while (true) {
+	while (!this->sigint_handler.getGracefulQuit()) {
 
 		cout << "Opcion: ";
 		cin.clear();
 		cin.ignore(cin.rdbuf()->in_avail());
 
 		cin >> opcion;
-
-		this->ejecutarOpcion(opcion);
 	}
 
 	return opcion;
@@ -47,6 +45,7 @@ void ProcesoConsulta::ejecutarOpcion(string opcion) {
 		break;
 	default:
 		cout << "Opcion incorrecta" << endl;
+		break;
 	}
 }
 
