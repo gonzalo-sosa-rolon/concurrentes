@@ -9,6 +9,9 @@
 #include	<sys/types.h>
 #include	<sys/ipc.h>
 #include	<sys/shm.h>
+#include <iostream>
+
+using namespace std;
 
 template<class T> class MemoriaCompartida {
 
@@ -42,9 +45,9 @@ template<class T> int MemoriaCompartida<T>::crear(char *archivo, char letra, int
 
 	// generacion de la clave
 	key_t clave = ftok(archivo, letra);
-	if (clave == -1)
+	if (clave == -1) {
 		return ERROR_FTOK;
-	else {
+	} else {
 		// creacion de la memoria compartida
 		this->shmId = shmget(clave, sizeof(T) * cant_registros, 0644 | IPC_CREAT);
 

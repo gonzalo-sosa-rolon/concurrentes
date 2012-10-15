@@ -20,14 +20,11 @@ string ProcesoConsulta::leerOpcion() {
 
 	string opcion;
 
-	while (!this->sigint_handler.getGracefulQuit()) {
+	cout << "Opcion: ";
+	cin.clear();
+	cin.ignore(cin.rdbuf()->in_avail());
 
-		cout << "Opcion: ";
-		cin.clear();
-		cin.ignore(cin.rdbuf()->in_avail());
-
-		cin >> opcion;
-	}
+	cin >> opcion;
 
 	return opcion;
 }
@@ -51,10 +48,12 @@ void ProcesoConsulta::ejecutarOpcion(string opcion) {
 
 void ProcesoConsulta::consultarCantidadDeAutos() {
 	cout << "Cantidad actual de autos : " << this->estacionamiento->getCantidadDeAutos() << endl;
+	cout.flush();
 }
 
 void ProcesoConsulta::consultarMontoFacturado() {
 	cout << "Monto facturado : " << this->estacionamiento->getCantidadFacturado() << endl;
+	cout.flush();
 }
 
 void ProcesoConsulta::ejecutar() {
@@ -64,11 +63,6 @@ void ProcesoConsulta::ejecutar() {
 	while (!this->sigint_handler.getGracefulQuit()) {
 		this->imprimirOpciones();
 		opcion = this->leerOpcion();
-
-		if (!this->sigint_handler.getGracefulQuit()) {
-			this->ejecutarOpcion(opcion);
-		} else {
-			cout << "La aplicacion ya no se encuentra en funcionamiento" << endl;
-		}
+		this->ejecutarOpcion(opcion);
 	}
 }

@@ -69,7 +69,6 @@ int main(int argc, char **argv) {
 		} else {
 			ProcesoConsulta procesoConsulta(&estacionamiento);
 			procesoConsulta.ejecutar();
-
 		}
 	}
 
