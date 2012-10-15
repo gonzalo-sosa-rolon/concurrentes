@@ -10,7 +10,7 @@ Log* Log::getLog() {
 		instancia = new Log();
 		lock = new Lock((char*) ARCHIVO_LOG);
 		archivo = new fstream();
-		archivo->open(ARCHIVO_LOG);
+		archivo->open(ARCHIVO_LOG, fstream::out | fstream::app);
 	}
 
 	return instancia;
@@ -39,11 +39,8 @@ void Log::logMensaje(const string mensaje) {
 	}
 
 	if (LOG_ARCHIVO) {
-		stringstream ss;
-		ss << getTimeStamp() << "INFO: " << mensaje << "\n";
 
-		string mensajeAEscribir = ss.str();
-		this->archivo->write(mensajeAEscribir.c_str(), mensajeAEscribir.length());
+		*this->archivo << getTimeStamp() << "INFO: " << mensaje << "\n";
 		this->archivo->flush();
 	}
 
