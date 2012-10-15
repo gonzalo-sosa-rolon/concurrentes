@@ -1,6 +1,6 @@
 #include "Estacionamiento.h"
 
-Estacionamiento::Estacionamiento(int tamanio, double precio) {
+Estacionamiento::Estacionamiento(int tamanio, int precio) {
 	this->tamanio = tamanio;
 	this->precio = precio;
 
@@ -23,7 +23,6 @@ void Estacionamiento::initPlazas() {
 	}
 }
 
-//TODO esto no se si va asi
 int Estacionamiento::crearOAtacharte() {
 	return this->plazas.crear((char*)"README.md", 'S', tamanio);
 }
@@ -66,8 +65,8 @@ void Estacionamiento::restarUnAuto() {
 	this->lockCantidadDeAutos->liberarLock();
 }
 
-double Estacionamiento::getCantidadFacturado() {
-	double resultado;
+int Estacionamiento::getCantidadFacturado() {
+	int resultado;
 
 	this->lockCantidadFacturado->tomarLock();
 	resultado = this->cantidadFacturado.leer(0);

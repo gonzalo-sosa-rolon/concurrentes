@@ -14,7 +14,7 @@ class Estacionamiento {
 
 private:
 	int tamanio;
-	double precio;
+	int precio;
 
 	MemoriaCompartida<double> cantidadFacturado;
 	Lock* lockCantidadFacturado;
@@ -26,12 +26,12 @@ private:
 	Lock** lockPlazas;
 
 public:
-	Estacionamiento(int tamanio, double precio);
+	Estacionamiento(int tamanio, int precio);
 	virtual ~Estacionamiento();
 
 	int getCantidadDeAutos();
 
-	double getCantidadFacturado();
+	int getCantidadFacturado();
 	bool estaLLeno();
 	bool estaVacio();
 	int getTamanio();

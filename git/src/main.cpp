@@ -18,12 +18,14 @@ using namespace std;
 int main(int argc, char **argv) {
 
 	srand(time(NULL));
-	int tiempo = 5;
+	int tiempo;
+	int capacidad;
+	int precio;
 
-	//TODO esto habria que pasar a una clase que lance los procesos
+	ParserParametros::parsear(argc, argv, &tiempo, &precio, &capacidad);
 
 	pid_t id;
-	Estacionamiento estacionamiento(10, 20); //dummy values
+	Estacionamiento estacionamiento(10, 20);
 	pid_t entradas[CANTIDAD_ENTRADAS], salidas[CANTIDAD_SALIDAS];
 
 	for (int i = 0; i < CANTIDAD_ENTRADAS; i++) {
