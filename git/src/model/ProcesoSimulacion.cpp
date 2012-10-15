@@ -1,7 +1,9 @@
 #include "ProcesoSimulacion.h"
 
-ProcesoSimulacion::ProcesoSimulacion(int tiempoEjecucion, pid_t* entradas, pid_t* salidas) {
+ProcesoSimulacion::ProcesoSimulacion(int tiempoEjecucion, Estacionamiento* estacionamiento, pid_t* entradas, pid_t* salidas, pid_t consulta) {
 	this->tiempoEjecucion = tiempoEjecucion;
+	this->estacionamiento = estacionamiento;
+	this->consulta = consulta;
 
 	for (int i = 0; i < CANTIDAD_ENTRADAS; i++) {
 		this->entradas[i] = entradas[i];
@@ -22,14 +24,13 @@ void ProcesoSimulacion::ejecutar() {
 	sleep(tiempoEjecucion);
 
 	for (int i = 0; i < CANTIDAD_SALIDAS; i++) {
-		cout << "Enviando señal a salida [" << salidas[i] << "]" << endl ;
 		kill(salidas[i], SIGINT);
 	}
 
 	for (int i = 0; i < CANTIDAD_ENTRADAS; i++) {
-		cout << "Enviando señal a entrada [" << entradas[i] << "]" << endl;
 		kill(entradas[i], SIGINT);
 	}
 
+	kill(consulta, SIGINT);
 	cout << "Finalizacion de la ejecucion" << endl;
 }

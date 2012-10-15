@@ -4,13 +4,13 @@ Estacionamiento::Estacionamiento(int tamanio, int precio) {
 	this->tamanio = tamanio;
 	this->precio = precio;
 
-	this->cantidadDeAutos.crear((char*)PATH_MEMORIA_COMPARTIDA, 'a', 1);
+	this->cantidadDeAutos.crear((char*) PATH_MEMORIA_COMPARTIDA, 'a', 1);
 	this->cantidadDeAutos.escribir(0, 0);
 
-	this->cantidadFacturado.crear((char*)PATH_MEMORIA_COMPARTIDA, 'b', 1);
+	this->cantidadFacturado.crear((char*) PATH_MEMORIA_COMPARTIDA, 'b', 1);
 	this->cantidadFacturado.escribir(0, 0);
 
-	this->plazas.crear((char*)PATH_MEMORIA_COMPARTIDA, 'S', tamanio);
+	this->plazas.crear((char*) PATH_MEMORIA_COMPARTIDA, 'S', tamanio);
 	initPlazas();
 	innitLocks();
 }
@@ -24,7 +24,7 @@ void Estacionamiento::initPlazas() {
 }
 
 int Estacionamiento::crearOAtacharte() {
-	return this->plazas.crear((char*)"README.md", 'S', tamanio);
+	return this->plazas.crear((char*) "README.md", 'S', tamanio);
 }
 
 int Estacionamiento::getTamanio() {
@@ -121,13 +121,12 @@ Plaza Estacionamiento::getPlaza(int pos) {
 
 void Estacionamiento::facturar(int tiempo) {
 
-	double cantidadFacturada = tiempo * this->precio;
-
+	int cantidadFacturada = tiempo * this->precio;
 	this->incrementarFacturacion(cantidadFacturada);
 }
 
-void Estacionamiento::incrementarFacturacion(double cantidadFacturada) {
-	double resultado = this->cantidadFacturado.leer(0) + cantidadFacturada;
+void Estacionamiento::incrementarFacturacion(int cantidadFacturada) {
+	int resultado = this->cantidadFacturado.leer(0) + cantidadFacturada;
 	this->cantidadFacturado.escribir(0, resultado);
 }
 

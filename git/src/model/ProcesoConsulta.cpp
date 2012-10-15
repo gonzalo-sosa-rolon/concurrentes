@@ -2,6 +2,8 @@
 
 ProcesoConsulta::ProcesoConsulta(Estacionamiento* estacionamiento) {
 	this->estacionamiento = estacionamiento;
+
+	SignalHandler::getInstance()->registrarHandler(SIGINT, &sigint_handler);
 }
 
 ProcesoConsulta::~ProcesoConsulta() {
@@ -60,9 +62,14 @@ void ProcesoConsulta::ejecutar() {
 
 	string opcion;
 
-	while (true) {
+	while (!this->sigint_handler.getGracefulQuit()) {
 		this->imprimirOpciones();
 		opcion = this->leerOpcion();
-		this->ejecutarOpcion(opcion);
+
+		if (!this->sigint_handler.getGracefulQuit()) {
+			this->ejecutarOpcion(opcion);
+		} else {
+			cout << "La aplicacion ya no se encuentra en funcionamiento" << endl;
+		}
 	}
 }

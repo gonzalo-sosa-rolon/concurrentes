@@ -6,7 +6,9 @@
 #include "Plaza.h"
 #include "../util/Lock.h"
 #include "../MemoriaCompartida.h"
-#include<sstream>
+#include <sstream>
+#include <string>
+#include <iostream>
 
 using namespace std;
 
@@ -54,12 +56,11 @@ public:
 
 	Plaza getPlaza(int pos);
 	Lock* getLockPlaza(int pos);
-
 private:
 	void innitLocks();
 	char* getNombreLockPlaza(int i);
 	void facturar(int tiempo);
-	void incrementarFacturacion(double cantidadFacturada);
+	void incrementarFacturacion(int cantidadFacturada);
 	void sumarUnAuto();
 	void restarUnAuto();
 };

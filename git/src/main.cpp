@@ -25,7 +25,8 @@ int main(int argc, char **argv) {
 	ParserParametros::parsear(argc, argv, &tiempo, &precio, &capacidad);
 
 	pid_t id;
-	Estacionamiento estacionamiento(10, 20);
+
+	Estacionamiento estacionamiento(capacidad, precio);
 	pid_t entradas[CANTIDAD_ENTRADAS], salidas[CANTIDAD_SALIDAS];
 
 	for (int i = 0; i < CANTIDAD_ENTRADAS; i++) {
@@ -62,9 +63,13 @@ int main(int argc, char **argv) {
 	if (id) {
 		id = fork();
 
-		if (!id) {
-			ProcesoSimulacion procesoSimulacion(tiempo, entradas, salidas);
+		if (id) {
+			ProcesoSimulacion procesoSimulacion(tiempo, &estacionamiento, entradas, salidas, id);
 			procesoSimulacion.ejecutar();
+		} else {
+			ProcesoConsulta procesoConsulta(&estacionamiento);
+			procesoConsulta.ejecutar();
+
 		}
 	}
 

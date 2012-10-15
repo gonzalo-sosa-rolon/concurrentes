@@ -5,13 +5,17 @@
 #include <iostream>
 #include <string>
 #include "../model/Estacionamiento.h"
+#include "../signals/EventHandler.h"
+#include "../signals/SignalHandler.h"
+#include "../signals/SIGINT_Handler.h"
+
 
 using namespace std;
 
 class ProcesoConsulta: public Proceso {
-
 private:
 	Estacionamiento* estacionamiento;
+	SIGINT_Handler sigint_handler;
 public:
 	ProcesoConsulta(Estacionamiento* estacionamiento);
 	virtual ~ProcesoConsulta();
