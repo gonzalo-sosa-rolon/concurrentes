@@ -21,7 +21,6 @@ public:
 	}
 
 	virtual int handleSignal(int signum) {
-		std::cout << "Cache la señal, pid: " << getpid() << std::endl;
 		assert( signum == SIGINT);
 		this->gracefulQuit = 1;
 		return 0;
