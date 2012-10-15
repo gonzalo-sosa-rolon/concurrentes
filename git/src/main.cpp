@@ -58,6 +58,7 @@ int main(int argc, char **argv) {
 	if (id) {
 		id = fork();
 
+		// ver porque no mata a los hijos
 		if (id) {
 			ProcesoSimulacion procesoSimulacion(tiempo, entradas, salidas);
 			procesoSimulacion.ejecutar();

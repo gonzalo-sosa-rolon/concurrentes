@@ -40,6 +40,7 @@ void Log::logMensaje(const string mensaje) {
 
 	if (LOG_ARCHIVO) {
 		*this->archivo << getTimeStamp() << "INFO: " << mensaje << "\n";
+		this->archivo->flush();
 	}
 
 	this->lock->liberarLock();
@@ -55,6 +56,7 @@ void Log::logError(const string& error) {
 
 	if (LOG_ARCHIVO) {
 		*this->archivo << getTimeStamp() << "ERROR: " << error << "\n";
+		this->archivo->flush();
 	}
 
 	this->lock->liberarLock();
