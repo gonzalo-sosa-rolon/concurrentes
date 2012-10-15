@@ -63,6 +63,7 @@ private:
 	void incrementarFacturacion(int cantidadFacturada);
 	void sumarUnAuto();
 	void restarUnAuto();
+	void eliminarLocks();
 };
 
 

@@ -31,6 +31,7 @@ Estacionamiento::~Estacionamiento() {
 	this->cantidadDeAutos.liberar();
 	this->cantidadFacturado.liberar();
 	this->plazas.liberar();
+	eliminarLocks();
 }
 
 int Estacionamiento::getCantidadDeAutos() {
@@ -138,6 +139,17 @@ void Estacionamiento::innitLocks() {
 	for (int i = 0; i < tamanio; i++) {
 		lockPlazas[i] = new Lock(getNombreLockPlaza(i));
 	}
+}
+
+void Estacionamiento::eliminarLocks() {
+
+	delete lockCantidadFacturado;
+	delete lockCantidadDeAutos;
+
+	for (int i = 0; i < tamanio; i++) {
+		delete lockPlazas[i];
+	}
+	delete lockPlazas;
 }
 
 char* Estacionamiento::getNombreLockPlaza(int i) {
