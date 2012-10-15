@@ -23,15 +23,13 @@ void Estacionamiento::initPlazas() {
 	}
 }
 
-int Estacionamiento::crearOAtacharte() {
-	return this->plazas.crear((char*) "README.md", 'S', tamanio);
-}
-
 int Estacionamiento::getTamanio() {
 	return tamanio;
 }
 
 Estacionamiento::~Estacionamiento() {
+	this->cantidadDeAutos.liberar();
+	this->cantidadFacturado.liberar();
 	this->plazas.liberar();
 }
 
