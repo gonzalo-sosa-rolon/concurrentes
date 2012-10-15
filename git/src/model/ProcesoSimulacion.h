@@ -20,7 +20,7 @@ private:
 	pid_t entradas[CANTIDAD_ENTRADAS], salidas[CANTIDAD_SALIDAS];
 public:
 
-	ProcesoSimulacion(int tiempoEjecucion, pid_t entradas[], pid_t salidas[]);
+	ProcesoSimulacion(int tiempoEjecucion, pid_t* entradas, pid_t* salidas);
 	virtual ~ProcesoSimulacion();
 	virtual void ejecutar();
 };

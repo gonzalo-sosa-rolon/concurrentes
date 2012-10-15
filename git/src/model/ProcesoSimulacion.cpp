@@ -1,6 +1,6 @@
 #include "ProcesoSimulacion.h"
 
-ProcesoSimulacion::ProcesoSimulacion(int tiempoEjecucion, pid_t entradas[], pid_t salidas[]) {
+ProcesoSimulacion::ProcesoSimulacion(int tiempoEjecucion, pid_t* entradas, pid_t* salidas) {
 	this->tiempoEjecucion = tiempoEjecucion;
 
 	for (int i = 0; i < CANTIDAD_ENTRADAS; i++) {

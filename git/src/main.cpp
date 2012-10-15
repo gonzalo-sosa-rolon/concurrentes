@@ -33,8 +33,9 @@ int main(int argc, char **argv) {
 		if (!id) {
 			ProcesoEntrada procesoEntrada(i + 1, &estacionamiento);
 			procesoEntrada.ejecutar();
-			entradas[i] = id;
 			break;
+		} else {
+			entradas[i] = id;
 		}
 	}
 
@@ -47,8 +48,9 @@ int main(int argc, char **argv) {
 			if (!id) {
 				ProcesoSalida procesoSalida(i + 1, &estacionamiento);
 				procesoSalida.ejecutar();
-				salidas[i] = id;
 				break;
+			} else {
+				salidas[i] = id;
 			}
 		}
 	}
@@ -58,8 +60,7 @@ int main(int argc, char **argv) {
 	if (id) {
 		id = fork();
 
-		// ver porque no mata a los hijos
-		if (id) {
+		if (!id) {
 			ProcesoSimulacion procesoSimulacion(tiempo, entradas, salidas);
 			procesoSimulacion.ejecutar();
 		}
