@@ -53,7 +53,12 @@ bool ProcesoEntrada::ocuparPlaza() {
 	for (int i = 0; i < this->estacionamiento->getTamanio(); i++) {
 		Lock* lockPlaza = this->estacionamiento->getLockPlaza(i);
 
-		lockPlaza->tomarLock();
+		int error = lockPlaza->tomarLock();
+
+		if (error) {
+			cerr << "Error: se produjo un error al intentar tomar el lock de la plaza " << i +1 << endl;
+			exit(-1);
+		}
 
 		if (!this->estacionamiento->getPlaza(i).getOcupado()) {
 			long id = NumberUtil::getRandom(RAND_MAX);
@@ -63,10 +68,20 @@ bool ProcesoEntrada::ocuparPlaza() {
 			info << "Entrada " << numeroDeEntrada << ": Yay! ocupe la plaza [" << i << "] id del auto [" << id << "]";
 			Log::getLog()->logMensaje(info.str());
 			resultado = true;
-			lockPlaza->liberarLock();
+			error = lockPlaza->liberarLock();
+
+			if (error) {
+				cerr << "Error: se produjo un error al intentar liberar el lock de la plaza " << i +1 << endl;
+				exit(-1);
+			}
 			break;
 		}
-		lockPlaza->liberarLock();
+		error = lockPlaza->liberarLock();
+
+		if (error) {
+			cerr << "Error: se produjo un error al intentar liberar el lock de la plaza " << i +1 << endl;
+			exit(-1);
+		}
 	}
 
 	return resultado;

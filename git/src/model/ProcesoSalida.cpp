@@ -1,4 +1,5 @@
 #include "ProcesoSalida.h"
+#include <stdlib.h>
 
 
 ProcesoSalida::ProcesoSalida(int numeroDeSalida, Estacionamiento* estacionamiento) {
@@ -37,7 +38,12 @@ void ProcesoSalida::liberarPlaza() {
 	for (int i = 0; i < this->estacionamiento->getTamanio(); i++) {
 
 		Lock* lockPlaza = this->estacionamiento->getLockPlaza(i);
-		lockPlaza->tomarLock();
+		int error = lockPlaza->tomarLock();
+
+		if (error) {
+			cerr << "Error: se produjo un error al intentar tomar el lock de la plaza " << i +1 << endl;
+			exit(-1);
+		}
 
 		if (this->estacionamiento->getPlaza(i).deseaIrse()) {
 			long idDelAutoDesocupado = this->estacionamiento->desocuparLugar(i);
@@ -54,11 +60,21 @@ void ProcesoSalida::liberarPlaza() {
 			Log::getLog()->logMensaje(info.str());
 
 			liberoAlgo = true;
-			lockPlaza->liberarLock();
+			error = lockPlaza->liberarLock();
+
+			if (error) {
+				cerr << "Error: se produjo un error al intentar liberar el lock de la plaza " << i +1 << endl;
+				exit(-1);
+			}
 			break;
 		}
 
-		lockPlaza->liberarLock();
+		error = lockPlaza->liberarLock();
+
+		if (error) {
+			cerr << "Error: se produjo un error al intentar liberar el lock de la plaza " << i +1 << endl;
+			exit(-1);
+		}
 	}
 
 	if (!liberoAlgo) {
