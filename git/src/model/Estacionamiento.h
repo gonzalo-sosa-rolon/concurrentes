@@ -64,6 +64,9 @@ private:
 	void sumarUnAuto();
 	void restarUnAuto();
 	void eliminarLocks();
+private:
+	void imprimirError(int error);
+	void imprimirErrorLock();
 };
 
 

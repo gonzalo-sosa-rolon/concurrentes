@@ -30,7 +30,7 @@ public:
 	void liberar();
 	void escribir(int pos, T dato);
 	T leer(int pos);
-
+	void imprimirError(int error);
 };
 
 template<class T> MemoriaCompartida<T>::MemoriaCompartida() {
