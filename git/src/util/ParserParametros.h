@@ -5,7 +5,7 @@
 
 #define TIEMPO 15
 #define PRECIO_HORA 5
-#define CAPACIDAD 9
+#define CAPACIDAD 200
 
 #include <getopt.h>
 
