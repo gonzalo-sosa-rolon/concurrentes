@@ -17,7 +17,12 @@ private:
 	int numeroDeSalida;
 	SIGINT_Handler sigint_handler;
 	Estacionamiento* estacionamiento;
-	void liberarPlaza();
+	void buscarYSacarAuto();
+	bool recorrerEstacionamiento();
+	void liberarPlaza(int i);
+
+	Lock* tomarLockPlaza(int nroDePlaza);
+	void liberarLockPlaza(int nroDePlaza, Lock* lockPlaza);
 public:
 	ProcesoSalida(int numeroDeSalida, Estacionamiento* estacionamiento);
 	virtual ~ProcesoSalida();

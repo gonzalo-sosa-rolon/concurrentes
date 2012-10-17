@@ -65,6 +65,10 @@ int main(int argc, char **argv) {
 		if (id) {
 			ProcesoSimulacion procesoSimulacion(tiempo, &estacionamiento, entradas, salidas, id);
 			procesoSimulacion.ejecutar();
+			for (int i = 0; i < 6; i++) {
+
+				wait();
+			}
 		} else {
 			ProcesoConsulta procesoConsulta(&estacionamiento);
 			procesoConsulta.ejecutar();

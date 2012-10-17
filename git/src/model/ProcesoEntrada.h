@@ -21,6 +21,10 @@ private:
 	SIGINT_Handler sigint_handler;
 
 	bool ocuparPlaza();
+	void logOcupePlaza(int nroPlaza, int idAuto);
+	Lock* tomarLockPlaza(int nroDePlaza);
+	void liberarLockPlaza(int nroDePlaza, Lock* lockPlaza);
+
 public:
 	ProcesoEntrada(int numeroDeEntrada, Estacionamiento* estacionamiento);
 	virtual ~ProcesoEntrada();

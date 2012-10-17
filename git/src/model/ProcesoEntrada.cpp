@@ -13,20 +13,13 @@ ProcesoEntrada::~ProcesoEntrada() {
 }
 
 void ProcesoEntrada::ejecutar() {
-
 	while (!this->sigint_handler.getGracefulQuit()) {
 
 		if (!this->estacionamiento->estaLLeno()) {
 
-			if (ocuparPlaza()) {
-
-				stringstream info;
-				info << "Entrada " << numeroDeEntrada << ": Acabo de ocupar una plaza, hay " << this->estacionamiento->getCantidadDeAutos() << " Autos en el estacionamiento";
-				Log::getLog()->logMensaje(info.str());
-
-			} else {
+			if (!ocuparPlaza()) {
 				stringstream error;
-				error << "Entrada " << this->numeroDeEntrada << "algo anda mal, el estacionamiento no esta lleno pero no pude ingresar ";
+				error << "Entrada " << this->numeroDeEntrada << "algo anda mal, el estacionamiento no esta lleno pero no pude ingresar un auto";
 				Log::getLog()->logError(error.str());
 			}
 
@@ -45,45 +38,57 @@ void ProcesoEntrada::ejecutar() {
 }
 
 bool ProcesoEntrada::ocuparPlaza() {
-
 	bool resultado = false;
-
 	int tiempo = NumberUtil::getRandom(1, 3);
 
 	for (int i = 0; i < this->estacionamiento->getTamanio(); i++) {
-		Lock* lockPlaza = this->estacionamiento->getLockPlaza(i);
-
-		int error = lockPlaza->tomarLock();
-
-		if (error) {
-			cerr << "Error: se produjo un error al intentar tomar el lock de la plaza " << i +1 << endl;
-			exit(-1);
-		}
+		Lock* lockPlaza = ProcesoEntrada::tomarLockPlaza(i);
 
 		if (!this->estacionamiento->getPlaza(i).getOcupado()) {
 			long id = NumberUtil::getRandom(RAND_MAX);
 			this->estacionamiento->ocuparPlaza(i, tiempo, id);
 
-			stringstream info;
-			info << "Entrada " << numeroDeEntrada << ": Yay! ocupe la plaza [" << i << "] id del auto [" << id << "]";
-			Log::getLog()->logMensaje(info.str());
-			resultado = true;
-			error = lockPlaza->liberarLock();
+			logOcupePlaza(i, id);
 
-			if (error) {
-				cerr << "Error: se produjo un error al intentar liberar el lock de la plaza " << i +1 << endl;
-				exit(-1);
-			}
+			liberarLockPlaza(i, lockPlaza);
+			resultado = true;
+
 			break;
 		}
-		error = lockPlaza->liberarLock();
-
-		if (error) {
-			cerr << "Error: se produjo un error al intentar liberar el lock de la plaza " << i +1 << endl;
-			exit(-1);
-		}
+		liberarLockPlaza(i, lockPlaza);
 	}
 
 	return resultado;
+}
+
+void ProcesoEntrada::logOcupePlaza(int nroPlaza, int idAuto) {
+	stringstream info;
+	info << "Entrada " << numeroDeEntrada << ": Ocupe la plaza [" << nroPlaza << "] id del auto [" << idAuto << "]"
+			<< " Cantidad de autos en el estacionamiento [" << this->estacionamiento->getCantidadDeAutos() << "]";
+	Log::getLog()->logMensaje(info.str());
+}
+
+Lock* ProcesoEntrada::tomarLockPlaza(int nroDePlaza) {
+	Lock* lockPlaza = this->estacionamiento->getLockPlaza(nroDePlaza);
+	int error = lockPlaza->tomarLock();
+
+	if (error) {
+		stringstream errorMsg;
+		errorMsg << "Entrada " << this->numeroDeEntrada << ": Se produjo un error al intentar tomar el lock de la plaza " << nroDePlaza + 1 << endl;
+		Log::getLog()->logError(errorMsg.str());
+		exit(error);
+	}
+	return lockPlaza;
+}
+
+void ProcesoEntrada::liberarLockPlaza(int nroDePlaza, Lock* lockPlaza) {
+	int error = lockPlaza->liberarLock();
+
+	if (error) {
+		stringstream errorMsg;
+		errorMsg << "Entrada " << this->numeroDeEntrada << ": Se produjo un error al intentar liberar el lock de la plaza " << nroDePlaza + 1 << endl;
+		Log::getLog()->logError(errorMsg.str());
+		exit(error);
+	}
 }
 
