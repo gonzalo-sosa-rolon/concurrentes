@@ -4,9 +4,9 @@ void ParserParametros::parsear(int argc, char **argv, int* tiempo, int* precio,
 		int* capacidad) {
 
 	char opcion = 0;
-	int tiempoPorParametro = TIEMPO;
-	int precioPorParametro = PRECIO_HORA;
-	int capacidadPorParametro = CAPACIDAD;
+	int tiempoPorParametro = TIEMPO_DEFAULT;
+	int precioPorParametro = PRECIO_HORA_DEFAULT;
+	int capacidadPorParametro = CAPACIDAD_DEFAULT;
 
 	while ((opcion = getopt(argc, argv, "t:c:p:")) != -1) {
 

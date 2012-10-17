@@ -14,7 +14,7 @@ private:
 	char nombre[255];
 
 public:
-	Lock(char* nombre);
+	Lock(const char* nombre);
 	virtual ~Lock();
 
 	int tomarLock();

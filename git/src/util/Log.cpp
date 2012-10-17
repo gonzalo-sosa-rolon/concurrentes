@@ -4,13 +4,15 @@ Log* Log::instancia = NULL;
 Lock* Log::lock = NULL;
 fstream* Log::archivo = NULL;
 
+const char* Log::LOG_FILE_NAME = "log.txt";
+
 Log* Log::getLog() {
 
 	if (!instancia) {
 		instancia = new Log();
-		lock = new Lock((char*) ARCHIVO_LOG);
+		lock = new Lock(Log::LOG_FILE_NAME);
 		archivo = new fstream();
-		archivo->open(ARCHIVO_LOG, fstream::out | fstream::app);
+		archivo->open(Log::LOG_FILE_NAME, fstream::out | fstream::app);
 	}
 
 	return instancia;

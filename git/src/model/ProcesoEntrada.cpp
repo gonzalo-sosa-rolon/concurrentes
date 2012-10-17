@@ -29,7 +29,7 @@ void ProcesoEntrada::ejecutar() {
 			Log::getLog()->logMensaje(info.str());
 		}
 
-		sleep(NumberUtil::getRandom(1, 3));
+		sleep(NumberUtil::getRandom(ParserParametros::ENTRADA_SLEEP_MIN_DEFAULT, ParserParametros::ENTRADA_SLEEP_MAX_DEFAULT));
 	}
 
 	stringstream info;
@@ -39,7 +39,7 @@ void ProcesoEntrada::ejecutar() {
 
 bool ProcesoEntrada::ocuparPlaza() {
 	bool resultado = false;
-	int tiempo = NumberUtil::getRandom(1, 3);
+	int tiempo = NumberUtil::getRandom(ParserParametros::TIEMPO_ESTADIA_MIN_DEFAULT, ParserParametros::TIEMPO_ESTADIA_MAX_DEFAULT);
 
 	for (int i = 0; i < this->estacionamiento->getTamanio(); i++) {
 		Lock* lockPlaza = ProcesoEntrada::tomarLockPlaza(i);
@@ -63,7 +63,7 @@ bool ProcesoEntrada::ocuparPlaza() {
 
 void ProcesoEntrada::logOcupePlaza(int nroPlaza, int idAuto) {
 	stringstream info;
-	info << "Entrada " << numeroDeEntrada << ": Ocupe la plaza [" << nroPlaza << "] id del auto [" << idAuto << "]"
+	info << "Entrada " << numeroDeEntrada << ": Ocupé la plaza [" << nroPlaza << "] Id del auto [" << idAuto << "]"
 			<< " Cantidad de autos en el estacionamiento [" << this->estacionamiento->getCantidadDeAutos() << "]";
 	Log::getLog()->logMensaje(info.str());
 }

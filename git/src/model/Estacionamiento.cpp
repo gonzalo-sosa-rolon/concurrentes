@@ -1,12 +1,16 @@
 #include "Estacionamiento.h"
 #include <stdlib.h>
 
+
+
+const char* Estacionamiento::PATH_TOKEN_MEMORIA_COMPARTIDA = "/bin/ls";
+
 Estacionamiento::Estacionamiento(int tamanio, int precio) {
 	this->tamanio = tamanio;
 	this->precio = precio;
 
 	int error;
-	error = this->cantidadDeAutos.crear((char*) PATH_MEMORIA_COMPARTIDA, 'a', 1);
+	error = this->cantidadDeAutos.crear(Estacionamiento::PATH_TOKEN_MEMORIA_COMPARTIDA, 'a', 1);
 
 	if (error) {
 		imprimirError(error);
@@ -15,7 +19,7 @@ Estacionamiento::Estacionamiento(int tamanio, int precio) {
 
 	this->cantidadDeAutos.escribir(0, 0);
 
-	error = this->cantidadFacturado.crear((char*) PATH_MEMORIA_COMPARTIDA, 'b', 1);
+	error = this->cantidadFacturado.crear(Estacionamiento::PATH_TOKEN_MEMORIA_COMPARTIDA, 'b', 1);
 
 	if (error) {
 		imprimirError(error);
@@ -24,7 +28,7 @@ Estacionamiento::Estacionamiento(int tamanio, int precio) {
 
 	this->cantidadFacturado.escribir(0, 0);
 
-	error = this->plazas.crear((char*) PATH_MEMORIA_COMPARTIDA, 'S', tamanio);
+	error = this->plazas.crear(Estacionamiento::PATH_TOKEN_MEMORIA_COMPARTIDA, 'S', tamanio);
 
 	if (error) {
 		imprimirError(error);
@@ -62,7 +66,7 @@ int Estacionamiento::getCantidadDeAutos() {
 
 	if (error) {
 		imprimirErrorLock();
-		exit(-1);
+		exit(error);
 	}
 
 	resultado = this->cantidadDeAutos.leer(0);
@@ -70,7 +74,7 @@ int Estacionamiento::getCantidadDeAutos() {
 
 	if (error) {
 		imprimirErrorLock();
-		exit(-1);
+		exit(error);
 	}
 
 	return resultado;
@@ -82,7 +86,7 @@ void Estacionamiento::sumarUnAuto() {
 
 	if (error) {
 		imprimirErrorLock();
-		exit(-1);
+		exit(error);
 	}
 
 	int resultado = this->cantidadDeAutos.leer(0);
@@ -92,7 +96,7 @@ void Estacionamiento::sumarUnAuto() {
 
 	if (error) {
 		imprimirErrorLock();
-		exit(-1);
+		exit(error);
 	}
 }
 
@@ -102,7 +106,7 @@ void Estacionamiento::restarUnAuto() {
 
 	if (error) {
 		imprimirErrorLock();
-		exit(-1);
+		exit(error);
 	}
 
 	int resultado = this->cantidadDeAutos.leer(0);
@@ -112,7 +116,7 @@ void Estacionamiento::restarUnAuto() {
 
 	if (error) {
 		imprimirErrorLock();
-		exit(-1);
+		exit(error);
 	}
 }
 
@@ -126,7 +130,7 @@ int Estacionamiento::getCantidadFacturado() {
 
 	if (error) {
 		imprimirErrorLock();
-		exit(-1);
+		exit(error);
 	}
 
 	return resultado;
@@ -176,9 +180,9 @@ Plaza Estacionamiento::getPlaza(int pos) {
 	return this->plazas.leer(pos);
 }
 
-void Estacionamiento::facturar(int tiempo) {
+void Estacionamiento::facturar(int segundos) {
 
-	int cantidadFacturada = tiempo * this->precio;
+	int cantidadFacturada = segundos * this->precio / ParserParametros::SEGUNDOS_POR_HORA_DEFAULT;
 	this->incrementarFacturacion(cantidadFacturada);
 }
 
@@ -219,18 +223,18 @@ char* Estacionamiento::getNombreLockPlaza(int i) {
 
 
 void Estacionamiento::imprimirErrorLock() {
-	cerr << "Error: se ha producido un error al intentar tomar o liberar un lock." << endl;
+	Log::getLog()->logError("Error: se ha producido un error al intentar tomar o liberar un lock.");
 }
 
 void Estacionamiento::imprimirError(int error) {
 
 	if (error == ERROR_FTOK) {
-		cerr << "Error:  se ha producido un error al intentar crear la memoria compartida. Verifique que el archivo seleccionado para el token exista" << endl;
+		Log::getLog()->logError("Error:  se ha producido un error al intentar crear la memoria compartida. Verifique que el archivo seleccionado para el token exista");
 	} else if (error == ERROR_SHMGET) {
-		cerr << "Error: se ha producido un error al intentar alocar memoria compartida" << endl;
+		Log::getLog()->logError("Error: se ha producido un error al intentar alocar memoria compartida");
 	} else if (error == ERROR_SHMAT) {
-		cerr << "Error: se ha producido un error al intentar adjuntar el segmento de memoria compartida" << endl;
+		Log::getLog()->logError("Error: se ha producido un error al intentar adjuntar el segmento de memoria compartida");
 	} else {
-		cerr << "Se ha producido un error desconocido" << endl;
+		Log::getLog()->logError("Se ha producido un error desconocido");
 	}
 }

@@ -7,11 +7,6 @@
 #include <sstream>
 #include <fstream>
 
-#define ARCHIVO_LOG "log.txt"
-
-#define LOG_CONSOLA false
-#define LOG_ARCHIVO true
-
 using namespace std;
 
 class Log {
@@ -19,8 +14,13 @@ private:
 	static Log* instancia;
 	static Lock* lock;
 	static fstream* archivo;
+	static const bool LOG_CONSOLA = false;
+	static const bool LOG_ARCHIVO = true;
 
 public:
+
+	static const char* LOG_FILE_NAME;
+
 	static Log* getLog();
 	void logMensaje(const string mensaje);
 	void logError(const string& error);

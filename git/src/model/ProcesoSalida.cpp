@@ -17,7 +17,7 @@ ProcesoSalida::~ProcesoSalida() {
 void ProcesoSalida::ejecutar() {
 	while ((!this->sigint_handler.getGracefulQuit()) || (!this->estacionamiento->estaVacio())) {
 		buscarYSacarAuto();
-		sleep(1);
+		sleep(ParserParametros::SEGUNDOS_POR_HORA_DEFAULT);
 	}
 
 	stringstream info;
@@ -69,7 +69,7 @@ void ProcesoSalida::liberarPlaza(int nroDePlaza) {
 	long idDelAutoDesocupado = this->estacionamiento->desocuparLugar(nroDePlaza);
 
 	stringstream info;
-	info << "Salida  " << this->numeroDeSalida << ": Libere la plaza [" << nroDePlaza << "] Id del auto que se fue [" << idDelAutoDesocupado
+	info << "Salida  " << this->numeroDeSalida << ": Liberé la plaza [" << nroDePlaza << "] Id del auto que se fue [" << idDelAutoDesocupado
 			<< "] Quedan [" << this->estacionamiento->getCantidadDeAutos() << "] autos en el estacionamiento"
 			<< ". Cantidad Facturada [" << this->estacionamiento->getCantidadFacturado() << "]";
 

@@ -1,6 +1,6 @@
 #include "Lock.h"
 
-Lock::Lock(char* nombre) {
+Lock::Lock(const char* nombre) {
 
 	strcpy(this->nombre, nombre);
 
