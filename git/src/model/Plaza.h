@@ -22,8 +22,8 @@ public:
 
 	long getAutoId();
 
-	int getTiempoEstadia();
 	bool getOcupado();
+	int getTiempoEstadia();
 	void setHoraIngreso(int horaIngreso);
 	void setId(int id);
 	void setOcupado(bool ocupado);

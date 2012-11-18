@@ -1,8 +1,6 @@
 #include "Estacionamiento.h"
 #include <stdlib.h>
 
-
-
 const char* Estacionamiento::PATH_TOKEN_MEMORIA_COMPARTIDA = "/bin/ls";
 
 Estacionamiento::Estacionamiento(int tamanio, int precio) {
@@ -56,6 +54,8 @@ Estacionamiento::~Estacionamiento() {
 	this->cantidadFacturado.liberar();
 	this->plazas.liberar();
 	eliminarLocks();
+
+	cout << getpid() << endl;
 }
 
 int Estacionamiento::getCantidadDeAutos() {
