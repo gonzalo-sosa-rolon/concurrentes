@@ -1,18 +1,19 @@
 #include <iostream>
-#include <unistd.h>
 #include <sys/types.h>
 #include <stdlib.h>
 #include <stdio.h>
+#include <string>
+#include <unistd.h>
+
+#include "model/Estacionamiento.h"
 #include "model/ProcesoEntrada.h"
+#include "model/ProcesoConsulta.h"
 #include "model/ProcesoSalida.h"
 #include "model/ProcesoSimulacion.h"
 #include "util/ParserParametros.h"
-#include "model/ProcesoConsulta.h"
-#include "model/Estacionamiento.h"
 #include "util/Lock.h"
 #include "util/Log.h"
 #include "util/NumberUtil.h"
-#include <string>
 
 using namespace std;
 

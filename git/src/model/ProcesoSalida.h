@@ -2,20 +2,17 @@
 #define PROCESOSALIDA_H_
 
 #include <iostream>
+#include <sstream>
+
 #include "Estacionamiento.h"
 #include "Proceso.h"
-#include "../signals/EventHandler.h"
-#include "../signals/SignalHandler.h"
-#include "../signals/SIGINT_Handler.h"
 #include "../util/Log.h"
-#include <sstream>
 
 using namespace std;
 
 class ProcesoSalida: Proceso {
 private:
 	int numeroDeSalida;
-	SIGINT_Handler sigint_handler;
 	Estacionamiento* estacionamiento;
 	void buscarYSacarAuto();
 	bool recorrerEstacionamiento();

@@ -1,13 +1,8 @@
 #include "ProcesoSalida.h"
-#include <stdlib.h>
-
 
 ProcesoSalida::ProcesoSalida(int numeroDeSalida, Estacionamiento* estacionamiento) {
 	this->numeroDeSalida  = numeroDeSalida;
 	this->estacionamiento = estacionamiento;
-
-	// se registra el event handler declarado antes
-	SignalHandler::getInstance()->registrarHandler(SIGINT, &sigint_handler);
 }
 
 ProcesoSalida::~ProcesoSalida() {
@@ -15,7 +10,7 @@ ProcesoSalida::~ProcesoSalida() {
 }
 
 void ProcesoSalida::ejecutar() {
-	while ((!this->sigint_handler.getGracefulQuit()) || (!this->estacionamiento->estaVacio())) {
+	while ((!this->terminarProceso()) || (!this->estacionamiento->estaVacio())) {
 		buscarYSacarAuto();
 		sleep(ParserParametros::SEGUNDOS_POR_HORA_DEFAULT);
 	}

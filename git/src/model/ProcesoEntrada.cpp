@@ -3,9 +3,6 @@
 ProcesoEntrada::ProcesoEntrada(int numeroDeEntrada, Estacionamiento* estacionamiento) {
 	this->numeroDeEntrada = numeroDeEntrada;
 	this->estacionamiento = estacionamiento;
-
-	// se registra el event handler declarado antes
-	SignalHandler::getInstance()->registrarHandler(SIGINT, &sigint_handler);
 }
 
 ProcesoEntrada::~ProcesoEntrada() {
@@ -13,7 +10,7 @@ ProcesoEntrada::~ProcesoEntrada() {
 }
 
 void ProcesoEntrada::ejecutar() {
-	while (!this->sigint_handler.getGracefulQuit()) {
+	while (!this->terminarProceso()) {
 
 		if (!this->estacionamiento->estaLLeno()) {
 
