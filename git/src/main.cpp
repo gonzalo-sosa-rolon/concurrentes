@@ -67,7 +67,7 @@ int main(int argc, char **argv) {
 			ProcesoSimulacion procesoSimulacion(tiempo, &estacionamiento, entradas, salidas, id);
 			procesoSimulacion.ejecutar();
 			for (int i = 0; i < 6; i++) {
-				wait();
+				wait(0);
 			}
 		} else {
 			ProcesoConsulta procesoConsulta(&estacionamiento);
