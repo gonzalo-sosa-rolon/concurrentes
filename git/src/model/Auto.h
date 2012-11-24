@@ -1,21 +1,18 @@
-/*
- * Auto.h
- *
- *  Created on: 21/11/2012
- *      Author: maxi
- */
-
 #ifndef AUTO_H_
 #define AUTO_H_
 
-#include "Proceso.h"
+#include "Estacionamiento.h"
 
-class Auto: public Proceso {
+class Auto {
+private:
+	Estacionamiento* estacionamiento;
 public:
-	Auto();
+	Auto(Estacionamiento* estacionamiento);
 	virtual ~Auto();
-	virtual void ejecutar();
-
+    bool solicitarLugar();
+    void aparcar();
+    void dirigirseAPlaza();
+    void dirigirseASalida();
 };
 
 #endif /* AUTO_H_ */

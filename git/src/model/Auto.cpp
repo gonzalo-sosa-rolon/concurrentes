@@ -1,22 +1,25 @@
-/*
- * Auto.cpp
- *
- *  Created on: 21/11/2012
- *      Author: maxi
- */
-
 #include "Auto.h"
 
-Auto::Auto() {
-	// TODO Auto-generated constructor stub
-
+Auto::Auto(Estacionamiento* estacionamiento) {
+	this->estacionamiento = estacionamiento;
 }
 
 Auto::~Auto() {
-	// TODO Auto-generated destructor stub
-}
-
-void Auto::ejecutar() {
 
 }
 
+bool Auto::solicitarLugar() {
+
+	return 0;
+}
+
+void Auto::aparcar() {
+
+}
+
+void Auto::dirigirseAPlaza() {
+
+}
+void Auto::dirigirseASalida() {
+
+}
