@@ -18,4 +18,15 @@ ProcesoAuto::~ProcesoAuto() {
 
 void ProcesoAuto::ejecutar() {
 
+	if (this->autoDelProceso->solicitarLugar()) {
+
+		if (this->autoDelProceso->solicitarPlaza()) {
+			this->autoDelProceso->entrar();
+			this->autoDelProceso->dirigirseAPlaza();
+
+			this->autoDelProceso->aparcar();
+			this->autoDelProceso->dirigirseASalida();
+			this->autoDelProceso->salir();
+		}
+	}
 }

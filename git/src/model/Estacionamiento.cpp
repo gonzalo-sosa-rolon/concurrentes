@@ -203,6 +203,34 @@ void Estacionamiento::innitLocks() {
 	}
 }
 
+bool Estacionamiento::solicitarLugar() {
+
+	bool resultado = false;
+
+	int error = this->lockCantidadDeAutos->tomarLock();
+
+	if (error) {
+		imprimirErrorLock();
+		exit(error);
+	}
+
+	int cantidad = this->cantidadDeAutos.leer(0);
+
+	if (cantidad < tamanio) {
+		this->cantidadDeAutos.escribir(0, ++cantidad);
+		resultado = true;
+	}
+
+	error = this->lockCantidadDeAutos->liberarLock();
+
+	if (error) {
+		imprimirErrorLock();
+		exit(error);
+	}
+
+	return resultado;
+}
+
 void Estacionamiento::eliminarLocks() {
 
 	delete lockCantidadFacturado;

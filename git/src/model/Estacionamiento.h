@@ -34,7 +34,7 @@ public:
 
 	Plaza getPlaza(int pos);
 	Lock* getLockPlaza(int pos);
-
+	bool solicitarLugar();
 private:
 	int tamanio;
 	int precio;

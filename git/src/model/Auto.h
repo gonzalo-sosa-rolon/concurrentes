@@ -9,10 +9,14 @@ private:
 public:
 	Auto(Estacionamiento* estacionamiento);
 	virtual ~Auto();
+
     bool solicitarLugar();
-    void aparcar();
+	void entrar();
+    bool solicitarPlaza();
     void dirigirseAPlaza();
+    void aparcar();
     void dirigirseASalida();
+    void salir();
 };
 
 #endif /* AUTO_H_ */
