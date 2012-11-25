@@ -18,9 +18,16 @@ ProcesoAuto::~ProcesoAuto() {
 
 void ProcesoAuto::ejecutar() {
 
-	if (this->autoDelProceso->solicitarLugar()) {
+	stringstream info;
+	info << "Proceso auto: auto solicita lugar" ;
+	Log::getLog()->logMensaje(info.str());
+	info.str("");
 
+	if (this->autoDelProceso->solicitarLugar()) {
 		if (this->autoDelProceso->solicitarPlaza()) {
+
+			//Auto toma plaza y entra info << "Proceso auto: el auto se retira porque el estacionamiento esta lleno";
+			Log::getLog()->logMensaje(info.str());
 			this->autoDelProceso->entrar();
 			this->autoDelProceso->dirigirseAPlaza();
 
@@ -28,5 +35,8 @@ void ProcesoAuto::ejecutar() {
 			this->autoDelProceso->dirigirseASalida();
 			this->autoDelProceso->salir();
 		}
+	} else {
+		info << "Proceso auto: el auto se retira porque el estacionamiento esta lleno";
+		Log::getLog()->logMensaje(info.str());
 	}
 }

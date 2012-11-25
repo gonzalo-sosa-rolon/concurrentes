@@ -4,6 +4,7 @@
 #include "Proceso.h"
 #include "Auto.h"
 #include "Estacionamiento.h"
+#include "../util/Log.h"
 
 class ProcesoAuto : public Proceso {
 private:

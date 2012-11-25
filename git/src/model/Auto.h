@@ -6,6 +6,8 @@
 class Auto {
 private:
 	Estacionamiento* estacionamiento;
+	long id;
+	int tiempo;
 public:
 	Auto(Estacionamiento* estacionamiento);
 	virtual ~Auto();
@@ -17,6 +19,11 @@ public:
     void aparcar();
     void dirigirseASalida();
     void salir();
+
+    void setId(long id);
+    long getId();
+
+    int getTiempo();
 };
 
 #endif /* AUTO_H_ */
