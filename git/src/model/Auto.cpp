@@ -17,7 +17,7 @@ bool Auto::solicitarLugar() {
 }
 
 void Auto::aparcar() {
-
+	sleep(this->tiempo);
 }
 
 void Auto::entrar() {

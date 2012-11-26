@@ -9,6 +9,7 @@
 #include "../util/Lock.h"
 #include "../util/Log.h"
 #include "../util/ParserParametros.h"
+#include "../util/Semaforo.h"
 
 using namespace std;
 
@@ -17,8 +18,9 @@ class Estacionamiento {
 public:
 
 	static const char* PATH_TOKEN_MEMORIA_COMPARTIDA;
+	static const char* PATH_TOKEN_SEMAFORO;
 
-	Estacionamiento(int tamanio, int precio);
+	Estacionamiento(int tamanio, int precio, int cantidadEntradas = 3, int cantidadSalidas = 2);
 	virtual ~Estacionamiento();
 
 	int getCantidadDeAutos();
@@ -35,9 +37,15 @@ public:
 	Plaza getPlaza(int pos);
 	Lock* getLockPlaza(int pos);
 	bool solicitarLugar();
+	bool solicitarEntrada();
+	bool liberarEntrada();
+	bool solicitarSalida();
+	bool liberarSalida();
 private:
 	int tamanio;
 	int precio;
+	int cantidadEntradas;
+	int cantidadSalidas;
 
 	MemoriaCompartida<double> cantidadFacturado;
 	Lock* lockCantidadFacturado;
@@ -47,8 +55,10 @@ private:
 
 	MemoriaCompartida<Plaza> plazas;
 	Lock** lockPlazas;
+	Semaforo *semaforoEntrada, *semaforoSalida;
 
 	void innitLocks();
+	void innitSemaforos();
 	char* getNombreLockPlaza(int i);
 	void facturar(int segundos);
 	void incrementarFacturacion(int cantidadFacturada);

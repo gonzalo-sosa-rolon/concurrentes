@@ -2,13 +2,18 @@
 #include <stdlib.h>
 
 const char* Estacionamiento::PATH_TOKEN_MEMORIA_COMPARTIDA = "/bin/ls";
+const char* Estacionamiento::PATH_TOKEN_SEMAFORO = "/bin/ps";
 
-Estacionamiento::Estacionamiento(int tamanio, int precio) {
+Estacionamiento::Estacionamiento(int tamanio, int precio, int cantidadEntradas,
+		int cantidadSalidas) {
 	this->tamanio = tamanio;
 	this->precio = precio;
+	this->cantidadEntradas = cantidadEntradas;
+	this->cantidadSalidas = cantidadSalidas;
 
 	int error;
-	error = this->cantidadDeAutos.crear(Estacionamiento::PATH_TOKEN_MEMORIA_COMPARTIDA, 'a', 1);
+	error = this->cantidadDeAutos.crear(
+			Estacionamiento::PATH_TOKEN_MEMORIA_COMPARTIDA, 'a', 1);
 
 	if (error) {
 		imprimirError(error);
@@ -17,7 +22,8 @@ Estacionamiento::Estacionamiento(int tamanio, int precio) {
 
 	this->cantidadDeAutos.escribir(0, 0);
 
-	error = this->cantidadFacturado.crear(Estacionamiento::PATH_TOKEN_MEMORIA_COMPARTIDA, 'b', 1);
+	error = this->cantidadFacturado.crear(
+			Estacionamiento::PATH_TOKEN_MEMORIA_COMPARTIDA, 'b', 1);
 
 	if (error) {
 		imprimirError(error);
@@ -26,7 +32,8 @@ Estacionamiento::Estacionamiento(int tamanio, int precio) {
 
 	this->cantidadFacturado.escribir(0, 0);
 
-	error = this->plazas.crear(Estacionamiento::PATH_TOKEN_MEMORIA_COMPARTIDA, 'S', tamanio);
+	error = this->plazas.crear(Estacionamiento::PATH_TOKEN_MEMORIA_COMPARTIDA,
+			'S', tamanio);
 
 	if (error) {
 		imprimirError(error);
@@ -35,6 +42,21 @@ Estacionamiento::Estacionamiento(int tamanio, int precio) {
 
 	initPlazas();
 	innitLocks();
+	innitSemaforos();
+}
+
+void Estacionamiento::innitSemaforos() {
+	this->semaforoEntrada = new Semaforo((char*) PATH_TOKEN_SEMAFORO, 0);
+
+	for (int i = 0; i < this->cantidadEntradas; i++) {
+		this->semaforoEntrada->v();
+	}
+
+	this->semaforoSalida = new Semaforo((char*) PATH_TOKEN_SEMAFORO, 1);
+
+	for (int i = 0; i < this->cantidadSalidas; i++) {
+		this->semaforoSalida->v();
+	}
 }
 
 void Estacionamiento::initPlazas() {
@@ -182,7 +204,8 @@ Plaza Estacionamiento::getPlaza(int pos) {
 
 void Estacionamiento::facturar(int segundos) {
 
-	int cantidadFacturada = segundos * this->precio / ParserParametros::SEGUNDOS_POR_HORA_DEFAULT;
+	int cantidadFacturada = segundos * this->precio
+			/ ParserParametros::SEGUNDOS_POR_HORA_DEFAULT;
 	this->incrementarFacturacion(cantidadFacturada);
 }
 
@@ -201,6 +224,22 @@ void Estacionamiento::innitLocks() {
 	for (int i = 0; i < tamanio; i++) {
 		lockPlazas[i] = new Lock(getNombreLockPlaza(i));
 	}
+}
+
+bool Estacionamiento::solicitarEntrada() {
+	return true;
+}
+
+bool Estacionamiento::liberarEntrada() {
+	return true;
+}
+
+bool Estacionamiento::solicitarSalida() {
+	return true;
+}
+
+bool Estacionamiento::liberarSalida() {
+	return true;
 }
 
 bool Estacionamiento::solicitarLugar() {
@@ -249,19 +288,22 @@ char* Estacionamiento::getNombreLockPlaza(int i) {
 	return (char*) lockPlaza.str().c_str();
 }
 
-
 void Estacionamiento::imprimirErrorLock() {
-	Log::getLog()->logError("Error: se ha producido un error al intentar tomar o liberar un lock.");
+	Log::getLog()->logError(
+			"Error: se ha producido un error al intentar tomar o liberar un lock.");
 }
 
 void Estacionamiento::imprimirError(int error) {
 
 	if (error == ERROR_FTOK) {
-		Log::getLog()->logError("Error:  se ha producido un error al intentar crear la memoria compartida. Verifique que el archivo seleccionado para el token exista");
+		Log::getLog()->logError(
+				"Error:  se ha producido un error al intentar crear la memoria compartida. Verifique que el archivo seleccionado para el token exista");
 	} else if (error == ERROR_SHMGET) {
-		Log::getLog()->logError("Error: se ha producido un error al intentar alocar memoria compartida");
+		Log::getLog()->logError(
+				"Error: se ha producido un error al intentar alocar memoria compartida");
 	} else if (error == ERROR_SHMAT) {
-		Log::getLog()->logError("Error: se ha producido un error al intentar adjuntar el segmento de memoria compartida");
+		Log::getLog()->logError(
+				"Error: se ha producido un error al intentar adjuntar el segmento de memoria compartida");
 	} else {
 		Log::getLog()->logError("Se ha producido un error desconocido");
 	}
