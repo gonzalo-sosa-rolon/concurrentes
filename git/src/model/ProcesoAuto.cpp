@@ -24,7 +24,7 @@ void ProcesoAuto::ejecutar() {
 	info.str("");
 
 	if (this->autoDelProceso->solicitarLugar()) {
-		if (this->autoDelProceso->solicitarPlaza()) {
+		if (this->autoDelProceso->ocuparPlaza()) {
 
 			//Auto toma plaza y entra info << "Proceso auto: el auto se retira porque el estacionamiento esta lleno";
 			Log::getLog()->logMensaje(info.str());

@@ -11,6 +11,8 @@
 #include "../util/ParserParametros.h"
 #include "../util/Semaforo.h"
 
+class Auto;
+
 using namespace std;
 
 class Estacionamiento {
@@ -37,6 +39,8 @@ public:
 	Plaza getPlaza(int pos);
 	Lock* getLockPlaza(int pos);
 	bool solicitarLugar();
+	bool ocuparPlaza(Auto *automovil);
+	bool liberarPlaza(Auto *automovil);
 	bool solicitarEntrada();
 	bool liberarEntrada();
 	bool solicitarSalida();
@@ -67,7 +71,9 @@ private:
 	void eliminarLocks();
 	void imprimirError(int error);
 	void imprimirErrorLock();
-
+	Lock* tomarLockPlaza(int nroDePlaza);
+	void liberarLockPlaza(int nroDePlaza, Lock* lockPlaza);
+	void logOcupePlaza(int nroPlaza, int idAuto);
 };
 
 

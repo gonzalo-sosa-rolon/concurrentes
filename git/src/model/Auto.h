@@ -5,6 +5,10 @@
 
 class Auto {
 private:
+	static const int TIEMPO_ENTRAR;
+	static const int TIEMPO_SALIR;
+	static const int TIEMPO_LLEGAR_PLAZA;
+	static const int TIEMPO_LLEGAR_SALIDA;
 	Estacionamiento* estacionamiento;
 	long id;
 	int tiempo;
@@ -14,7 +18,8 @@ public:
 
     bool solicitarLugar();
 	void entrar();
-    bool solicitarPlaza();
+    bool ocuparPlaza();
+    bool liberarPlaza();
     void dirigirseAPlaza();
     void aparcar();
     void dirigirseASalida();
@@ -22,7 +27,6 @@ public:
 
     void setId(long id);
     long getId();
-
     int getTiempo();
 };
 

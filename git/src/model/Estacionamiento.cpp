@@ -1,4 +1,5 @@
 #include "Estacionamiento.h"
+#include "Auto.h"
 #include <stdlib.h>
 
 const char* Estacionamiento::PATH_TOKEN_MEMORIA_COMPARTIDA = "/bin/ls";
@@ -227,18 +228,81 @@ void Estacionamiento::innitLocks() {
 }
 
 bool Estacionamiento::solicitarEntrada() {
+	this->semaforoEntrada->p();
 	return true;
 }
 
 bool Estacionamiento::liberarEntrada() {
+	this->semaforoEntrada->v();
 	return true;
 }
 
 bool Estacionamiento::solicitarSalida() {
+	this->semaforoSalida->p();
 	return true;
 }
 
+bool Estacionamiento::liberarPlaza(Auto *automovil) {
+	return true;
+}
+
+bool Estacionamiento::ocuparPlaza(Auto *automovil) {
+
+	bool resultado = false;
+
+	for (int i = 0; i < this->getTamanio(); i++) {
+			Lock* lockPlaza = this->tomarLockPlaza(i);
+
+			if (!this->getPlaza(i).getOcupado()) {
+
+				this->ocuparPlaza(i, automovil->getTiempo(), automovil->getId());
+
+				logOcupePlaza(i, automovil->getId());
+
+				liberarLockPlaza(i, lockPlaza);
+				resultado = true;
+
+				break;
+			}
+			liberarLockPlaza(i, lockPlaza);
+		}
+
+	return resultado;
+}
+
+void Estacionamiento::logOcupePlaza(int nroPlaza, int idAuto) {
+	stringstream info;
+	info << "Se ocupa la plaza [" << nroPlaza << "] Id del auto [" << idAuto << "]"
+			<< " Cantidad de autos en el estacionamiento [" << this->getCantidadDeAutos() << "]";
+	Log::getLog()->logMensaje(info.str());
+}
+
+
+Lock* Estacionamiento::tomarLockPlaza(int nroDePlaza) {
+	Lock* lockPlaza = this->getLockPlaza(nroDePlaza);
+	int error = lockPlaza->tomarLock();
+
+	if (error) {
+		stringstream errorMsg;
+		errorMsg << "Entrada : Se produjo un error al intentar tomar el lock de la plaza " << nroDePlaza + 1 << endl;
+		Log::getLog()->logError(errorMsg.str());
+		exit(error);
+	}
+	return lockPlaza;
+}
+
+void Estacionamiento::liberarLockPlaza(int nroDePlaza, Lock* lockPlaza) {
+	int error = lockPlaza->liberarLock();
+
+	if (error) {
+		stringstream errorMsg;
+		errorMsg << "Entrada : Se produjo un error al intentar liberar el lock de la plaza " << nroDePlaza + 1 << endl;
+		Log::getLog()->logError(errorMsg.str());
+		exit(error);
+	}
+}
 bool Estacionamiento::liberarSalida() {
+	this->semaforoSalida->v();
 	return true;
 }
 
