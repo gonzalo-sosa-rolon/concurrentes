@@ -10,10 +10,14 @@
 
 #include "Proceso.h"
 
+class Estacionamiento;
+
 class ProcesoGeneradorAutos : Proceso {
+private:
+	Estacionamiento *estacionamiento;
 public:
 	static const int TIEMPO_ENTRE_AUTOS;
-	ProcesoGeneradorAutos();
+	ProcesoGeneradorAutos(Estacionamiento *estacionamiento);
 	virtual ~ProcesoGeneradorAutos();
 	virtual void ejecutar();
 };

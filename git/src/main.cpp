@@ -6,9 +6,8 @@
 #include <unistd.h>
 
 #include "model/Estacionamiento.h"
-#include "model/ProcesoEntrada.h"
+#include "model/ProcesoGeneradorAutos.h"
 #include "model/ProcesoConsulta.h"
-#include "model/ProcesoSalida.h"
 #include "model/ProcesoSimulacion.h"
 #include "util/ParserParametros.h"
 #include "util/Lock.h"
@@ -31,33 +30,11 @@ int main(int argc, char **argv) {
 	Estacionamiento estacionamiento(capacidad, precio);
 	pid_t entradas[CANTIDAD_ENTRADAS], salidas[CANTIDAD_SALIDAS];
 
-	for (int i = 0; i < CANTIDAD_ENTRADAS; i++) {
-		srand(49 * i);//Para que generen distintos randoms
-		id = fork();
+	id = fork();
 
-		if (!id) {
-			ProcesoEntrada procesoEntrada(i + 1, &estacionamiento);
-			procesoEntrada.ejecutar();
-			break;
-		} else {
-			entradas[i] = id;
-		}
-	}
-
-
-	if (id) {
-		for (int i = 0; i < CANTIDAD_SALIDAS; i++) {
-			srand(49 * (i+3));//Para que generen distintos randoms
-			id = fork();
-
-			if (!id) {
-				ProcesoSalida procesoSalida(i + 1, &estacionamiento);
-				procesoSalida.ejecutar();
-				break;
-			} else {
-				salidas[i] = id;
-			}
-		}
+	if (!id){
+		ProcesoGeneradorAutos procesoGenerador(&estacionamiento);
+		procesoGenerador.ejecutar();
 	}
 
 	if (id) {

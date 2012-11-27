@@ -174,7 +174,6 @@ bool Estacionamiento::ocuparPlaza(int pos, int tiempo, long autoId) {
 	if (!plaza.getOcupado()) {
 		plaza.ocupar(tiempo, time(NULL), autoId);
 		this->plazas.escribir(pos, plaza);
-		sumarUnAuto();
 		resultado = true;
 	}
 
@@ -256,7 +255,7 @@ bool Estacionamiento::ocuparPlaza(Auto *automovil) {
 			if (!this->getPlaza(i).getOcupado()) {
 
 				this->ocuparPlaza(i, automovil->getTiempo(), automovil->getId());
-
+				automovil->setNumeroPlaza(i);
 				logOcupePlaza(i, automovil->getId());
 
 				liberarLockPlaza(i, lockPlaza);

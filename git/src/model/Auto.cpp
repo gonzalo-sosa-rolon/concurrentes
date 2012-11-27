@@ -12,6 +12,7 @@ Auto::Auto(Estacionamiento* estacionamiento) {
 	this->estacionamiento = estacionamiento;
 	this->id = NumberUtil::getRandom(RAND_MAX);
 	this->tiempo = NumberUtil::getRandom(ParserParametros::TIEMPO_ESTADIA_MIN_DEFAULT, ParserParametros::TIEMPO_ESTADIA_MAX_DEFAULT);
+	this->numeroPlaza = -1;
 }
 
 Auto::~Auto() {
@@ -33,13 +34,11 @@ void Auto::entrar() {
 }
 
 bool Auto::ocuparPlaza() {
-	this->estacionamiento->ocuparPlaza(this);
-	return true;
+	return this->estacionamiento->ocuparPlaza(this);
 }
 
 bool Auto::liberarPlaza() {
-	this->estacionamiento->liberarPlaza(this);
-	return true;
+	return this->estacionamiento->liberarPlaza(this);
 }
 
 void Auto::dirigirseAPlaza() {
@@ -47,13 +46,23 @@ void Auto::dirigirseAPlaza() {
 }
 
 void Auto::dirigirseASalida() {
-
+	sleep(NumberUtil::getRandom(0, TIEMPO_LLEGAR_SALIDA));
 }
 
 void Auto::salir() {
+	this->estacionamiento->desocuparLugar(this->numeroPlaza);
+	//TODO logear que desocupe esta plaza
 	this->estacionamiento->solicitarSalida();
 	sleep(NumberUtil::getRandom(0, TIEMPO_SALIR));
 	this->estacionamiento->liberarSalida();
+}
+
+void Auto::setNumeroPlaza(int numeroPlaza) {
+	this->numeroPlaza = numeroPlaza;
+}
+
+int Auto::getNumeroPlaza() {
+	return this->numeroPlaza;
 }
 
 void Auto::setId(long id) {

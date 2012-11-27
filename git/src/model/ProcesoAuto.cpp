@@ -19,21 +19,42 @@ ProcesoAuto::~ProcesoAuto() {
 void ProcesoAuto::ejecutar() {
 
 	stringstream info;
-	info << "Proceso auto: auto solicita lugar" ;
+	info << "Auto: [" << this->autoDelProceso->getId() << "]: solicita lugar" ;
 	Log::getLog()->logMensaje(info.str());
 	info.str("");
 
 	if (this->autoDelProceso->solicitarLugar()) {
 		if (this->autoDelProceso->ocuparPlaza()) {
 
-			//Auto toma plaza y entra info << "Proceso auto: el auto se retira porque el estacionamiento esta lleno";
+			info << "Auto: [" << this->autoDelProceso->getId() << "]: Entra al estacionamiento.";
 			Log::getLog()->logMensaje(info.str());
+			info.str("");
+
 			this->autoDelProceso->entrar();
+
+			info << "Auto: [" << this->autoDelProceso->getId() << "]: Se dirige a la plaza \"." << this->autoDelProceso->getNumeroPlaza() << "\"";
+			Log::getLog()->logMensaje(info.str());
+			info.str("");
+
 			this->autoDelProceso->dirigirseAPlaza();
 
+			info << "Auto: [" << this->autoDelProceso->getId() << "]: va a aparcar.";
+			Log::getLog()->logMensaje(info.str());
+			info.str("");
+
 			this->autoDelProceso->aparcar();
+
+			info << "Auto: [" << this->autoDelProceso->getId() << "]: Se dirige a la salida.";
+			Log::getLog()->logMensaje(info.str());
+			info.str("");
+
 			this->autoDelProceso->dirigirseASalida();
+
 			this->autoDelProceso->salir();
+			info << "Auto: [" << this->autoDelProceso->getId() << "]: salio del estacionamiento.";
+			Log::getLog()->logMensaje(info.str());
+			info.str("");
+
 		}
 	} else {
 		info << "Proceso auto: el auto se retira porque el estacionamiento esta lleno";

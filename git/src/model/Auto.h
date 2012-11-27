@@ -12,6 +12,7 @@ private:
 	Estacionamiento* estacionamiento;
 	long id;
 	int tiempo;
+	int numeroPlaza;
 public:
 	Auto(Estacionamiento* estacionamiento);
 	virtual ~Auto();
@@ -28,6 +29,9 @@ public:
     void setId(long id);
     long getId();
     int getTiempo();
+
+    void setNumeroPlaza(int numeroPlaza);
+    int getNumeroPlaza();
 };
 
 #endif /* AUTO_H_ */
