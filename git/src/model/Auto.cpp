@@ -37,10 +37,6 @@ bool Auto::ocuparPlaza() {
 	return this->estacionamiento->ocuparPlaza(this);
 }
 
-bool Auto::liberarPlaza() {
-	return this->estacionamiento->liberarPlaza(this);
-}
-
 void Auto::dirigirseAPlaza() {
 	sleep(NumberUtil::getRandom(0, TIEMPO_LLEGAR_PLAZA));
 }
@@ -51,7 +47,6 @@ void Auto::dirigirseASalida() {
 
 void Auto::salir() {
 	this->estacionamiento->desocuparLugar(this->numeroPlaza);
-	//TODO logear que desocupe esta plaza
 	this->estacionamiento->solicitarSalida();
 	sleep(NumberUtil::getRandom(0, TIEMPO_SALIR));
 	this->estacionamiento->liberarSalida();

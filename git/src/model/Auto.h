@@ -20,7 +20,6 @@ public:
     bool solicitarLugar();
 	void entrar();
     bool ocuparPlaza();
-    bool liberarPlaza();
     void dirigirseAPlaza();
     void aparcar();
     void dirigirseASalida();

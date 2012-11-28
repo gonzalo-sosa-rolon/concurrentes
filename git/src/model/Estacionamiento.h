@@ -40,7 +40,6 @@ public:
 	Lock* getLockPlaza(int pos);
 	bool solicitarLugar();
 	bool ocuparPlaza(Auto *automovil);
-	bool liberarPlaza(Auto *automovil);
 	bool solicitarEntrada();
 	bool liberarEntrada();
 	bool solicitarSalida();

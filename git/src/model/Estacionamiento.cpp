@@ -241,10 +241,6 @@ bool Estacionamiento::solicitarSalida() {
 	return true;
 }
 
-bool Estacionamiento::liberarPlaza(Auto *automovil) {
-	return true;
-}
-
 bool Estacionamiento::ocuparPlaza(Auto *automovil) {
 
 	bool resultado = false;
