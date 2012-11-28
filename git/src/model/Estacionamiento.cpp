@@ -76,6 +76,8 @@ Estacionamiento::~Estacionamiento() {
 	this->cantidadDeAutos.liberar();
 	this->cantidadFacturado.liberar();
 	this->plazas.liberar();
+	this->semaforoEntrada->eliminar();
+	this->semaforoSalida->eliminar();
 	eliminarLocks();
 }
 
