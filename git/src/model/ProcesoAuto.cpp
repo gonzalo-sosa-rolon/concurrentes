@@ -25,7 +25,7 @@ void ProcesoAuto::ejecutar() {
 
 			this->autoDelProceso->entrar();
 
-			info << "Auto: [" << this->autoDelProceso->getId() << "]: Se dirige a la plaza \"." << this->autoDelProceso->getNumeroPlaza() << "\"";
+			info << "Auto: [" << this->autoDelProceso->getId() << "]: Se dirige a la plaza \"" << this->autoDelProceso->getNumeroPlaza() << "\"";
 			Log::getLog()->logMensaje(info.str());
 			info.str("");
 

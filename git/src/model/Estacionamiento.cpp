@@ -77,8 +77,6 @@ Estacionamiento::~Estacionamiento() {
 	this->cantidadFacturado.liberar();
 	this->plazas.liberar();
 	eliminarLocks();
-
-	cout << getpid() << endl;
 }
 
 int Estacionamiento::getCantidadDeAutos() {
