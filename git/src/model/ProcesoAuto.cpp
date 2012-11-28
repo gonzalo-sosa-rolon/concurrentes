@@ -1,10 +1,3 @@
-/*
- * ProcesoAuto.cpp
- *
- *  Created on: Nov 24, 2012
- *      Author: gsosarolon
- */
-
 #include "ProcesoAuto.h"
 
 ProcesoAuto::ProcesoAuto(Estacionamiento *estacionamiento) {
@@ -57,7 +50,7 @@ void ProcesoAuto::ejecutar() {
 
 		}
 	} else {
-		info << "Proceso auto: el auto se retira porque el estacionamiento esta lleno";
+		info << "Auto: [" << this->autoDelProceso->getId() << "]: el auto se retira porque el estacionamiento esta lleno";
 		Log::getLog()->logMensaje(info.str());
 	}
 }

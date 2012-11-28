@@ -28,23 +28,27 @@ int main(int argc, char **argv) {
 	pid_t id;
 
 	Estacionamiento estacionamiento(capacidad, precio);
-	pid_t entradas[CANTIDAD_ENTRADAS], salidas[CANTIDAD_SALIDAS];
+	pid_t idsAFinalizar[1];
 
 	id = fork();
 
 	if (!id){
 		ProcesoGeneradorAutos procesoGenerador(&estacionamiento);
 		procesoGenerador.ejecutar();
+	} else {
+		idsAFinalizar[0] = id;
 	}
 
 	if (id) {
 		id = fork();
 
 		if (id) {
-			ProcesoSimulacion procesoSimulacion(tiempo, &estacionamiento, entradas, salidas, id);
+			idsAFinalizar[1] = id;
+			ProcesoSimulacion procesoSimulacion(tiempo, &estacionamiento, idsAFinalizar, 2);
 			procesoSimulacion.ejecutar();
+
 			for (int i = 0; i < 6; i++) {
-				wait(0);
+				//TODO ver de esperar a los procesos waitpid(0);
 			}
 		} else {
 			ProcesoConsulta procesoConsulta(&estacionamiento);

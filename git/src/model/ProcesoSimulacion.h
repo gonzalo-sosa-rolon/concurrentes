@@ -18,12 +18,12 @@ using namespace std;
 class ProcesoSimulacion : public Proceso {
 private:
 	int tiempoEjecucion;
-	pid_t entradas[CANTIDAD_ENTRADAS], salidas[CANTIDAD_SALIDAS];
-	pid_t consulta;
+	pid_t* idsAFinalizar;
+	int cantidadIds;
 	Estacionamiento* estacionamiento;
 public:
 
-	ProcesoSimulacion(int tiempoEjecucion, Estacionamiento* estacionamiento, pid_t* entradas, pid_t* salidas, pid_t consulta);
+	ProcesoSimulacion(int tiempoEjecucion, Estacionamiento* estacionamiento, pid_t* idsAFinalizar, int cantidadIds);
 	virtual ~ProcesoSimulacion();
 	virtual void ejecutar();
 };
