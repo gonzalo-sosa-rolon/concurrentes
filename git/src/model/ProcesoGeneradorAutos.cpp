@@ -1,9 +1,10 @@
 #include "ProcesoGeneradorAutos.h"
-
+#include "AdministracionCliente.h"
 const int ProcesoGeneradorAutos::TIEMPO_ENTRE_AUTOS = 5;
 
-ProcesoGeneradorAutos::ProcesoGeneradorAutos(Estacionamiento *estacionamiento) {
+ProcesoGeneradorAutos::ProcesoGeneradorAutos(Estacionamiento *estacionamiento, AdministracionCliente* administracionCliente) {
 	this->estacionamiento = estacionamiento;
+	this->administracionCliente = administracionCliente;
 }
 
 ProcesoGeneradorAutos::~ProcesoGeneradorAutos() {
@@ -23,7 +24,7 @@ void ProcesoGeneradorAutos::ejecutar() {
 		id = fork();
 
 		if (!id) {
-			ProcesoAuto procesoAuto(estacionamiento);
+			ProcesoAuto procesoAuto(estacionamiento, administracionCliente);
 			procesoAuto.ejecutar();
 			return;
 		} else {

@@ -8,6 +8,7 @@
 #include "model/Estacionamiento.h"
 #include "model/ProcesoGeneradorAutos.h"
 #include "model/ProcesoConsulta.h"
+#include "model/AdministracionCliente.h"
 #include "model/ProcesoPuerta.h"
 #include "model/ProcesoSimulacion.h"
 #include "util/ParserParametros.h"
@@ -29,12 +30,13 @@ int main(int argc, char **argv) {
 	pid_t id;
 
 	Estacionamiento estacionamiento(capacidad, precio);
+	AdministracionCliente administracionCliente;
 	pid_t idsAFinalizar[5];
 
 	id = fork();
 
 	if (!id){
-		ProcesoGeneradorAutos procesoGenerador(&estacionamiento);
+		ProcesoGeneradorAutos procesoGenerador(&estacionamiento, &administracionCliente);
 		procesoGenerador.ejecutar();
 	} else {
 		idsAFinalizar[0] = id;

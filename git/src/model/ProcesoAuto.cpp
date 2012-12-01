@@ -1,8 +1,10 @@
 #include "ProcesoAuto.h"
+#include "AdministracionCliente.h"
 
-ProcesoAuto::ProcesoAuto(Estacionamiento *estacionamiento) {
-	this->autoDelProceso = new Auto(estacionamiento);
+ProcesoAuto::ProcesoAuto(Estacionamiento *estacionamiento, AdministracionCliente* administracionCliente) {
+	this->autoDelProceso = new Auto(estacionamiento, administracionCliente);
 	this->estacionamiento = estacionamiento;
+	this->administracionCliente = administracionCliente;
 }
 
 ProcesoAuto::~ProcesoAuto() {
@@ -22,7 +24,7 @@ void ProcesoAuto::ejecutar() {
 		info.str("");
 
 		this->autoDelProceso->tomarEntrada();
-		sleep(2); //TODO sacar numero magico
+		this->autoDelProceso->entrar();
 		this->autoDelProceso->liberarEntrada();
 
 
@@ -30,14 +32,16 @@ void ProcesoAuto::ejecutar() {
 		Log::getLog()->logMensaje(info.str());
 		info.str("");
 		this->autoDelProceso->ocuparPlaza();
-		sleep(3);
+		this->autoDelProceso->aparcar();
 
 		info << "Auto: [" << this->autoDelProceso->getId() << "]: Busca la salida.";
 		Log::getLog()->logMensaje(info.str());
 		info.str("");
 
+		this->autoDelProceso->desocuparPlaza();
+
 		this->autoDelProceso->tomarSalida();
-		sleep(2); //TODO sacar numero magico
+		this->autoDelProceso->salir();
 		this->autoDelProceso->liberarSalida();
 
 		info << "Auto: [" << this->autoDelProceso->getId() << "]: salio del estacionamiento.";

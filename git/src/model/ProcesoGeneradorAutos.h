@@ -19,13 +19,15 @@
 #include "../util/Log.h"
 
 class Estacionamiento;
+class AdministracionCliente;
 
 class ProcesoGeneradorAutos : Proceso {
 private:
 	Estacionamiento *estacionamiento;
+	AdministracionCliente* administracionCliente;
 public:
 	static const int TIEMPO_ENTRE_AUTOS;
-	ProcesoGeneradorAutos(Estacionamiento *estacionamiento);
+	ProcesoGeneradorAutos(Estacionamiento *estacionamiento, AdministracionCliente* administracionCliente);
 	virtual ~ProcesoGeneradorAutos();
 	virtual void ejecutar();
 };

@@ -6,7 +6,7 @@
 #include <errno.h>
 
 #include "Proceso.h"
-#include "SolicitudPuerta.h"
+#include "Mensaje.h"
 #include "../util/NumberUtil.h"
 #include "../util/Log.h"
 #include "../util/Cola.h"
@@ -14,11 +14,14 @@
 using namespace std;
 
 class ProcesoPuerta: public Proceso {
+public:
+	static const int TOMAR_PUERTA;
+	static const int LIBERAR_PUERTA;
 
 private:
 	int cantidadEntradas;
 	int cantidadEntradasOcupadas;
-	Cola<solicitudPuerta> colaDeAutos;
+	Cola<Mensaje> colaDeAutos;
 	std::string nombre;
 
 
