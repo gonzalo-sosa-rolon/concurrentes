@@ -5,6 +5,9 @@
 #include <sys/msg.h>
 #include <sys/ipc.h>
 #include <stdio.h>
+#include <iostream>
+
+using namespace std;
 
 template<class T> class Cola {
 private:
@@ -23,6 +26,8 @@ public:
 
 template<class T> Cola<T>::Cola(char* archivo, char letra) {
 	this->clave = ftok(archivo, letra);
+	cout << archivo << endl;
+	cout << "clave generada " << clave << endl;
 	if (this->clave == -1)
 		perror("Error en ftok");
 

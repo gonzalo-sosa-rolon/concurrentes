@@ -1,11 +1,8 @@
 #include "ProcesoPuerta.h"
 #include "Estacionamiento.h" //TODO Estaria bueno sacar este include
 
-const int ProcesoPuerta::TOMAR_PUERTA = 2;
-const int ProcesoPuerta::LIBERAR_PUERTA = 3;
-
-ProcesoPuerta::ProcesoPuerta(int cantidadEntradas, char* nombre, char key)
-									: colaDeAutos((char*)Estacionamiento::PATH_TOKEN_COLAS, key), nombre(nombre) {
+ProcesoPuerta::ProcesoPuerta(int cantidadEntradas, char* nombre, char* path, char key)
+									: colaDeAutos(path, key), nombre(nombre) {
 	this->cantidadEntradas = cantidadEntradas;
 	this->cantidadEntradasOcupadas = 0;
 }
@@ -49,8 +46,8 @@ void ProcesoPuerta::ocuparEntrada() {
 	Log::getLog()->logMensaje(info.str());
 	info.str("");
 
-	Mensaje solicitud;
-	colaDeAutos.leer(TOMAR_PUERTA, &solicitud);
+	Mensaje::Mensaje solicitud;
+	colaDeAutos.leer(Mensaje::TOMAR_PUERTA, &solicitud);
 	solicitud.mtype = solicitud.pid;
 	int resultado = colaDeAutos.escribir(solicitud);
 	cantidadEntradasOcupadas++;
@@ -72,8 +69,8 @@ void ProcesoPuerta::liberarEntrada() {
 	//TODO Emprolijar logs
 
 	stringstream info;
-	Mensaje liberado;
-	int resultado = colaDeAutos.leer(LIBERAR_PUERTA, &liberado);
+	Mensaje::Mensaje liberado;
+	int resultado = colaDeAutos.leer(Mensaje::LIBERAR_PUERTA, &liberado);
 	cantidadEntradasOcupadas--;
 
 	info << nombre << ": Libere el auto [" << liberado.pid << "]" << ". Resultado " << resultado;

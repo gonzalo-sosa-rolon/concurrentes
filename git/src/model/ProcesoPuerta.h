@@ -14,14 +14,10 @@
 using namespace std;
 
 class ProcesoPuerta: public Proceso {
-public:
-	static const int TOMAR_PUERTA;
-	static const int LIBERAR_PUERTA;
-
 private:
 	int cantidadEntradas;
 	int cantidadEntradasOcupadas;
-	Cola<Mensaje> colaDeAutos;
+	Cola<Mensaje::Mensaje> colaDeAutos;
 	std::string nombre;
 
 
@@ -34,7 +30,7 @@ private:
 	void ocuparEntrada();
 
 public:
-	ProcesoPuerta(int numeroDeEntrada, char* nombre, char key);
+	ProcesoPuerta(int numeroDeEntrada, char* nombre, char* path, char key);
 	virtual ~ProcesoPuerta();
 	virtual void ejecutar();
 };

@@ -11,13 +11,15 @@ using namespace std;
 class AdministracionCliente {
 public:
 	static const char* PATH_TOKEN_MEMORIA_COMPARTIDA;
-	static const char* PATH_TOKEN_COLAS;
-private:
-	Cola<Mensaje> colaEntrada;
-	Cola<Mensaje> colaSalida;
 
+private:
+	vector<Cola<Mensaje::Mensaje>* > colaEntrada;
+	vector<Cola<Mensaje::Mensaje>* > colaSalida;
+	int tamanio;
+	int cantidadEntradas;
+	int cantidadSalidas;
 public:
-	AdministracionCliente();
+	AdministracionCliente(int tamanio = 1, int cantidadEntradas = 3, int cantidadSalidas = 2);
 	virtual ~AdministracionCliente();
 
 	bool solicitarLugar(int estacionamiento);

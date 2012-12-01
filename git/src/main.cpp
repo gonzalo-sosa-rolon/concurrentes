@@ -15,6 +15,7 @@
 #include "util/Lock.h"
 #include "util/Log.h"
 #include "util/NumberUtil.h"
+#include "model/Mensaje.h"
 
 using namespace std;
 
@@ -24,6 +25,7 @@ int main(int argc, char **argv) {
 	int tiempo;
 	int capacidad;
 	int precio;
+	int cantidadEstacionamientos = 1;
 
 	ParserParametros::parsear(argc, argv, &tiempo, &precio, &capacidad);
 
@@ -35,33 +37,44 @@ int main(int argc, char **argv) {
 
 	id = fork();
 
-	if (!id){
-		ProcesoGeneradorAutos procesoGenerador(&estacionamiento, &administracionCliente);
+	if (!id) {
+		ProcesoGeneradorAutos procesoGenerador(&estacionamiento,
+				&administracionCliente);
 		procesoGenerador.ejecutar();
 	} else {
 		idsAFinalizar[0] = id;
 	}
 
-	if (id){
-		id = fork();
+	if (id) {
+		for (int i = 0; i < cantidadEstacionamientos; i++) {
+			id = fork();
 
-		if (!id){
-			ProcesoPuerta procEntrada(3, (char*)"Entrada", 'E');
-			procEntrada.ejecutar();
-		} else {
-			idsAFinalizar[1] = id;
+			if (!id) {
+				ProcesoPuerta procEntrada(3, (char*) "Entrada",
+						(char*) Mensaje::PATH_TOKEN_COLAS_ENTRADA, i);
+				procEntrada.ejecutar();
+				break;
+			}
 		}
+
+	} else {
+		idsAFinalizar[1] = id;
 	}
 
-	if (id){
-		id = fork();
+	if (id) {
+		for (int i = 0; i < cantidadEstacionamientos; i++) {
+			id = fork();
 
-		if (!id){
-			ProcesoPuerta procSalida(3, (char*)"Salida", 'S');
-			procSalida.ejecutar();
-		} else {
-			idsAFinalizar[2] = id;
+			if (!id) {
+
+				ProcesoPuerta procSalida(3, (char*) "Salida",
+						(char*) Mensaje::PATH_TOKEN_COLAS_SALIDA, i);
+				procSalida.ejecutar();
+				break;
+			}
 		}
+	} else {
+		idsAFinalizar[2] = id;
 	}
 
 	if (id) {
@@ -69,7 +82,8 @@ int main(int argc, char **argv) {
 
 		if (id) {
 			idsAFinalizar[3] = id;
-			ProcesoSimulacion procesoSimulacion(tiempo, &estacionamiento, idsAFinalizar, 4);
+			ProcesoSimulacion procesoSimulacion(tiempo, &estacionamiento,
+					idsAFinalizar, 4);
 			procesoSimulacion.ejecutar();
 
 			for (int i = 0; i < 6; i++) {

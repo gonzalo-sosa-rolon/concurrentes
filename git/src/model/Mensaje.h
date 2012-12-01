@@ -1,5 +1,15 @@
 #ifndef MENSAJE_H_
 
+#define MENSAJE_H_
+
+namespace Mensaje {
+
+static const char* PATH_TOKEN_COLAS_ENTRADA = "/bin/ps";
+static const char* PATH_TOKEN_COLAS_SALIDA = "/bin/cp";
+
+const int TOMAR_PUERTA = 2;
+const int LIBERAR_PUERTA = 3;
+
 typedef struct mensaje {
 	long mtype;
 	int pid;
@@ -8,7 +18,7 @@ typedef struct mensaje {
 	int estacionamiento;
 } Mensaje;
 
-#define MENSAJE_H_
+}
 
 
 

@@ -37,7 +37,7 @@ void ProcesoGeneradorAutos::ejecutar() {
 //			sleep(
 //					NumberUtil::getRandom(2,
 //							ProcesoGeneradorAutos::TIEMPO_ENTRE_AUTOS));
-			sleep(1);
+			sleep(1); //TODO
 		}
 
 	}
