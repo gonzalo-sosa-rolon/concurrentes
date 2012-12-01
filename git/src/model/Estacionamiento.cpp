@@ -301,7 +301,7 @@ bool Estacionamiento::solicitarLugar() {
 }
 
 int Estacionamiento::solicitarEntrada() {
-	__pid_t pid = getpid();
+	pid_t pid = getpid();
 	solicitudPuerta solicitud;
 
 	solicitud.mtype = 2;
@@ -318,7 +318,7 @@ int Estacionamiento::liberarEntrada() {
 }
 
 int Estacionamiento::solicitarSalida() {
-	__pid_t pid = getpid();
+	pid_t pid = getpid();
 	solicitudPuerta solicitud;
 
 	solicitud.mtype = 2;
