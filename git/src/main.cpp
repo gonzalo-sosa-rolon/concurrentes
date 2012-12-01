@@ -8,6 +8,7 @@
 #include "model/Estacionamiento.h"
 #include "model/ProcesoGeneradorAutos.h"
 #include "model/ProcesoConsulta.h"
+#include "model/ProcesoPuerta.h"
 #include "model/ProcesoSimulacion.h"
 #include "util/ParserParametros.h"
 #include "util/Lock.h"
@@ -28,7 +29,7 @@ int main(int argc, char **argv) {
 	pid_t id;
 
 	Estacionamiento estacionamiento(capacidad, precio);
-	pid_t idsAFinalizar[1];
+	pid_t idsAFinalizar[5];
 
 	id = fork();
 
@@ -39,12 +40,34 @@ int main(int argc, char **argv) {
 		idsAFinalizar[0] = id;
 	}
 
+	if (id){
+		id = fork();
+
+		if (!id){
+			ProcesoPuerta procEntrada(3, (char*)"Entrada", 'E');
+			procEntrada.ejecutar();
+		} else {
+			idsAFinalizar[1] = id;
+		}
+	}
+
+	if (id){
+		id = fork();
+
+		if (!id){
+			ProcesoPuerta procSalida(3, (char*)"Salida", 'S');
+			procSalida.ejecutar();
+		} else {
+			idsAFinalizar[2] = id;
+		}
+	}
+
 	if (id) {
 		id = fork();
 
 		if (id) {
-			idsAFinalizar[1] = id;
-			ProcesoSimulacion procesoSimulacion(tiempo, &estacionamiento, idsAFinalizar, 2);
+			idsAFinalizar[3] = id;
+			ProcesoSimulacion procesoSimulacion(tiempo, &estacionamiento, idsAFinalizar, 4);
 			procesoSimulacion.ejecutar();
 
 			for (int i = 0; i < 6; i++) {

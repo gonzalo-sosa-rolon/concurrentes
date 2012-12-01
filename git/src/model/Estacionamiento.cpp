@@ -3,10 +3,10 @@
 #include <stdlib.h>
 
 const char* Estacionamiento::PATH_TOKEN_MEMORIA_COMPARTIDA = "/bin/ls";
-const char* Estacionamiento::PATH_TOKEN_SEMAFORO = "/bin/ps";
+const char* Estacionamiento::PATH_TOKEN_COLAS = "/bin/ps";
 
 Estacionamiento::Estacionamiento(int tamanio, int precio, int cantidadEntradas,
-		int cantidadSalidas) {
+		int cantidadSalidas) : colaEntrada((char*) PATH_TOKEN_COLAS, 'E'), colaSalida((char*) PATH_TOKEN_COLAS, 'S') {
 	this->tamanio = tamanio;
 	this->precio = precio;
 	this->cantidadEntradas = cantidadEntradas;
@@ -43,21 +43,6 @@ Estacionamiento::Estacionamiento(int tamanio, int precio, int cantidadEntradas,
 
 	initPlazas();
 	innitLocks();
-	innitSemaforos();
-}
-
-void Estacionamiento::innitSemaforos() {
-	this->semaforoEntrada = new Semaforo((char*) PATH_TOKEN_SEMAFORO, 0);
-
-	for (int i = 0; i < this->cantidadEntradas; i++) {
-		this->semaforoEntrada->v();
-	}
-
-	this->semaforoSalida = new Semaforo((char*) PATH_TOKEN_SEMAFORO, 1);
-
-	for (int i = 0; i < this->cantidadSalidas; i++) {
-		this->semaforoSalida->v();
-	}
 }
 
 void Estacionamiento::initPlazas() {
@@ -76,8 +61,6 @@ Estacionamiento::~Estacionamiento() {
 	this->cantidadDeAutos.liberar();
 	this->cantidadFacturado.liberar();
 	this->plazas.liberar();
-	this->semaforoEntrada->eliminar();
-	this->semaforoSalida->eliminar();
 	eliminarLocks();
 }
 
@@ -226,52 +209,37 @@ void Estacionamiento::innitLocks() {
 	}
 }
 
-bool Estacionamiento::solicitarEntrada() {
-	this->semaforoEntrada->p();
-	return true;
-}
-
-bool Estacionamiento::liberarEntrada() {
-	this->semaforoEntrada->v();
-	return true;
-}
-
-bool Estacionamiento::solicitarSalida() {
-	this->semaforoSalida->p();
-	return true;
-}
-
 bool Estacionamiento::ocuparPlaza(Auto *automovil) {
 
 	bool resultado = false;
 
 	for (int i = 0; i < this->getTamanio(); i++) {
-			Lock* lockPlaza = this->tomarLockPlaza(i);
+		Lock* lockPlaza = this->tomarLockPlaza(i);
 
-			if (!this->getPlaza(i).getOcupado()) {
+		if (!this->getPlaza(i).getOcupado()) {
 
-				this->ocuparPlaza(i, automovil->getTiempo(), automovil->getId());
-				automovil->setNumeroPlaza(i);
-				logOcupePlaza(i, automovil->getId());
+			this->ocuparPlaza(i, automovil->getTiempo(), automovil->getId());
+			automovil->setNumeroPlaza(i);
+			logOcupePlaza(i, automovil->getId());
 
-				liberarLockPlaza(i, lockPlaza);
-				resultado = true;
-
-				break;
-			}
 			liberarLockPlaza(i, lockPlaza);
+			resultado = true;
+
+			break;
 		}
+		liberarLockPlaza(i, lockPlaza);
+	}
 
 	return resultado;
 }
 
 void Estacionamiento::logOcupePlaza(int nroPlaza, int idAuto) {
 	stringstream info;
-	info << "Se ocupa la plaza [" << nroPlaza << "] Id del auto [" << idAuto << "]"
-			<< " Cantidad de autos en el estacionamiento [" << this->getCantidadDeAutos() << "]";
+	info << "Se ocupa la plaza [" << nroPlaza << "] Id del auto [" << idAuto
+			<< "]" << " Cantidad de autos en el estacionamiento ["
+			<< this->getCantidadDeAutos() << "]";
 	Log::getLog()->logMensaje(info.str());
 }
-
 
 Lock* Estacionamiento::tomarLockPlaza(int nroDePlaza) {
 	Lock* lockPlaza = this->getLockPlaza(nroDePlaza);
@@ -279,7 +247,9 @@ Lock* Estacionamiento::tomarLockPlaza(int nroDePlaza) {
 
 	if (error) {
 		stringstream errorMsg;
-		errorMsg << "Entrada : Se produjo un error al intentar tomar el lock de la plaza " << nroDePlaza + 1 << endl;
+		errorMsg
+				<< "Entrada : Se produjo un error al intentar tomar el lock de la plaza "
+				<< nroDePlaza + 1 << endl;
 		Log::getLog()->logError(errorMsg.str());
 		exit(error);
 	}
@@ -291,16 +261,17 @@ void Estacionamiento::liberarLockPlaza(int nroDePlaza, Lock* lockPlaza) {
 
 	if (error) {
 		stringstream errorMsg;
-		errorMsg << "Entrada : Se produjo un error al intentar liberar el lock de la plaza " << nroDePlaza + 1 << endl;
+		errorMsg
+				<< "Entrada : Se produjo un error al intentar liberar el lock de la plaza "
+				<< nroDePlaza + 1 << endl;
 		Log::getLog()->logError(errorMsg.str());
 		exit(error);
 	}
 }
-bool Estacionamiento::liberarSalida() {
-	this->semaforoSalida->v();
-	return true;
-}
 
+/**
+ * (cantidad < tamanio) ? cantidad++
+ */
 bool Estacionamiento::solicitarLugar() {
 
 	bool resultado = false;
@@ -327,6 +298,40 @@ bool Estacionamiento::solicitarLugar() {
 	}
 
 	return resultado;
+}
+
+int Estacionamiento::solicitarEntrada() {
+	__pid_t pid = getpid();
+	solicitudPuerta solicitud;
+
+	solicitud.mtype = 2;
+	solicitud.pid = pid;
+	colaEntrada.escribir(solicitud);
+	return colaEntrada.leer(pid, &solicitud);
+}
+
+int Estacionamiento::liberarEntrada() {
+	solicitudPuerta solicitud;
+	solicitud.mtype = 3;
+	solicitud.pid = getpid();
+	return colaEntrada.escribir(solicitud);
+}
+
+int Estacionamiento::solicitarSalida() {
+	__pid_t pid = getpid();
+	solicitudPuerta solicitud;
+
+	solicitud.mtype = 2;
+	solicitud.pid = pid;
+	colaSalida.escribir(solicitud);
+	return colaSalida.leer(pid, &solicitud);
+}
+
+int Estacionamiento::liberarSalida() {
+	solicitudPuerta solicitud;
+	solicitud.mtype = 3;
+	solicitud.pid = getpid();
+	return colaSalida.escribir(solicitud);
 }
 
 void Estacionamiento::eliminarLocks() {

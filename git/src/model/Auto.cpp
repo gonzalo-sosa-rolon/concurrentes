@@ -23,33 +23,28 @@ bool Auto::solicitarLugar() {
 	return this->estacionamiento->solicitarLugar();
 }
 
-void Auto::aparcar() {
-	sleep(this->tiempo);
+int Auto::tomarEntrada() {
+	return this->estacionamiento->solicitarEntrada();
 }
 
-void Auto::entrar() {
-	this->estacionamiento->solicitarEntrada();
-	sleep(NumberUtil::getRandom(0, TIEMPO_ENTRAR));
-	this->estacionamiento->liberarEntrada();
+int Auto::liberarEntrada() {
+	return this->estacionamiento->liberarEntrada();
+}
+
+int Auto::tomarSalida() {
+	return this->estacionamiento->solicitarSalida();
+}
+
+int Auto::liberarSalida() {
+	return this->estacionamiento->liberarSalida();
 }
 
 bool Auto::ocuparPlaza() {
 	return this->estacionamiento->ocuparPlaza(this);
 }
 
-void Auto::dirigirseAPlaza() {
-	sleep(NumberUtil::getRandom(0, TIEMPO_LLEGAR_PLAZA));
-}
-
-void Auto::dirigirseASalida() {
-	sleep(NumberUtil::getRandom(0, TIEMPO_LLEGAR_SALIDA));
-}
-
-void Auto::salir() {
-	this->estacionamiento->desocuparLugar(this->numeroPlaza);
-	this->estacionamiento->solicitarSalida();
-	sleep(NumberUtil::getRandom(0, TIEMPO_SALIR));
-	this->estacionamiento->liberarSalida();
+long Auto::desocuparPlaza() {
+	return this->estacionamiento->desocuparLugar(this->numeroPlaza);
 }
 
 void Auto::setNumeroPlaza(int numeroPlaza) {

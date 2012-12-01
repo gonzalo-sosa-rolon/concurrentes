@@ -5,11 +5,12 @@
 #include <string>
 #include <iostream>
 #include "Plaza.h"
+#include "SolicitudPuerta.h"
 #include "../MemoriaCompartida.h"
+#include "../util/Cola.h"
 #include "../util/Lock.h"
 #include "../util/Log.h"
 #include "../util/ParserParametros.h"
-#include "../util/Semaforo.h"
 
 class Auto;
 
@@ -20,7 +21,7 @@ class Estacionamiento {
 public:
 
 	static const char* PATH_TOKEN_MEMORIA_COMPARTIDA;
-	static const char* PATH_TOKEN_SEMAFORO;
+	static const char* PATH_TOKEN_COLAS;
 
 	Estacionamiento(int tamanio, int precio, int cantidadEntradas = 3, int cantidadSalidas = 2);
 	virtual ~Estacionamiento();
@@ -40,10 +41,11 @@ public:
 	Lock* getLockPlaza(int pos);
 	bool solicitarLugar();
 	bool ocuparPlaza(Auto *automovil);
-	bool solicitarEntrada();
-	bool liberarEntrada();
-	bool solicitarSalida();
-	bool liberarSalida();
+
+	int solicitarEntrada();
+	int liberarEntrada();
+	int solicitarSalida();
+	int liberarSalida();
 private:
 	int tamanio;
 	int precio;
@@ -58,10 +60,12 @@ private:
 
 	MemoriaCompartida<Plaza> plazas;
 	Lock** lockPlazas;
-	Semaforo *semaforoEntrada, *semaforoSalida;
+
+
+	Cola<solicitudPuerta> colaEntrada;
+	Cola<solicitudPuerta> colaSalida;
 
 	void innitLocks();
-	void innitSemaforos();
 	char* getNombreLockPlaza(int i);
 	void facturar(int segundos);
 	void incrementarFacturacion(int cantidadFacturada);

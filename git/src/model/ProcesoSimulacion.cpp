@@ -17,9 +17,14 @@ ProcesoSimulacion::~ProcesoSimulacion() {
 }
 
 void ProcesoSimulacion::ejecutar() {
+	stringstream info;
 
 	cout << "Comienzo de la ejecucion por " << tiempoEjecucion << " segundos" << endl;
 	sleep(tiempoEjecucion);
+
+	info << "Finalizando Ejecucion, enviando señales a procesos";
+	Log::getLog()->logMensaje(info.str());
+	info.str("");
 
 	for (int i = 0; i < this->cantidadIds; i++) {
 		kill(idsAFinalizar[i], SIGINT);

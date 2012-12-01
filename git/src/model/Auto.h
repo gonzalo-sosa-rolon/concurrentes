@@ -18,12 +18,14 @@ public:
 	virtual ~Auto();
 
     bool solicitarLugar();
-	void entrar();
+
     bool ocuparPlaza();
-    void dirigirseAPlaza();
-    void aparcar();
-    void dirigirseASalida();
-    void salir();
+    long desocuparPlaza();
+
+    int tomarEntrada();
+    int liberarEntrada();
+    int tomarSalida();
+    int liberarSalida();
 
     void setId(long id);
     long getId();
