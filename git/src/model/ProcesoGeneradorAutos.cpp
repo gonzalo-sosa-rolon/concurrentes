@@ -24,7 +24,7 @@ void ProcesoGeneradorAutos::ejecutar() {
 		id = fork();
 
 		if (!id) {
-			ProcesoAuto procesoAuto(estacionamiento, administracionCliente);
+			ProcesoAuto procesoAuto(administracionCliente, 0); //TODO setear el nombre del estacionamiento
 			procesoAuto.ejecutar();
 			return;
 		} else {

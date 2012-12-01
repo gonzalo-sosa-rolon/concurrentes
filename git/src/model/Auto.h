@@ -13,15 +13,15 @@ private:
 	static const int TIEMPO_LLEGAR_SALIDA;
 	static const int TIEMPO_APARCAR;
 
-	Estacionamiento* estacionamiento;
 	AdministracionCliente* administracionCliente;
+
 	long id;
 	int tiempo;
 	int numeroPlaza;
-	int estacionamientoS; //TODO rename
+	int estacionamiento;
 
 public:
-	Auto(Estacionamiento* estacionamiento, AdministracionCliente* administracionCliente, int estacionamientoS = 0);
+	Auto(AdministracionCliente* administracionCliente, int estacionamiento);
 	virtual ~Auto();
 
     bool solicitarLugar();
@@ -44,6 +44,8 @@ public:
     void entrar();
     void salir();
     void aparcar();
+
+    int getEstacionamiento();
 
 };
 

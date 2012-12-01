@@ -1,29 +1,31 @@
 #include "AdministracionCliente.h"
+#include "Auto.h"
 
 const char* AdministracionCliente::PATH_TOKEN_MEMORIA_COMPARTIDA = "/bin/ls";
 
-AdministracionCliente::AdministracionCliente(int tamanio, int cantidadEntradas, int cantidadSalidas)
+AdministracionCliente::AdministracionCliente(int cantidadEstacionamientos, int tamanio, int precio, int cantidadEntradas, int cantidadSalidas)
 		 {
 	this->tamanio = tamanio;
 	this->cantidadEntradas = cantidadEntradas;
 	this->cantidadSalidas = cantidadSalidas;
 
-	for (int i = 0; i < tamanio; i++) {
+	for (int i = 0; i < cantidadEstacionamientos; i++) {
 		Cola<Mensaje::Mensaje>* colaEntrada = new Cola<Mensaje::Mensaje>((char*)Mensaje::PATH_TOKEN_COLAS_ENTRADA, i);
 		Cola<Mensaje::Mensaje>* colaSalida = new Cola<Mensaje::Mensaje>((char*)Mensaje::PATH_TOKEN_COLAS_SALIDA, i);
+		Estacionamiento* estacionamiento = new Estacionamiento(tamanio, precio);
 
-		this->colaEntrada.push_back(colaEntrada);
-		this->colaSalida.push_back(colaSalida);
+		this->estacionamientos.push_back(estacionamiento);
+		this->colasEntrada.push_back(colaEntrada);
+		this->colasSalida.push_back(colaSalida);
 	}
 }
 
 AdministracionCliente::~AdministracionCliente() {
-
+	//TODO borrar todas las cosas aca =(
 }
 
 bool AdministracionCliente::solicitarLugar(int estacionamiento) {
-
-	return true;
+	return this->estacionamientos[estacionamiento]->solicitarLugar();
 }
 
 bool AdministracionCliente::solicitarEntrada(int estacionamiento) {
@@ -32,8 +34,8 @@ bool AdministracionCliente::solicitarEntrada(int estacionamiento) {
 
 	mensaje.mtype = Mensaje::TOMAR_PUERTA;
 	mensaje.pid = pid;
-	colaEntrada[estacionamiento]->escribir(mensaje);
-	return colaEntrada[estacionamiento]->leer(pid, &mensaje);
+	colasEntrada[estacionamiento]->escribir(mensaje);
+	return colasEntrada[estacionamiento]->leer(pid, &mensaje);
 }
 
 bool AdministracionCliente::liberarEntrada(int estacionamiento) {
@@ -42,11 +44,11 @@ bool AdministracionCliente::liberarEntrada(int estacionamiento) {
 	solicitud.mtype = Mensaje::LIBERAR_PUERTA;
 	solicitud.pid = getpid();
 
-	return colaEntrada[estacionamiento]->escribir(solicitud);
+	return colasEntrada[estacionamiento]->escribir(solicitud);
 }
 
-bool AdministracionCliente::ocuparPlaza(int estacionamiento) {
-	return true;
+bool AdministracionCliente::ocuparPlaza(Auto* automovil) {
+	return this->estacionamientos[automovil->getEstacionamiento()]->ocuparPlaza(automovil);
 }
 
 bool AdministracionCliente::solicitarSalida(int estacionamiento) {
@@ -55,17 +57,21 @@ bool AdministracionCliente::solicitarSalida(int estacionamiento) {
 
 	solicitud.mtype = Mensaje::TOMAR_PUERTA;
 	solicitud.pid = pid;
-	colaSalida[estacionamiento]->escribir(solicitud);
-	return colaSalida[estacionamiento]->leer(pid, &solicitud);
+	colasSalida[estacionamiento]->escribir(solicitud);
+	return colasSalida[estacionamiento]->leer(pid, &solicitud);
 }
 
 bool AdministracionCliente::liberarSalida(int estacionamiento) {
 	Mensaje::Mensaje solicitud;
 	solicitud.mtype = Mensaje::LIBERAR_PUERTA;
 	solicitud.pid = getpid();
-	return colaSalida[estacionamiento]->escribir(solicitud);
+	return colasSalida[estacionamiento]->escribir(solicitud);
+}
+
+bool AdministracionCliente::descocuparLugar(Auto* automovil) {
+	return this->estacionamientos[automovil->getEstacionamiento()]->desocuparLugar(automovil->getNumeroPlaza());
 }
 
 bool AdministracionCliente::salir(Auto* automovil) {
-	return true;
+	return false; //TODO ver esto
 }

@@ -12,11 +12,10 @@ class AdministracionCliente;
 class ProcesoAuto : public Proceso {
 private:
 	Auto *autoDelProceso;
-	Estacionamiento *estacionamiento;
 	AdministracionCliente* administracionCliente;
 
 public:
-	ProcesoAuto(Estacionamiento *estacionamiento, AdministracionCliente* administracionCliente);
+	ProcesoAuto(AdministracionCliente* administracionCliente, int estacionamiento);
 	virtual ~ProcesoAuto();
 	virtual void ejecutar();
 };

@@ -32,7 +32,7 @@ int main(int argc, char **argv) {
 	pid_t id;
 
 	Estacionamiento estacionamiento(capacidad, precio);
-	AdministracionCliente administracionCliente;
+	AdministracionCliente administracionCliente(cantidadEstacionamientos, capacidad, precio);
 	pid_t idsAFinalizar[5];
 
 	id = fork();

@@ -1,9 +1,8 @@
 #include "ProcesoAuto.h"
 #include "AdministracionCliente.h"
 
-ProcesoAuto::ProcesoAuto(Estacionamiento *estacionamiento, AdministracionCliente* administracionCliente) {
-	this->autoDelProceso = new Auto(estacionamiento, administracionCliente);
-	this->estacionamiento = estacionamiento;
+ProcesoAuto::ProcesoAuto(AdministracionCliente* administracionCliente, int estacionamiento) {
+	this->autoDelProceso = new Auto(administracionCliente, estacionamiento);
 	this->administracionCliente = administracionCliente;
 }
 

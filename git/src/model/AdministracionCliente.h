@@ -2,6 +2,7 @@
 #define ADMINISTRACIONCLIENTE_H_
 
 #include "../util/Cola.h"
+#include "Estacionamiento.h"
 #include "Mensaje.h"
 #include <vector>
 
@@ -13,19 +14,22 @@ public:
 	static const char* PATH_TOKEN_MEMORIA_COMPARTIDA;
 
 private:
-	vector<Cola<Mensaje::Mensaje>* > colaEntrada;
-	vector<Cola<Mensaje::Mensaje>* > colaSalida;
+	vector<Cola<Mensaje::Mensaje>* > colasEntrada;
+	vector<Cola<Mensaje::Mensaje>* > colasSalida;
+	vector<Estacionamiento*> estacionamientos;
+
 	int tamanio;
 	int cantidadEntradas;
 	int cantidadSalidas;
 public:
-	AdministracionCliente(int tamanio = 1, int cantidadEntradas = 3, int cantidadSalidas = 2);
+	AdministracionCliente(int cantidadEstacionamientos, int tamanio, int precio, int cantidadEntradas = 3, int cantidadSalidas = 2);
 	virtual ~AdministracionCliente();
 
 	bool solicitarLugar(int estacionamiento);
 	bool solicitarEntrada(int estacionamiento);
 	bool liberarEntrada(int estacionamiento);
-	bool ocuparPlaza(int estacionamiento);
+	bool ocuparPlaza(Auto* automovil);
+	bool descocuparLugar(Auto* automovil);
 	bool solicitarSalida(int estacionamiento);
 	bool liberarSalida(int estacionamiento);
 	bool salir(Auto* automovil);

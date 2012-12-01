@@ -10,12 +10,11 @@ const int Auto::TIEMPO_LLEGAR_PLAZA = 2;
 const int Auto::TIEMPO_LLEGAR_SALIDA = 2;
 const int Auto::TIEMPO_APARCAR = 15;
 
-Auto::Auto(Estacionamiento* estacionamiento, AdministracionCliente* administracionCliente, int estacionamientoS) {
+Auto::Auto(AdministracionCliente* administracionCliente, int estacionamiento) {
 	this->estacionamiento = estacionamiento;
 	this->id = NumberUtil::getRandom(RAND_MAX);
 	this->tiempo = NumberUtil::getRandom(ParserParametros::TIEMPO_ESTADIA_MIN_DEFAULT, ParserParametros::TIEMPO_ESTADIA_MAX_DEFAULT);
 	this->numeroPlaza = -1;
-	this->estacionamientoS = estacionamientoS;
 	this->administracionCliente = administracionCliente;
 }
 
@@ -24,31 +23,35 @@ Auto::~Auto() {
 }
 
 bool Auto::solicitarLugar() {
-	return this->estacionamiento->solicitarLugar();
+	return this->administracionCliente->solicitarLugar(this->estacionamiento);
 }
 
 int Auto::tomarEntrada() {
-	return this->administracionCliente->solicitarEntrada(0); //TODO
+	return this->administracionCliente->solicitarEntrada(this->estacionamiento);
 }
 
 int Auto::liberarEntrada() {
-	return this->administracionCliente->liberarEntrada(0); //TODO
+	return this->administracionCliente->liberarEntrada(this->estacionamiento);
 }
 
 int Auto::tomarSalida() {
-	return this->administracionCliente->solicitarSalida(0); //TODO
+	return this->administracionCliente->solicitarSalida(this->estacionamiento);
 }
 
 int Auto::liberarSalida() {
-	return this->administracionCliente->liberarSalida(0); //TODO
+	return this->administracionCliente->liberarSalida(this->estacionamiento);
 }
 
 bool Auto::ocuparPlaza() {
-	return this->estacionamiento->ocuparPlaza(this);
+	return this->administracionCliente->ocuparPlaza(this);
 }
 
 long Auto::desocuparPlaza() {
-	return this->estacionamiento->desocuparLugar(this->numeroPlaza);
+	return this->administracionCliente->descocuparLugar(this);
+}
+
+int Auto::getEstacionamiento() {
+	return this->estacionamiento;
 }
 
 void Auto::setNumeroPlaza(int numeroPlaza) {
@@ -80,5 +83,5 @@ void Auto::salir() {
 }
 
 void Auto::aparcar() {
-	sleep(NumberUtil::getRandom(TIEMPO_APARCAR));
+	sleep(this->tiempo);
 }
