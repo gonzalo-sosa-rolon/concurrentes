@@ -5,7 +5,6 @@
 #include <string>
 #include <iostream>
 #include "Plaza.h"
-#include "SolicitudPuerta.h"
 #include "../MemoriaCompartida.h"
 #include "../util/Cola.h"
 #include "../util/Lock.h"
@@ -41,11 +40,6 @@ public:
 	Lock* getLockPlaza(int pos);
 	bool solicitarLugar();
 	bool ocuparPlaza(Auto *automovil);
-
-	int solicitarEntrada();
-	int liberarEntrada();
-	int solicitarSalida();
-	int liberarSalida();
 private:
 	int tamanio;
 	int precio;
@@ -60,10 +54,6 @@ private:
 
 	MemoriaCompartida<Plaza> plazas;
 	Lock** lockPlazas;
-
-
-	Cola<solicitudPuerta> colaEntrada;
-	Cola<solicitudPuerta> colaSalida;
 
 	void innitLocks();
 	char* getNombreLockPlaza(int i);

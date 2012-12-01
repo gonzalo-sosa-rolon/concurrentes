@@ -6,7 +6,7 @@ const char* Estacionamiento::PATH_TOKEN_MEMORIA_COMPARTIDA = "/bin/ls";
 const char* Estacionamiento::PATH_TOKEN_COLAS = "/bin/ps";
 
 Estacionamiento::Estacionamiento(int tamanio, int precio, int cantidadEntradas,
-		int cantidadSalidas) : colaEntrada((char*) PATH_TOKEN_COLAS, 'E'), colaSalida((char*) PATH_TOKEN_COLAS, 'S') {
+		int cantidadSalidas) {
 	this->tamanio = tamanio;
 	this->precio = precio;
 	this->cantidadEntradas = cantidadEntradas;
@@ -298,40 +298,6 @@ bool Estacionamiento::solicitarLugar() {
 	}
 
 	return resultado;
-}
-
-int Estacionamiento::solicitarEntrada() {
-	pid_t pid = getpid();
-	solicitudPuerta solicitud;
-
-	solicitud.mtype = 2;
-	solicitud.pid = pid;
-	colaEntrada.escribir(solicitud);
-	return colaEntrada.leer(pid, &solicitud);
-}
-
-int Estacionamiento::liberarEntrada() {
-	solicitudPuerta solicitud;
-	solicitud.mtype = 3;
-	solicitud.pid = getpid();
-	return colaEntrada.escribir(solicitud);
-}
-
-int Estacionamiento::solicitarSalida() {
-	pid_t pid = getpid();
-	solicitudPuerta solicitud;
-
-	solicitud.mtype = 2;
-	solicitud.pid = pid;
-	colaSalida.escribir(solicitud);
-	return colaSalida.leer(pid, &solicitud);
-}
-
-int Estacionamiento::liberarSalida() {
-	solicitudPuerta solicitud;
-	solicitud.mtype = 3;
-	solicitud.pid = getpid();
-	return colaSalida.escribir(solicitud);
 }
 
 void Estacionamiento::eliminarLocks() {

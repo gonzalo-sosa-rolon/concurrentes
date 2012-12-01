@@ -4,7 +4,6 @@
 #include "Auto.h"
 #include "Estacionamiento.h"
 #include "Proceso.h"
-#include "SolicitudPuerta.h"
 #include "../util/Cola.h"
 #include "../util/Log.h"
 
