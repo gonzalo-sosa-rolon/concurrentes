@@ -39,7 +39,7 @@ public:
 	Plaza getPlaza(int pos);
 	Lock* getLockPlaza(int pos);
 	bool solicitarLugar();
-	bool ocuparPlaza(Auto *automovil);
+	int seleccionarPlaza(int tiempo, long autoId);
 private:
 	int tamanio;
 	int precio;

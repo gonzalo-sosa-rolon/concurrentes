@@ -209,18 +209,18 @@ void Estacionamiento::innitLocks() {
 	}
 }
 
-bool Estacionamiento::ocuparPlaza(Auto *automovil) {
+int Estacionamiento::seleccionarPlaza(int tiempo, long autoId) {
 
-	bool resultado = false;
+	int resultado = -1;
 
 	for (int i = 0; i < this->getTamanio(); i++) {
 		Lock* lockPlaza = this->tomarLockPlaza(i);
 
 		if (!this->getPlaza(i).getOcupado()) {
 
-			this->ocuparPlaza(i, automovil->getTiempo(), automovil->getId());
-			automovil->setNumeroPlaza(i);
-			logOcupePlaza(i, automovil->getId());
+			this->ocuparPlaza(i, tiempo, autoId);
+			resultado = i;
+			logOcupePlaza(i, autoId);
 
 			liberarLockPlaza(i, lockPlaza);
 			resultado = true;

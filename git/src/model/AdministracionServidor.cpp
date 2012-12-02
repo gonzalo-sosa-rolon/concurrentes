@@ -14,6 +14,11 @@ AdministracionServidor::AdministracionServidor(int cantidadEstacionamientos,
 
 AdministracionServidor::~AdministracionServidor() {
 
+	for (int i = 0; i < cantidadEstacionamientos; i++) {
+		delete this->estacionamientos[i];
+	}
+
+	colaDeMensajes.destruir();
 }
 
 void AdministracionServidor::crearEstacionamientos() {
@@ -25,9 +30,9 @@ void AdministracionServidor::crearEstacionamientos() {
 	info.str("");
 
 	for (int i = 0; i < cantidadEstacionamientos; i++) {
-		/*Estacionamiento* estacionamiento = new Estacionamiento(this->tamanio,
+		Estacionamiento* estacionamiento = new Estacionamiento(this->tamanio,
 				this->precio);
-		this->estacionamientos.push_back(estacionamiento);*/
+		this->estacionamientos.push_back(estacionamiento);
 	}
 
 	info << "Proceso administracion servidor: estacionamientos creados ";
@@ -40,7 +45,7 @@ void AdministracionServidor::procesarMensaje(Mensaje::Mensaje &mensaje) {
 	switch (mensaje.tipo) {
 	case Mensaje::TIPO_SOLICITAR_LUGAR:
 		procesarSolicitarLugar(mensaje);
-			break;
+		break;
 	case Mensaje::TIPO_LIBERAR_PLAZA:
 		procesarLiberarPlaza(mensaje);
 		break;
@@ -54,15 +59,45 @@ void AdministracionServidor::procesarMensaje(Mensaje::Mensaje &mensaje) {
 }
 
 void AdministracionServidor::procesarLiberarPlaza(Mensaje::Mensaje mensaje) {
-
+	this->estacionamientos[mensaje.estacionamiento]->desocuparLugar(mensaje.plaza);
 }
 
 void AdministracionServidor::procesarSolicitarLugar(Mensaje::Mensaje mensaje) {
+	bool resultado =
+			this->estacionamientos[mensaje.estacionamiento]->solicitarLugar();
 
+	Mensaje::Mensaje respuesta;
+
+	respuesta.resultado = resultado;
+	respuesta.mtype = mensaje.pid;
+
+	colaDeMensajes.escribir(respuesta);
+
+	stringstream info;
+	info
+			<< "Proceso administracion servidor: se proceso la consulta procesar lugar al proceso ["
+			<< respuesta.mtype << "]";
+
+	Log::getLog()->logMensaje(info.str());
 }
 
 void AdministracionServidor::procesarOcuparPlaza(Mensaje::Mensaje mensaje) {
 
+	int resultado =
+			this->estacionamientos[mensaje.estacionamiento]->seleccionarPlaza(
+					mensaje.tiempo, mensaje.automovil);
+
+	Mensaje::Mensaje respuesta;
+
+	respuesta.resultado = resultado;
+	respuesta.mtype = mensaje.pid;
+
+	colaDeMensajes.escribir(respuesta);
+
+	stringstream info;
+	info
+			<< "Proceso administracion servidor: se proceso la consulta ocupar plaza para el proceso ["
+			<< respuesta.mtype << "]";
 }
 
 void AdministracionServidor::procesarSalir(Mensaje::Mensaje mensaje) {

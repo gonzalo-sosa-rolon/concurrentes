@@ -25,6 +25,8 @@ typedef struct mensaje {
 	int plaza;
 	int estacionamiento;
 	int tipo;
+	int resultado;
+	int tiempo;
 } Mensaje;
 
 }

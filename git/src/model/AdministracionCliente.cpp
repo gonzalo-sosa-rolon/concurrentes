@@ -14,9 +14,7 @@ AdministracionCliente::AdministracionCliente(int cantidadEstacionamientos, int t
 	for (int i = 0; i < cantidadEstacionamientos; i++) {
 		Cola<Mensaje::Mensaje>* colaEntrada = new Cola<Mensaje::Mensaje>((char*)Mensaje::PATH_TOKEN_COLAS_ENTRADA, i);
 		Cola<Mensaje::Mensaje>* colaSalida = new Cola<Mensaje::Mensaje>((char*)Mensaje::PATH_TOKEN_COLAS_SALIDA, i);
-		Estacionamiento* estacionamiento = new Estacionamiento(tamanio, precio);
 
-		this->estacionamientos.push_back(estacionamiento);
 		this->colasEntrada.push_back(colaEntrada);
 		this->colasSalida.push_back(colaSalida);
 	}
@@ -24,7 +22,6 @@ AdministracionCliente::AdministracionCliente(int cantidadEstacionamientos, int t
 
 AdministracionCliente::~AdministracionCliente() {
 	for (int i = 0; i < cantidadEstacionamientos; i++) {
-		delete this->estacionamientos[i];
 
 		this->colasEntrada[i]->destruir();
 		delete this->colasEntrada[i];
@@ -35,16 +32,21 @@ AdministracionCliente::~AdministracionCliente() {
 	}
 }
 
-bool AdministracionCliente::solicitarLugar(int estacionamiento) {
+bool AdministracionCliente::solicitarLugar(Auto* automovil) {
+
+	int estacionamiento = automovil->getEstacionamiento();
+	pid_t pid = getpid();
 	Mensaje::Mensaje mensaje = prepararMensajeServidor(estacionamiento);
 	mensaje.tipo = Mensaje::TIPO_SOLICITAR_LUGAR;
 
 	colaServidor.escribir(mensaje);
+	colaServidor.leer(pid, &mensaje);
 
-	return this->estacionamientos[estacionamiento]->solicitarLugar();
+	return mensaje.resultado;
 }
 
-bool AdministracionCliente::solicitarEntrada(int estacionamiento) {
+bool AdministracionCliente::solicitarEntrada(Auto* automovil) {
+	int estacionamiento = automovil->getEstacionamiento();
 	pid_t pid = getpid();
 	Mensaje::Mensaje mensaje;
 
@@ -54,7 +56,8 @@ bool AdministracionCliente::solicitarEntrada(int estacionamiento) {
 	return colasEntrada[estacionamiento]->leer(pid, &mensaje);
 }
 
-bool AdministracionCliente::liberarEntrada(int estacionamiento) {
+bool AdministracionCliente::liberarEntrada(Auto* automovil) {
+	int estacionamiento = automovil->getEstacionamiento();
 	Mensaje::Mensaje solicitud;
 
 	solicitud.mtype = Mensaje::LIBERAR_PUERTA;
@@ -64,10 +67,25 @@ bool AdministracionCliente::liberarEntrada(int estacionamiento) {
 }
 
 bool AdministracionCliente::ocuparPlaza(Auto* automovil) {
-	return this->estacionamientos[automovil->getEstacionamiento()]->ocuparPlaza(automovil);
+
+	int estacionamiento = automovil->getEstacionamiento();
+
+	pid_t pid = getpid();
+	Mensaje::Mensaje mensaje = prepararMensajeServidor(estacionamiento);
+
+	mensaje.tipo = Mensaje::TIPO_OCUPAR_PLAZA;
+	mensaje.automovil = automovil->getId();
+	mensaje.tiempo = automovil->getTiempo();
+
+	colaServidor.escribir(mensaje);
+	colaServidor.leer(pid, &mensaje);
+
+	automovil->setNumeroPlaza(mensaje.resultado);
+	return mensaje.resultado == -1? false : true;
 }
 
-bool AdministracionCliente::solicitarSalida(int estacionamiento) {
+bool AdministracionCliente::solicitarSalida(Auto* automovil) {
+	int estacionamiento = automovil->getEstacionamiento();
 	pid_t pid = getpid();
 	Mensaje::Mensaje solicitud;
 
@@ -77,7 +95,8 @@ bool AdministracionCliente::solicitarSalida(int estacionamiento) {
 	return colasSalida[estacionamiento]->leer(pid, &solicitud);
 }
 
-bool AdministracionCliente::liberarSalida(int estacionamiento) {
+bool AdministracionCliente::liberarSalida(Auto* automovil) {
+	int estacionamiento = automovil->getEstacionamiento();
 	Mensaje::Mensaje solicitud;
 	solicitud.mtype = Mensaje::LIBERAR_PUERTA;
 	solicitud.pid = getpid();
@@ -85,7 +104,16 @@ bool AdministracionCliente::liberarSalida(int estacionamiento) {
 }
 
 bool AdministracionCliente::descocuparLugar(Auto* automovil) {
-	return this->estacionamientos[automovil->getEstacionamiento()]->desocuparLugar(automovil->getNumeroPlaza());
+
+	int estacionamiento = automovil->getEstacionamiento();
+	Mensaje::Mensaje mensaje = prepararMensajeServidor(estacionamiento);
+
+	mensaje.tipo = Mensaje::TIPO_LIBERAR_PLAZA;
+	mensaje.plaza = automovil->getNumeroPlaza();
+
+	colaServidor.escribir(mensaje);
+
+	return true;
 }
 
 

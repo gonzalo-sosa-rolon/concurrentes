@@ -27,13 +27,13 @@ public:
 	AdministracionCliente(int cantidadEstacionamientos, int tamanio, int precio, int cantidadEntradas = 3, int cantidadSalidas = 2);
 	virtual ~AdministracionCliente();
 
-	bool solicitarLugar(int estacionamiento);
-	bool solicitarEntrada(int estacionamiento);
-	bool liberarEntrada(int estacionamiento);
+	bool solicitarLugar(Auto* automovil);
+	bool solicitarEntrada(Auto* automovil);
+	bool liberarEntrada(Auto* automovil);
 	bool ocuparPlaza(Auto* automovil);
 	bool descocuparLugar(Auto* automovil);
-	bool solicitarSalida(int estacionamiento);
-	bool liberarSalida(int estacionamiento);
+	bool solicitarSalida(Auto* automovil);
+	bool liberarSalida(Auto* automovil);
 	bool salir(Auto* automovil);
 
 private:

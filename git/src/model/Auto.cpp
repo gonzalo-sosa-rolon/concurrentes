@@ -23,23 +23,23 @@ Auto::~Auto() {
 }
 
 bool Auto::solicitarLugar() {
-	return this->administracionCliente->solicitarLugar(this->estacionamiento);
+	return this->administracionCliente->solicitarLugar(this);
 }
 
 int Auto::tomarEntrada() {
-	return this->administracionCliente->solicitarEntrada(this->estacionamiento);
+	return this->administracionCliente->solicitarEntrada(this);
 }
 
 int Auto::liberarEntrada() {
-	return this->administracionCliente->liberarEntrada(this->estacionamiento);
+	return this->administracionCliente->liberarEntrada(this);
 }
 
 int Auto::tomarSalida() {
-	return this->administracionCliente->solicitarSalida(this->estacionamiento);
+	return this->administracionCliente->solicitarSalida(this);
 }
 
 int Auto::liberarSalida() {
-	return this->administracionCliente->liberarSalida(this->estacionamiento);
+	return this->administracionCliente->liberarSalida(this);
 }
 
 bool Auto::ocuparPlaza() {
