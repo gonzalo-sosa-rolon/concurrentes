@@ -3,11 +3,13 @@
 
 const char* AdministracionCliente::PATH_TOKEN_MEMORIA_COMPARTIDA = "/bin/ls";
 
-AdministracionCliente::AdministracionCliente(int cantidadEstacionamientos, int tamanio, int precio, int cantidadEntradas, int cantidadSalidas)
+AdministracionCliente::AdministracionCliente(int cantidadEstacionamientos, int tamanio, int precio, int cantidadEntradas, int cantidadSalidas) :
+		colaServidor((char*)Mensaje::PATH_TOKEN_COLA_SERVIDOR, 3)
 		 {
 	this->tamanio = tamanio;
 	this->cantidadEntradas = cantidadEntradas;
 	this->cantidadSalidas = cantidadSalidas;
+	this->cantidadEstacionamientos = cantidadEstacionamientos;
 
 	for (int i = 0; i < cantidadEstacionamientos; i++) {
 		Cola<Mensaje::Mensaje>* colaEntrada = new Cola<Mensaje::Mensaje>((char*)Mensaje::PATH_TOKEN_COLAS_ENTRADA, i);
@@ -21,10 +23,25 @@ AdministracionCliente::AdministracionCliente(int cantidadEstacionamientos, int t
 }
 
 AdministracionCliente::~AdministracionCliente() {
-	//TODO borrar todas las cosas aca =(
+	for (int i = 0; i < cantidadEstacionamientos; i++) {
+		delete this->estacionamientos[i];
+
+		this->colasEntrada[i]->destruir();
+		delete this->colasEntrada[i];
+
+		this->colasSalida[i]->destruir();
+		delete this->colasSalida[i];
+		colaServidor.destruir();
+	}
 }
 
 bool AdministracionCliente::solicitarLugar(int estacionamiento) {
+	Mensaje::Mensaje mensaje;
+	mensaje.mtype = Mensaje::MENSAJE_SERVIDOR;
+	mensaje.automovil = 334;
+
+	colaServidor.escribir(mensaje);
+
 	return this->estacionamientos[estacionamiento]->solicitarLugar();
 }
 

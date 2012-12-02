@@ -11,6 +11,7 @@
 #include "model/AdministracionCliente.h"
 #include "model/ProcesoPuerta.h"
 #include "model/ProcesoSimulacion.h"
+#include "model/AdministracionServidor.h"
 #include "util/ParserParametros.h"
 #include "util/Lock.h"
 #include "util/Log.h"
@@ -32,8 +33,9 @@ int main(int argc, char **argv) {
 	pid_t id;
 
 	Estacionamiento estacionamiento(capacidad, precio);
-	AdministracionCliente administracionCliente(cantidadEstacionamientos, capacidad, precio);
-	pid_t idsAFinalizar[5];
+	AdministracionCliente administracionCliente(cantidadEstacionamientos,
+			capacidad, precio);
+	pid_t idsAFinalizar[6];
 
 	id = fork();
 
@@ -79,16 +81,24 @@ int main(int argc, char **argv) {
 
 	if (id) {
 		id = fork();
+		idsAFinalizar[3] = id;
+
+		if (!id) {
+			AdministracionServidor administracionServidor(
+					cantidadEstacionamientos, capacidad, precio);
+			administracionServidor.ejecutar();
+		}
+	}
+
+	if (id) {
+		id = fork();
 
 		if (id) {
-			idsAFinalizar[3] = id;
+			idsAFinalizar[4] = id;
 			ProcesoSimulacion procesoSimulacion(tiempo, &estacionamiento,
-					idsAFinalizar, 4);
+					idsAFinalizar, 5);
 			procesoSimulacion.ejecutar();
 
-			for (int i = 0; i < 6; i++) {
-				//TODO ver de esperar a los procesos waitpid(0);
-			}
 		} else {
 			ProcesoConsulta procesoConsulta(&estacionamiento);
 			procesoConsulta.ejecutar();

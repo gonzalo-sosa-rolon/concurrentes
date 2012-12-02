@@ -21,9 +21,10 @@ public:
 	AdministracionServidor(int cantidadEstacionamientos, int tamanio, int precio);
 	virtual ~AdministracionServidor();
 	virtual void ejecutar();
-
 private:
 	void crearEstacionamientos();
+	void procesarMensaje(Mensaje::Mensaje &mensaje);
+	bool estacionamientosVacios();
 };
 
 #endif /* ADMINISTRACIONSERVIDOR_H_ */

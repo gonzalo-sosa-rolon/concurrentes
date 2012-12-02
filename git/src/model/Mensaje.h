@@ -2,6 +2,7 @@
 
 #define MENSAJE_H_
 
+
 namespace Mensaje {
 
 static const char* PATH_TOKEN_COLAS_ENTRADA = "/bin/ps";
@@ -10,6 +11,7 @@ static const char* PATH_TOKEN_COLA_SERVIDOR = "/bin/pwd";
 
 const int TOMAR_PUERTA = 2;
 const int LIBERAR_PUERTA = 3;
+const int MENSAJE_SERVIDOR = 4;
 
 typedef struct mensaje {
 	long mtype;

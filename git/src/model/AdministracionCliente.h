@@ -16,11 +16,13 @@ public:
 private:
 	vector<Cola<Mensaje::Mensaje>* > colasEntrada;
 	vector<Cola<Mensaje::Mensaje>* > colasSalida;
+	Cola<Mensaje::Mensaje> colaServidor;
 	vector<Estacionamiento*> estacionamientos;
 
 	int tamanio;
 	int cantidadEntradas;
 	int cantidadSalidas;
+	int cantidadEstacionamientos;
 public:
 	AdministracionCliente(int cantidadEstacionamientos, int tamanio, int precio, int cantidadEntradas = 3, int cantidadSalidas = 2);
 	virtual ~AdministracionCliente();
