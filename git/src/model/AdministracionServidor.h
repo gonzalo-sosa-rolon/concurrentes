@@ -3,6 +3,8 @@
 
 #include <vector>
 #include "Proceso.h"
+#include "Mensaje.h"
+#include "../util/Cola.h"
 
 class Estacionamiento;
 
@@ -14,6 +16,7 @@ private:
 	int tamanio;
 	int precio;
 	vector<Estacionamiento*> estacionamientos;
+	Cola<Mensaje::Mensaje> colaDeMensajes;
 public:
 	AdministracionServidor(int cantidadEstacionamientos, int tamanio, int precio);
 	virtual ~AdministracionServidor();

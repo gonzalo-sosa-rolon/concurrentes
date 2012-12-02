@@ -2,7 +2,7 @@
 #include "Estacionamiento.h"
 #include "../util/Log.h"
 
-AdministracionServidor::AdministracionServidor(int cantidadEstacionamientos, int tamanio, int precio) {
+AdministracionServidor::AdministracionServidor(int cantidadEstacionamientos, int tamanio, int precio) : colaDeMensajes((char*)Mensaje::PATH_TOKEN_COLA_SERVIDOR, 3) {
 	this->cantidadEstacionamientos = cantidadEstacionamientos;
 	this->tamanio = tamanio;
 	this->precio = precio;
