@@ -28,7 +28,7 @@ int main(int argc, char **argv) {
 	int precio;
 	int cantidadEstacionamientos = 1;
 
-	ParserParametros::parsear(argc, argv, &tiempo, &precio, &capacidad);
+	ParserParametros::parsear(argc, argv, &tiempo, &precio, &capacidad, &cantidadEstacionamientos);
 
 	pid_t id;
 

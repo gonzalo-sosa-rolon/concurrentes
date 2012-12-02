@@ -1,14 +1,15 @@
 #include "ParserParametros.h"
 
 void ParserParametros::parsear(int argc, char **argv, int* tiempo, int* precio,
-		int* capacidad) {
+		int* capacidad, int* cantidadEstacionamientos) {
 
 	char opcion = 0;
 	int tiempoPorParametro = TIEMPO_DEFAULT;
 	int precioPorParametro = PRECIO_HORA_DEFAULT;
 	int capacidadPorParametro = CAPACIDAD_DEFAULT;
+	int cantEstacionamientosPorParametro = CANTIDAD_ESTACION_DEFAULT;
 
-	while ((opcion = getopt(argc, argv, "t:c:p:")) != -1) {
+	while ((opcion = getopt(argc, argv, "t:c:p:e")) != -1) {
 
 		char* value = optarg;
 
@@ -30,6 +31,9 @@ void ParserParametros::parsear(int argc, char **argv, int* tiempo, int* precio,
 		case 'c':
 			capacidadPorParametro = atoi(value);
 			break;
+		case 'e':
+			cantEstacionamientosPorParametro = atoi(value);
+			break;
 		default:
 			abort();
 			break;
@@ -38,4 +42,5 @@ void ParserParametros::parsear(int argc, char **argv, int* tiempo, int* precio,
 	*tiempo = tiempoPorParametro;
 	*precio = precioPorParametro;
 	*capacidad = capacidadPorParametro;
+	*cantidadEstacionamientos = cantEstacionamientosPorParametro;
 }
