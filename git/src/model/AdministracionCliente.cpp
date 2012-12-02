@@ -36,9 +36,8 @@ AdministracionCliente::~AdministracionCliente() {
 }
 
 bool AdministracionCliente::solicitarLugar(int estacionamiento) {
-	Mensaje::Mensaje mensaje;
-	mensaje.mtype = Mensaje::MENSAJE_SERVIDOR;
-	mensaje.automovil = 334;
+	Mensaje::Mensaje mensaje = prepararMensajeServidor(estacionamiento);
+	mensaje.tipo = Mensaje::TIPO_SOLICITAR_LUGAR;
 
 	colaServidor.escribir(mensaje);
 
@@ -89,6 +88,17 @@ bool AdministracionCliente::descocuparLugar(Auto* automovil) {
 	return this->estacionamientos[automovil->getEstacionamiento()]->desocuparLugar(automovil->getNumeroPlaza());
 }
 
+
+Mensaje::Mensaje AdministracionCliente::prepararMensajeServidor(int estacionamiento) {
+	Mensaje::Mensaje resultado;
+	pid_t pid = getpid();
+
+	resultado.mtype = Mensaje::MENSAJE_SERVIDOR;
+	resultado.pid = pid;
+	resultado.estacionamiento = estacionamiento;
+
+	return resultado;
+}
 bool AdministracionCliente::salir(Auto* automovil) {
 	return false; //TODO ver esto
 }

@@ -35,6 +35,9 @@ public:
 	bool solicitarSalida(int estacionamiento);
 	bool liberarSalida(int estacionamiento);
 	bool salir(Auto* automovil);
+
+private:
+	Mensaje::Mensaje prepararMensajeServidor(int estacionamiento);
 };
 
 #endif /* ADMINISTRACIONCLIENTE_H_ */

@@ -35,7 +35,37 @@ void AdministracionServidor::crearEstacionamientos() {
 	info.str("");
 }
 
-void procesarMensaje(Mensaje::Mensaje &mensaje) {
+void AdministracionServidor::procesarMensaje(Mensaje::Mensaje &mensaje) {
+
+	switch (mensaje.tipo) {
+	case Mensaje::TIPO_SOLICITAR_LUGAR:
+		procesarSolicitarLugar(mensaje);
+			break;
+	case Mensaje::TIPO_LIBERAR_PLAZA:
+		procesarLiberarPlaza(mensaje);
+		break;
+	case Mensaje::TIPO_OCUPAR_PLAZA:
+		procesarOcuparPlaza(mensaje);
+		break;
+	case Mensaje::TIPO_SALIR:
+		procesarSalir(mensaje);
+		break;
+	}
+}
+
+void AdministracionServidor::procesarLiberarPlaza(Mensaje::Mensaje mensaje) {
+
+}
+
+void AdministracionServidor::procesarSolicitarLugar(Mensaje::Mensaje mensaje) {
+
+}
+
+void AdministracionServidor::procesarOcuparPlaza(Mensaje::Mensaje mensaje) {
+
+}
+
+void AdministracionServidor::procesarSalir(Mensaje::Mensaje mensaje) {
 
 }
 
@@ -55,23 +85,13 @@ void AdministracionServidor::ejecutar() {
 	stringstream info;
 
 	while (!this->terminarProceso() || !this->estacionamientosVacios()) {
-		info.str("");
-		info << "El servidor va a leer";
 		Log::getLog()->logMensaje(info.str());
 
 		Mensaje::Mensaje mensaje;
 		int resultado = colaDeMensajes.leer(Mensaje::MENSAJE_SERVIDOR,
 				&mensaje);
-
-		info.str("");
-		info << "El servidor leyo el mensaje " << mensaje.automovil;
-		Log::getLog()->logMensaje(info.str());
+		//TODO ver que hacer con el resultado
+		this->procesarMensaje(mensaje);
 	}
-	/**
-	 * 1 ) while true
-	 * 2 ) leo mensaje
-	 * 3 ) proceso mensaje
-	 * 4 ) envio respuesta
-	 */
 }
 

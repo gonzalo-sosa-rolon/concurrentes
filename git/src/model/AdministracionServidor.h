@@ -25,6 +25,11 @@ private:
 	void crearEstacionamientos();
 	void procesarMensaje(Mensaje::Mensaje &mensaje);
 	bool estacionamientosVacios();
+
+	void procesarSolicitarLugar(Mensaje::Mensaje mensaje);
+	void procesarLiberarPlaza(Mensaje::Mensaje mensaje);
+	void procesarOcuparPlaza(Mensaje::Mensaje mensaje);
+	void procesarSalir(Mensaje::Mensaje mensaje);
 };
 
 #endif /* ADMINISTRACIONSERVIDOR_H_ */
