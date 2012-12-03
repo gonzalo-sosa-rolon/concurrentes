@@ -100,7 +100,7 @@ int main(int argc, char **argv) {
 			procesoSimulacion.ejecutar();
 
 		} else {
-			ProcesoConsulta procesoConsulta(&estacionamiento);
+			ProcesoConsulta procesoConsulta(cantidadEstacionamientos);
 			procesoConsulta.ejecutar();
 		}
 	}

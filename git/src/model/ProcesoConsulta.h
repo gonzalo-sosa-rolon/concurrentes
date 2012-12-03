@@ -4,6 +4,7 @@
 #include "Proceso.h"
 #include <iostream>
 #include <string>
+#include <sstream>
 #include "../model/Estacionamiento.h"
 #include "../signals/EventHandler.h"
 #include "../signals/SignalHandler.h"
@@ -14,20 +15,21 @@ using namespace std;
 
 class ProcesoConsulta: public Proceso {
 private:
-	Estacionamiento* estacionamiento;
 	SIGINT_Handler sigint_handler;
+	int cantidadEstacionamientos;
 public:
-	ProcesoConsulta(Estacionamiento* estacionamiento);
+	ProcesoConsulta(int cantidadEstacionamientos);
 	virtual ~ProcesoConsulta();
 	void ejecutar();
 
 private:
 	void imprimirOpciones();
 	string leerOpcion();
+	int leerEstacionamiento();
 	void ejecutarOpcion(string opcion);
 
-	void consultarCantidadDeAutos();
-	void consultarMontoFacturado();
+	void consultarCantidadDeAutos(int estacionamiento);
+	void consultarMontoFacturado(int estacionamiento);
 };
 
 #endif /* PROCESOCONSULTA_H_ */

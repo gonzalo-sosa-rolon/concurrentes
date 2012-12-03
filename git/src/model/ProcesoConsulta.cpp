@@ -1,8 +1,8 @@
 #include "ProcesoConsulta.h"
+#include "Mensaje.h"
 
-ProcesoConsulta::ProcesoConsulta(Estacionamiento* estacionamiento) {
-	this->estacionamiento = estacionamiento;
-
+ProcesoConsulta::ProcesoConsulta(int cantidadEstacionamientos) {
+	this->cantidadEstacionamientos = cantidadEstacionamientos;
 	SignalHandler::getInstance()->registrarHandler(SIGINT, &sigint_handler);
 }
 
@@ -29,16 +29,34 @@ string ProcesoConsulta::leerOpcion() {
 	return opcion;
 }
 
+int ProcesoConsulta::leerEstacionamiento() {
+
+	string estacionamiento;
+	int resultado;
+
+	cout << "Ingrese el estacionamiento: ";
+	cin.clear();
+	cin.ignore(cin.rdbuf()->in_avail());
+
+	cin >> estacionamiento;
+	stringstream ss(estacionamiento);
+
+	ss >> resultado;
+
+	return resultado;
+}
+
 void ProcesoConsulta::ejecutarOpcion(string opcion) {
 
 	char opcionElegida = opcion[0];
+	int estacionamiento = leerEstacionamiento();
 
 	switch (opcionElegida) {
 	case 'a':
-		this->consultarCantidadDeAutos();
+		this->consultarCantidadDeAutos(estacionamiento);
 		break;
 	case 'b':
-		this->consultarMontoFacturado();
+		this->consultarMontoFacturado(estacionamiento);
 		break;
 	default:
 		cout << "Opcion incorrecta" << endl;
@@ -46,13 +64,22 @@ void ProcesoConsulta::ejecutarOpcion(string opcion) {
 	}
 }
 
-void ProcesoConsulta::consultarCantidadDeAutos() {
-	cout << "Cantidad actual de autos : " << this->estacionamiento->getCantidadDeAutos() << endl;
+void ProcesoConsulta::consultarCantidadDeAutos(int estacionamiento) {
+
+	if (estacionamiento >= cantidadEstacionamientos) {
+		cout << "Estacionamiento invalido (" << estacionamiento <<") Rango  [0," << cantidadEstacionamientos - 1<<"]" << endl;
+	}
+
+	cout << "Cantidad actual de autos : " << endl;//TODO this->estacionamiento->getCantidadDeAutos() << endl;
 	cout.flush();
 }
 
-void ProcesoConsulta::consultarMontoFacturado() {
-	cout << "Monto facturado : " << this->estacionamiento->getCantidadFacturado() << endl;
+void ProcesoConsulta::consultarMontoFacturado(int estacionamiento) {
+
+	if (estacionamiento >= cantidadEstacionamientos) {
+		cout << "Estacionamiento invalido (" << estacionamiento <<") Rango [0," << cantidadEstacionamientos - 1<<"]" << endl;
+	}
+	cout << "Monto facturado : " << endl; //TODO this->estacionamiento->getCantidadFacturado() << endl;
 	cout.flush();
 }
 

@@ -17,6 +17,8 @@ const int TIPO_SOLICITAR_LUGAR = 5;
 const int TIPO_OCUPAR_PLAZA = 6;
 const int TIPO_LIBERAR_PLAZA = 7;
 const int TIPO_SALIR = 8;
+const int TIPO_MONTO_FACTURADO = 9;
+const int TIPO_CANTIDAD_AUTOS = 9;
 
 typedef struct mensaje {
 	long mtype;
