@@ -36,6 +36,11 @@ public:
 	bool liberarSalida(Auto* automovil);
 	bool salir(Auto* automovil);
 
+	int consultarCantidadFacturado(int estacionamiento);
+	int consultarCantidadAutos(int estacionamiento);
+
+	int getCantidadEstacionamientos();
+
 private:
 	Mensaje::Mensaje prepararMensajeServidor(int estacionamiento);
 };

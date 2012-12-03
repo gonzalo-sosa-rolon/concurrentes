@@ -3,17 +3,19 @@
 
 const char* AdministracionCliente::PATH_TOKEN_MEMORIA_COMPARTIDA = "/bin/ls";
 
-AdministracionCliente::AdministracionCliente(int cantidadEstacionamientos, int tamanio, int precio, int cantidadEntradas, int cantidadSalidas) :
-		colaServidor((char*)Mensaje::PATH_TOKEN_COLA_SERVIDOR, 3)
-		 {
+AdministracionCliente::AdministracionCliente(int cantidadEstacionamientos,
+		int tamanio, int precio, int cantidadEntradas, int cantidadSalidas) :
+		colaServidor((char*) Mensaje::PATH_TOKEN_COLA_SERVIDOR, 3) {
 	this->tamanio = tamanio;
 	this->cantidadEntradas = cantidadEntradas;
 	this->cantidadSalidas = cantidadSalidas;
 	this->cantidadEstacionamientos = cantidadEstacionamientos;
 
 	for (int i = 0; i < cantidadEstacionamientos; i++) {
-		Cola<Mensaje::Mensaje>* colaEntrada = new Cola<Mensaje::Mensaje>((char*)Mensaje::PATH_TOKEN_COLAS_ENTRADA, i);
-		Cola<Mensaje::Mensaje>* colaSalida = new Cola<Mensaje::Mensaje>((char*)Mensaje::PATH_TOKEN_COLAS_SALIDA, i);
+		Cola<Mensaje::Mensaje>* colaEntrada = new Cola<Mensaje::Mensaje>(
+				(char*) Mensaje::PATH_TOKEN_COLAS_ENTRADA, i);
+		Cola<Mensaje::Mensaje>* colaSalida = new Cola<Mensaje::Mensaje>(
+				(char*) Mensaje::PATH_TOKEN_COLAS_SALIDA, i);
 
 		this->colasEntrada.push_back(colaEntrada);
 		this->colasSalida.push_back(colaSalida);
@@ -81,7 +83,7 @@ bool AdministracionCliente::ocuparPlaza(Auto* automovil) {
 	colaServidor.leer(pid, &mensaje);
 
 	automovil->setNumeroPlaza(mensaje.resultado);
-	return mensaje.resultado == -1? false : true;
+	return mensaje.resultado == -1 ? false : true;
 }
 
 bool AdministracionCliente::solicitarSalida(Auto* automovil) {
@@ -116,8 +118,8 @@ bool AdministracionCliente::descocuparLugar(Auto* automovil) {
 	return true;
 }
 
-
-Mensaje::Mensaje AdministracionCliente::prepararMensajeServidor(int estacionamiento) {
+Mensaje::Mensaje AdministracionCliente::prepararMensajeServidor(
+		int estacionamiento) {
 	Mensaje::Mensaje resultado;
 	pid_t pid = getpid();
 
@@ -127,6 +129,35 @@ Mensaje::Mensaje AdministracionCliente::prepararMensajeServidor(int estacionamie
 
 	return resultado;
 }
+
+int AdministracionCliente::consultarCantidadFacturado(int estacionamiento) {
+	pid_t pid = getpid();
+
+	Mensaje::Mensaje mensaje = prepararMensajeServidor(estacionamiento);
+	mensaje.tipo = Mensaje::TIPO_MONTO_FACTURADO;
+
+	colaServidor.escribir(mensaje);
+	colaServidor.leer(pid, &mensaje);
+
+	return mensaje.resultado;
+}
+
+int AdministracionCliente::getCantidadEstacionamientos() {
+	return this->cantidadEstacionamientos;
+}
+
+int AdministracionCliente::consultarCantidadAutos(int estacionamiento) {
+	pid_t pid = getpid();
+
+	Mensaje::Mensaje mensaje = prepararMensajeServidor(estacionamiento);
+	mensaje.tipo = Mensaje::TIPO_CANTIDAD_AUTOS;
+
+	colaServidor.escribir(mensaje);
+	colaServidor.leer(pid, &mensaje);
+
+	return mensaje.resultado;
+}
+
 bool AdministracionCliente::salir(Auto* automovil) {
 	return false; //TODO ver esto
 }

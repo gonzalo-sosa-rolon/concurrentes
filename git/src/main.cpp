@@ -30,9 +30,10 @@ int main(int argc, char **argv) {
 
 	ParserParametros::parsear(argc, argv, &tiempo, &precio, &capacidad, &cantidadEstacionamientos);
 
+	Estacionamiento estacionamiento(capacidad, precio);
+
 	pid_t id;
 
-	Estacionamiento estacionamiento(capacidad, precio);
 	AdministracionCliente administracionCliente(cantidadEstacionamientos,
 			capacidad, precio);
 	pid_t idsAFinalizar[6];
@@ -100,7 +101,7 @@ int main(int argc, char **argv) {
 			procesoSimulacion.ejecutar();
 
 		} else {
-			ProcesoConsulta procesoConsulta(cantidadEstacionamientos);
+			ProcesoConsulta procesoConsulta(&administracionCliente);
 			procesoConsulta.ejecutar();
 		}
 	}

@@ -9,7 +9,7 @@
 #include "../signals/EventHandler.h"
 #include "../signals/SignalHandler.h"
 #include "../signals/SIGINT_Handler.h"
-
+#include "AdministracionCliente.h"
 
 using namespace std;
 
@@ -17,8 +17,9 @@ class ProcesoConsulta: public Proceso {
 private:
 	SIGINT_Handler sigint_handler;
 	int cantidadEstacionamientos;
+	AdministracionCliente *administracionCliente;
 public:
-	ProcesoConsulta(int cantidadEstacionamientos);
+	ProcesoConsulta(AdministracionCliente *administracionCliente);
 	virtual ~ProcesoConsulta();
 	void ejecutar();
 

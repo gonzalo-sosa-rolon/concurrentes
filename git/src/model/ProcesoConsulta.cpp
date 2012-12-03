@@ -1,8 +1,11 @@
 #include "ProcesoConsulta.h"
 #include "Mensaje.h"
 
-ProcesoConsulta::ProcesoConsulta(int cantidadEstacionamientos) {
-	this->cantidadEstacionamientos = cantidadEstacionamientos;
+ProcesoConsulta::ProcesoConsulta(AdministracionCliente *administracionCliente) {
+
+	this->administracionCliente = administracionCliente;
+	this->cantidadEstacionamientos = administracionCliente->getCantidadEstacionamientos();
+
 	SignalHandler::getInstance()->registrarHandler(SIGINT, &sigint_handler);
 }
 
@@ -67,19 +70,24 @@ void ProcesoConsulta::ejecutarOpcion(string opcion) {
 void ProcesoConsulta::consultarCantidadDeAutos(int estacionamiento) {
 
 	if (estacionamiento >= cantidadEstacionamientos) {
-		cout << "Estacionamiento invalido (" << estacionamiento <<") Rango  [0," << cantidadEstacionamientos - 1<<"]" << endl;
+		cout << "Estacionamiento invalido (" << estacionamiento
+				<< ") Rango  [0," << cantidadEstacionamientos - 1 << "]"
+				<< endl;
+	} else {
+		int resultado = this->administracionCliente->consultarCantidadAutos(estacionamiento);
+		cout << "Cantidad actual de autos : " << resultado << endl;
+		cout.flush();
 	}
 
-	cout << "Cantidad actual de autos : " << endl;//TODO this->estacionamiento->getCantidadDeAutos() << endl;
-	cout.flush();
 }
 
 void ProcesoConsulta::consultarMontoFacturado(int estacionamiento) {
 
 	if (estacionamiento >= cantidadEstacionamientos) {
-		cout << "Estacionamiento invalido (" << estacionamiento <<") Rango [0," << cantidadEstacionamientos - 1<<"]" << endl;
+		cout << "Estacionamiento invalido (" << estacionamiento << ") Rango [0,"
+				<< cantidadEstacionamientos - 1 << "]" << endl;
 	}
-	cout << "Monto facturado : " << endl; //TODO this->estacionamiento->getCantidadFacturado() << endl;
+	cout << "Monto facturado : " << this->administracionCliente->consultarCantidadFacturado(estacionamiento) << endl;
 	cout.flush();
 }
 

@@ -55,11 +55,18 @@ void AdministracionServidor::procesarMensaje(Mensaje::Mensaje &mensaje) {
 	case Mensaje::TIPO_SALIR:
 		procesarSalir(mensaje);
 		break;
+	case Mensaje::TIPO_CANTIDAD_AUTOS:
+		consultaCantidadDeAutos(mensaje);
+		break;
+	case Mensaje::TIPO_MONTO_FACTURADO:
+		consultaMontoFacturado(mensaje);
+		break;
 	}
 }
 
 void AdministracionServidor::procesarLiberarPlaza(Mensaje::Mensaje mensaje) {
-	this->estacionamientos[mensaje.estacionamiento]->desocuparLugar(mensaje.plaza);
+	this->estacionamientos[mensaje.estacionamiento]->desocuparLugar(
+			mensaje.plaza);
 }
 
 void AdministracionServidor::procesarSolicitarLugar(Mensaje::Mensaje mensaje) {
@@ -113,6 +120,42 @@ bool AdministracionServidor::estacionamientosVacios() {
 	}
 
 	return resultado;
+}
+
+void AdministracionServidor::consultaCantidadDeAutos(Mensaje::Mensaje mensaje) {
+
+	int resultado =
+			this->estacionamientos[mensaje.estacionamiento]->getCantidadDeAutos();
+
+	Mensaje::Mensaje respuesta;
+
+	respuesta.resultado = resultado;
+	respuesta.mtype = mensaje.pid;
+
+	colaDeMensajes.escribir(respuesta);
+
+	stringstream info;
+	info
+			<< "Proceso administracion servidor: se proceso la consulta cantidad de autos para el proceso ["
+			<< respuesta.mtype << "]";
+
+}
+
+void AdministracionServidor::consultaMontoFacturado(Mensaje::Mensaje mensaje) {
+	int resultado =
+			this->estacionamientos[mensaje.estacionamiento]->getCantidadFacturado();
+
+	Mensaje::Mensaje respuesta;
+
+	respuesta.resultado = resultado;
+	respuesta.mtype = mensaje.pid;
+
+	colaDeMensajes.escribir(respuesta);
+
+	stringstream info;
+	info
+			<< "Proceso administracion servidor: se proceso la consulta monto facturado para el proceso ["
+			<< respuesta.mtype << "]";
 }
 
 void AdministracionServidor::ejecutar() {

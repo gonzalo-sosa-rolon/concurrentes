@@ -30,6 +30,9 @@ private:
 	void procesarLiberarPlaza(Mensaje::Mensaje mensaje);
 	void procesarOcuparPlaza(Mensaje::Mensaje mensaje);
 	void procesarSalir(Mensaje::Mensaje mensaje);
+
+	void consultaCantidadDeAutos(Mensaje::Mensaje mensaje);
+	void consultaMontoFacturado(Mensaje::Mensaje mensaje);
 };
 
 #endif /* ADMINISTRACIONSERVIDOR_H_ */
