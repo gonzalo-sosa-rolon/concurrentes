@@ -21,9 +21,10 @@ private:
 	int tiempoEjecucion;
 	std::vector<pid_t> idsAFinalizar;
 	AdministracionCliente* administracionCliente;
+	pid_t pidAdminServidor;
 public:
 
-	ProcesoSimulacion(int tiempoEjecucion, AdministracionCliente* administracionCliente, std::vector<pid_t> &idsAFinalizar);
+	ProcesoSimulacion(int tiempoEjecucion, AdministracionCliente* administracionCliente, std::vector<pid_t> &idsAFinalizar, pid_t pidAdminServidor);
 	virtual ~ProcesoSimulacion();
 	virtual void ejecutar();
 };

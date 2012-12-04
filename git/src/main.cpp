@@ -10,8 +10,9 @@
 #include "model/ProcesoGeneradorAutos.h"
 #include "model/ProcesoConsulta.h"
 #include "model/AdministracionCliente.h"
-#include "model/ProcesoPuertaEntrada.h"
-#include "model/ProcesoPuertaSalida.h"
+#include "model/ProcesoEntrada.h"
+#include "model/ProcesoSalida.h"
+#include "model/ProcesoPuerta.h"
 #include "model/ProcesoSimulacion.h"
 #include "model/AdministracionServidor.h"
 #include "util/ParserParametros.h"
@@ -52,8 +53,7 @@ int main(int argc, char **argv) {
 			id = fork();
 
 			if (!id) {
-				ProcesoPuertaEntrada procEntrada(3,
-						(char*) Mensaje::PATH_TOKEN_COLAS_ENTRADA, i);
+				ProcesoEntrada procEntrada(3, (char*) Mensaje::PATH_TOKEN_COLAS_ENTRADA, i);
 				procEntrada.ejecutar();
 				break;
 			} else {
@@ -69,8 +69,7 @@ int main(int argc, char **argv) {
 
 			if (!id) {
 
-				ProcesoPuertaSalida procSalida(3,
-						(char*) Mensaje::PATH_TOKEN_COLAS_SALIDA, i);
+				ProcesoSalida procSalida(2, (char*) Mensaje::PATH_TOKEN_COLAS_SALIDA, i, &administracionCliente, i);
 				procSalida.ejecutar();
 				break;
 			} else {
@@ -79,6 +78,8 @@ int main(int argc, char **argv) {
 		}
 	}
 
+	pid_t pidAdminServidor;
+
 	if (id) {
 		id = fork();
 
@@ -86,7 +87,7 @@ int main(int argc, char **argv) {
 			AdministracionServidor administracionServidor(cantidadEstacionamientos, capacidad, precio);
 			administracionServidor.ejecutar();
 		}
-		idsAFinalizar.push_back(id);
+		pidAdminServidor = id;
 	}
 
 	if (id) {
@@ -99,7 +100,7 @@ int main(int argc, char **argv) {
 
 		} else {
 			idsAFinalizar.push_back(id); // TODO revisar si hay q agregar este pid para q mate al proceso consulta
-			ProcesoSimulacion procesoSimulacion(tiempo, &administracionCliente,	idsAFinalizar);
+			ProcesoSimulacion procesoSimulacion(tiempo, &administracionCliente,	idsAFinalizar, pidAdminServidor);
 			procesoSimulacion.ejecutar();
 		}
 	}

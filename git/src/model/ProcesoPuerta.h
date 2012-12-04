@@ -14,26 +14,34 @@
 using namespace std;
 
 class ProcesoPuerta: public Proceso {
-private:
+
+public:
+	ProcesoPuerta(int numeroDeEntrada, char* path, char key);
+	virtual ~ProcesoPuerta();
+	virtual void ejecutar();
+
+protected:
 	int cantidadEntradas;
 	int cantidadEntradasOcupadas;
 	Cola<Mensaje::Mensaje> colaDeAutos;
-	std::string nombre;
 
 
-	bool ocuparPlaza();
-	void logOcupePlaza(int nroPlaza, int idAuto);
-	Lock* tomarLockPlaza(int nroDePlaza);
-	void liberarLockPlaza(int nroDePlaza, Lock* lockPlaza);
+	void liberarPuerta(Mensaje::Mensaje &msg);
+	void ocuparPuerta(Mensaje::Mensaje &msg);
+	Mensaje::Mensaje leerMensaje(int mtype);
 
-	void liberarEntrada();
-	void ocuparEntrada();
+	Mensaje::Mensaje leerTomarOLiberar();
+	Mensaje::Mensaje leerLiberar();
 
-public:
-	ProcesoPuerta(int numeroDeEntrada, char* nombre, char* path, char key);
-	virtual ~ProcesoPuerta();
-	virtual void ejecutar();
-	virtual bool getCondicionTerminar() = 0;
+	/*
+	 * Metodo q se ejecuta despues de recibir la señal
+	 */
+	virtual void terminarEjecucion() = 0;
+	virtual string getNombre();
+
+	void procesarIngresoOEgreso();
+	void procesarEgreso();
+
 };
 
 #endif /* PROCESOPUERTA_H_ */

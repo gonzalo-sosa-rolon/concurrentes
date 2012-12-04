@@ -1,8 +1,8 @@
 #include "ProcesoPuerta.h"
 #include "Estacionamiento.h" //TODO Estaria bueno sacar este include
 
-ProcesoPuerta::ProcesoPuerta(int cantidadEntradas, char* nombre, char* path, char key)
-									: colaDeAutos(path, key), nombre(nombre) {
+ProcesoPuerta::ProcesoPuerta(int cantidadEntradas, char* path, char key)
+									: colaDeAutos(path, key) {
 	this->cantidadEntradas = cantidadEntradas;
 	this->cantidadEntradasOcupadas = 0;
 }
@@ -11,90 +11,108 @@ ProcesoPuerta::~ProcesoPuerta() {
 	colaDeAutos.destruir();
 }
 
+string ProcesoPuerta::getNombre() {
+	return "";
+}
+
 void ProcesoPuerta::ejecutar() {
 	//TODO Emprolijar logs
 
 	stringstream info;
 
-	info << nombre << ": Inicio de ejecucion, pid = [" << getpid() << "]";
+	info << getNombre() << ": Inicio de ejecucion, pid = [" << getpid() << "]";
 	Log::getLog()->logMensaje(info.str());
 	info.str("");
 
-	while (!this->getCondicionTerminar()) {
+	while (!this->terminarProceso()) {
 		while ((!this->terminarProceso()) && (cantidadEntradasOcupadas < cantidadEntradas)) {
-			ocuparEntrada();
+			procesarIngresoOEgreso();
 		}
 
-		info << nombre << ": Parece que se llenaron las entradas";
+		info << getNombre() << ": Parece que se llenaron las puertas";
 		Log::getLog()->logMensaje(info.str());
 		info.str("");
 
-		if (!this->getCondicionTerminar()) {
-			liberarEntrada();
+		if (!this->terminarProceso()) {
+			procesarEgreso();
 		}
 	}
 
-	info << nombre << ": Recibi la señal, espero a q pasen los autos. pid = [" << getpid() << "]";
+	info << getNombre() << ": Recibi la señal, espero a q pasen los autos. pid = [" << getpid() << "]";
 	Log::getLog()->logMensaje(info.str());
 	info.str("");
 
-	for (int i = 0; i < cantidadEntradasOcupadas; i++) {
-		liberarEntrada();
-	}
+	terminarEjecucion();
 
-	info << nombre << ": Termine. pid = [" << getpid() << "]";
+	info << getNombre() << ": Termine. pid = [" << getpid() << "]";
 	Log::getLog()->logMensaje(info.str());
 	info.str("");
 }
 
-void ProcesoPuerta::ocuparEntrada() {
+void ProcesoPuerta::procesarIngresoOEgreso() {
+	Mensaje::Mensaje msg = leerTomarOLiberar();
+	if (msg.mtype == Mensaje::TOMAR_PUERTA) {
+		ocuparPuerta(msg);
+	} else if (msg.mtype == Mensaje::LIBERAR_PUERTA) {
+		liberarPuerta(msg);
+	}
+}
+
+void ProcesoPuerta::procesarEgreso() {
+	Mensaje::Mensaje msg = leerLiberar();
+	liberarPuerta(msg);
+}
+
+Mensaje::Mensaje ProcesoPuerta::leerTomarOLiberar() {
+	return leerMensaje(Mensaje::TOMAR_O_LIBERAR_PUERTA);
+}
+
+Mensaje::Mensaje ProcesoPuerta::leerLiberar() {
+	return leerMensaje(Mensaje::LIBERAR_PUERTA);
+}
+
+Mensaje::Mensaje ProcesoPuerta::leerMensaje(int mtype) {
+	stringstream info;
+	Mensaje::Mensaje msg;
+	int resultado = colaDeAutos.leer(mtype, &msg);
+
+	if ((resultado == -1) && (!this->terminarProceso())) {
+		info << getNombre() << "*** ERROR: " << strerror(errno) << " ***";
+		Log::getLog()->logMensaje(info.str());
+		info.str("");
+	}
+
+	return msg;
+}
+
+void ProcesoPuerta::ocuparPuerta(Mensaje::Mensaje &msg) {
 
 	//TODO sacar numeros magicos
 	//TODO Emprolijar logs
 
 	stringstream info;
-
-	info << nombre << ": Espero a leer una solicitud";
-	Log::getLog()->logMensaje(info.str());
-	info.str("");
-
-	Mensaje::Mensaje solicitud;
-	colaDeAutos.leer(Mensaje::TOMAR_PUERTA, &solicitud);
-	solicitud.mtype = solicitud.pid;
-	int resultado = colaDeAutos.escribir(solicitud);
+	msg.mtype = msg.pid;
+	int resultado = colaDeAutos.escribir(msg);
 	cantidadEntradasOcupadas++;
 
-	info << nombre << ": Ingrese el auto [" << solicitud.pid << "]" << ". Resultado " << resultado;
+	info << getNombre() << ": Ingrese el auto [" << msg.pid << "]" << ". Resultado " << resultado;
 	Log::getLog()->logMensaje(info.str());
 	info.str("");
 
 	if ((resultado == -1) && (!this->terminarProceso())) {
-		info << nombre << "********************** OCUPAR - ERROR: " << strerror(errno);
+		info << getNombre() << "********************** OCUPAR - ERROR: " << strerror(errno);
 		Log::getLog()->logMensaje(info.str());
 		info.str("");
+
 	}
 }
 
-void ProcesoPuerta::liberarEntrada() {
-
-	//TODO sacar numeros magicos
-	//TODO Emprolijar logs
-
+void ProcesoPuerta::liberarPuerta(Mensaje::Mensaje &msg) {
 	stringstream info;
-	Mensaje::Mensaje liberado;
-	int resultado = colaDeAutos.leer(Mensaje::LIBERAR_PUERTA, &liberado);
 	cantidadEntradasOcupadas--;
 
-	info << nombre << ": Libere el auto [" << liberado.pid << "]" << ". Resultado " << resultado;
-
+	info << getNombre() << ": Libere el auto [" << msg.pid << "]";
 	Log::getLog()->logMensaje(info.str());
-	info.str("");
-
-	if ((resultado == -1) && (!this->terminarProceso())) {
-		info << nombre << "********************** LIBERAR - ERROR: " << strerror(errno);
-		Log::getLog()->logMensaje(info.str());
-		info.str("");
-	}
 }
 
 

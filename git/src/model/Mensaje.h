@@ -11,6 +11,8 @@ static const char* PATH_TOKEN_COLA_SERVIDOR = "/bin/pwd";
 
 const int TOMAR_PUERTA = 2;
 const int LIBERAR_PUERTA = 3;
+const int TOMAR_O_LIBERAR_PUERTA = -3;
+
 const int MENSAJE_SERVIDOR = 4;
 
 const int TIPO_SOLICITAR_LUGAR = 5;
