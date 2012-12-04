@@ -20,7 +20,7 @@ void ProcesoPuerta::ejecutar() {
 	Log::getLog()->logMensaje(info.str());
 	info.str("");
 
-	while (!this->terminarProceso()) {
+	while (!this->getCondicionTerminar()) {
 		while ((!this->terminarProceso()) && (cantidadEntradasOcupadas < cantidadEntradas)) {
 			ocuparEntrada();
 		}
@@ -29,7 +29,7 @@ void ProcesoPuerta::ejecutar() {
 		Log::getLog()->logMensaje(info.str());
 		info.str("");
 
-		if (!this->terminarProceso()) {
+		if (!this->getCondicionTerminar()) {
 			liberarEntrada();
 		}
 	}

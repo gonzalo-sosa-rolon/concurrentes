@@ -33,6 +33,7 @@ public:
 	ProcesoPuerta(int numeroDeEntrada, char* nombre, char* path, char key);
 	virtual ~ProcesoPuerta();
 	virtual void ejecutar();
+	virtual bool getCondicionTerminar() = 0;
 };
 
 #endif /* PROCESOPUERTA_H_ */

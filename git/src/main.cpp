@@ -10,7 +10,8 @@
 #include "model/ProcesoGeneradorAutos.h"
 #include "model/ProcesoConsulta.h"
 #include "model/AdministracionCliente.h"
-#include "model/ProcesoPuerta.h"
+#include "model/ProcesoPuertaEntrada.h"
+#include "model/ProcesoPuertaSalida.h"
 #include "model/ProcesoSimulacion.h"
 #include "model/AdministracionServidor.h"
 #include "util/ParserParametros.h"
@@ -51,7 +52,7 @@ int main(int argc, char **argv) {
 			id = fork();
 
 			if (!id) {
-				ProcesoPuerta procEntrada(3, (char*) "Entrada",
+				ProcesoPuertaEntrada procEntrada(3,
 						(char*) Mensaje::PATH_TOKEN_COLAS_ENTRADA, i);
 				procEntrada.ejecutar();
 				break;
@@ -68,7 +69,7 @@ int main(int argc, char **argv) {
 
 			if (!id) {
 
-				ProcesoPuerta procSalida(3, (char*) "Salida",
+				ProcesoPuertaSalida procSalida(3,
 						(char*) Mensaje::PATH_TOKEN_COLAS_SALIDA, i);
 				procSalida.ejecutar();
 				break;
@@ -97,7 +98,7 @@ int main(int argc, char **argv) {
 			procesoConsulta.ejecutar();
 
 		} else {
-			//idsAFinalizar.push_back(id); // TODO revisar si hay q agregar este pid para q mate al proceso consulta
+			idsAFinalizar.push_back(id); // TODO revisar si hay q agregar este pid para q mate al proceso consulta
 			ProcesoSimulacion procesoSimulacion(tiempo, &administracionCliente,	idsAFinalizar);
 			procesoSimulacion.ejecutar();
 		}
