@@ -40,7 +40,7 @@ public:
 	int consultarCantidadAutos(int estacionamiento);
 
 	int getCantidadEstacionamientos();
-
+	bool estacionamientosVacios();
 private:
 	Mensaje::Mensaje prepararMensajeServidor(int estacionamiento);
 };

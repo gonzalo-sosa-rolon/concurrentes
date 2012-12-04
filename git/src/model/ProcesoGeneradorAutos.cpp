@@ -2,8 +2,8 @@
 #include "AdministracionCliente.h"
 const int ProcesoGeneradorAutos::TIEMPO_ENTRE_AUTOS = 5;
 
-ProcesoGeneradorAutos::ProcesoGeneradorAutos(Estacionamiento *estacionamiento, AdministracionCliente* administracionCliente) {
-	this->estacionamiento = estacionamiento;
+ProcesoGeneradorAutos::ProcesoGeneradorAutos(
+		AdministracionCliente* administracionCliente) {
 	this->administracionCliente = administracionCliente;
 }
 
@@ -24,7 +24,14 @@ void ProcesoGeneradorAutos::ejecutar() {
 		id = fork();
 
 		if (!id) {
-			ProcesoAuto procesoAuto(administracionCliente, 0); //TODO setear el nombre del estacionamiento
+			int estacionamiento = NumberUtil::getRandom(0,
+					this->administracionCliente->getCantidadEstacionamientos());
+			info
+					<< "Proceso Generador Autos: se genero un auto para el estacionamiento ["
+					<< estacionamiento << "]";
+			Log::getLog()->logMensaje(info.str());
+			info.str("");
+			ProcesoAuto procesoAuto(administracionCliente, 0); //TODO estacionamiento); //TODO loguear esto
 			procesoAuto.ejecutar();
 			return;
 		} else {

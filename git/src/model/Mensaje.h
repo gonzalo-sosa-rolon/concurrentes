@@ -19,6 +19,7 @@ const int TIPO_LIBERAR_PLAZA = 7;
 const int TIPO_SALIR = 8;
 const int TIPO_MONTO_FACTURADO = 9;
 const int TIPO_CANTIDAD_AUTOS = 10;
+const int TIPO_ESTACIONAMIENTO_VACIO = 11;
 
 typedef struct mensaje {
 	long mtype;

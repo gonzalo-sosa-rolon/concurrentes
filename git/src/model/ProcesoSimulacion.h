@@ -8,7 +8,7 @@
 #include "../signals/SignalHandler.h"
 #include "../signals/SIGINT_Handler.h"
 #include "../util/Log.h"
-#include "../model/Estacionamiento.h"
+#include "../model/AdministracionCliente.h"
 
 #define CANTIDAD_ENTRADAS 3
 #define CANTIDAD_SALIDAS 2
@@ -20,10 +20,10 @@ private:
 	int tiempoEjecucion;
 	pid_t* idsAFinalizar;
 	int cantidadIds;
-	Estacionamiento* estacionamiento;
+	AdministracionCliente* administracionCliente;
 public:
 
-	ProcesoSimulacion(int tiempoEjecucion, Estacionamiento* estacionamiento, pid_t* idsAFinalizar, int cantidadIds);
+	ProcesoSimulacion(int tiempoEjecucion, AdministracionCliente* administracionCliente, pid_t* idsAFinalizar, int cantidadIds);
 	virtual ~ProcesoSimulacion();
 	virtual void ejecutar();
 };

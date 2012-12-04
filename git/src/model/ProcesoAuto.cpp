@@ -12,6 +12,7 @@ ProcesoAuto::~ProcesoAuto() {
 }
 
 void ProcesoAuto::ejecutar() {
+
 	stringstream info;
 	info << "Auto: [" << this->autoDelProceso->getId() << "]: solicita lugar";
 	Log::getLog()->logMensaje(info.str());

@@ -1,8 +1,8 @@
 #include "ProcesoSimulacion.h"
 
-ProcesoSimulacion::ProcesoSimulacion(int tiempoEjecucion, Estacionamiento* estacionamiento, pid_t* idsAFinalizar, int cantidadIds) {
+ProcesoSimulacion::ProcesoSimulacion(int tiempoEjecucion, AdministracionCliente* administracionCliente, pid_t* idsAFinalizar, int cantidadIds) {
 	this->tiempoEjecucion = tiempoEjecucion;
-	this->estacionamiento = estacionamiento;
+	this->administracionCliente = administracionCliente;
 
 	this->idsAFinalizar = new pid_t[cantidadIds];
 	this->cantidadIds = cantidadIds;
@@ -22,7 +22,7 @@ void ProcesoSimulacion::ejecutar() {
 	cout << "Comienzo de la ejecucion por " << tiempoEjecucion << " segundos" << endl;
 	sleep(tiempoEjecucion);
 
-	info << "Finalizando Ejecucion, enviando señales a procesos";
+	info << "Finalizando Ejecucion, enviando seniales a procesos";
 	Log::getLog()->logMensaje(info.str());
 	info.str("");
 

@@ -1,10 +1,3 @@
-/*
- * ProcesoGeneradorAutos.h
- *
- *  Created on: Nov 24, 2012
- *      Author: gsosarolon
- */
-
 #ifndef PROCESOGENERADORAUTOS_H_
 #define PROCESOGENERADORAUTOS_H_
 
@@ -18,16 +11,14 @@
 #include "ProcesoAuto.h"
 #include "../util/Log.h"
 
-class Estacionamiento;
 class AdministracionCliente;
 
 class ProcesoGeneradorAutos : Proceso {
 private:
-	Estacionamiento *estacionamiento;
 	AdministracionCliente* administracionCliente;
 public:
 	static const int TIEMPO_ENTRE_AUTOS;
-	ProcesoGeneradorAutos(Estacionamiento *estacionamiento, AdministracionCliente* administracionCliente);
+	ProcesoGeneradorAutos(AdministracionCliente* administracionCliente);
 	virtual ~ProcesoGeneradorAutos();
 	virtual void ejecutar();
 };

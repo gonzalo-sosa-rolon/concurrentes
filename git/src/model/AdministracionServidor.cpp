@@ -24,8 +24,8 @@ AdministracionServidor::~AdministracionServidor() {
 void AdministracionServidor::crearEstacionamientos() {
 
 	stringstream info;
-	info << "Proceso administracion servidor: se van a crear " << this->cantidadEstacionamientos
-			<< " estacionamientos.";
+	info << "Proceso administracion servidor: se van a crear "
+			<< this->cantidadEstacionamientos << " estacionamientos.";
 	Log::getLog()->logMensaje(info.str());
 	info.str("");
 
@@ -92,6 +92,17 @@ void AdministracionServidor::procesarSolicitarLugar(Mensaje::Mensaje mensaje) {
 			<< respuesta.mtype << "] con el resultado {" << resultado << "}";
 
 	Log::getLog()->logMensaje(info.str());
+}
+
+void AdministracionServidor::procesarEstacionamientosVacios(
+		Mensaje::Mensaje mensaje) {
+	bool resultado = this->estacionamientosVacios();
+	Mensaje::Mensaje respuesta;
+
+	respuesta.resultado = resultado;
+	respuesta.mtype = mensaje.pid;
+
+	colaDeMensajes.escribir(respuesta);
 }
 
 void AdministracionServidor::procesarOcuparPlaza(Mensaje::Mensaje mensaje) {

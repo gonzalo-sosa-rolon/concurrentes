@@ -70,6 +70,18 @@ bool AdministracionCliente::liberarEntrada(Auto* automovil) {
 	return colasEntrada[estacionamiento]->escribir(solicitud);
 }
 
+bool AdministracionCliente::estacionamientosVacios() {
+
+	pid_t pid = getpid();
+	Mensaje::Mensaje mensaje = prepararMensajeServidor(0);
+	mensaje.tipo = Mensaje::TIPO_ESTACIONAMIENTO_VACIO;
+
+	colaServidor.escribir(mensaje);
+	colaServidor.leer(pid, &mensaje);
+
+	return mensaje.resultado;
+}
+
 bool AdministracionCliente::ocuparPlaza(Auto* automovil) {
 
 	int estacionamiento = automovil->getEstacionamiento();
