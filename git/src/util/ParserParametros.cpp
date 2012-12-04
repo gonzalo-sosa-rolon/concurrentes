@@ -9,7 +9,7 @@ void ParserParametros::parsear(int argc, char **argv, int* tiempo, int* precio,
 	int capacidadPorParametro = CAPACIDAD_DEFAULT;
 	int cantEstacionamientosPorParametro = CANTIDAD_ESTACION_DEFAULT;
 
-	while ((opcion = getopt(argc, argv, "t:c:p:e")) != -1) {
+	while ((opcion = getopt(argc, argv, "t:c:p:e:")) != -1) {
 
 		char* value = optarg;
 

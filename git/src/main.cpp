@@ -29,7 +29,7 @@ int main(int argc, char **argv) {
 	int tiempo;
 	int capacidad;
 	int precio;
-	int cantidadEstacionamientos = 1;
+	int cantidadEstacionamientos;
 
 	ParserParametros::parsear(argc, argv, &tiempo, &precio, &capacidad, &cantidadEstacionamientos);
 
@@ -99,8 +99,8 @@ int main(int argc, char **argv) {
 			procesoConsulta.ejecutar();
 
 		} else {
-			idsAFinalizar.push_back(id); // TODO revisar si hay q agregar este pid para q mate al proceso consulta
-			ProcesoSimulacion procesoSimulacion(tiempo, &administracionCliente,	idsAFinalizar, pidAdminServidor);
+			//idsAFinalizar.push_back(id); // TODO revisar si hay q agregar este pid para q mate al proceso consulta
+			ProcesoSimulacion procesoSimulacion(tiempo, &administracionCliente,	idsAFinalizar, pidAdminServidor, id);
 			procesoSimulacion.ejecutar();
 		}
 	}

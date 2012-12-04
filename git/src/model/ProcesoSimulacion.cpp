@@ -1,11 +1,12 @@
 #include "ProcesoSimulacion.h"
 
 ProcesoSimulacion::ProcesoSimulacion(int tiempoEjecucion, AdministracionCliente* administracionCliente,
-		std::vector<pid_t> &ids, pid_t pidAdminServidor) : idsAFinalizar(ids) {
+		std::vector<pid_t> &ids, pid_t pidAdminServidor, pid_t idProcesoConsulta) : idsAFinalizar(ids) {
 
 	this->tiempoEjecucion = tiempoEjecucion;
 	this->administracionCliente = administracionCliente;
 	this->pidAdminServidor = pidAdminServidor;
+	this->idProcesoConsulta = idProcesoConsulta;
 
 }
 
@@ -31,6 +32,7 @@ void ProcesoSimulacion::ejecutar() {
 		wait(0); //TODO ver que onda un wait sin pid
 	}
 	kill(pidAdminServidor, SIGINT);
+	kill(idProcesoConsulta, SIGINT);
 
 	cout << "Finalizacion de la ejecucion" << endl;
 }
