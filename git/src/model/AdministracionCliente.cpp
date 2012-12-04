@@ -41,10 +41,12 @@ bool AdministracionCliente::solicitarLugar(Auto* automovil) {
 	Mensaje::Mensaje mensaje = prepararMensajeServidor(estacionamiento);
 	mensaje.tipo = Mensaje::TIPO_SOLICITAR_LUGAR;
 
-	colaServidor.escribir(mensaje);
-	colaServidor.leer(pid, &mensaje);
+	Mensaje::Mensaje respuesta;
 
-	return mensaje.resultado;
+	colaServidor.escribir(mensaje);
+	colaServidor.leer(pid, &respuesta);
+
+	return respuesta.resultado;
 }
 
 bool AdministracionCliente::solicitarEntrada(Auto* automovil) {
@@ -83,7 +85,7 @@ bool AdministracionCliente::ocuparPlaza(Auto* automovil) {
 	colaServidor.leer(pid, &mensaje);
 
 	automovil->setNumeroPlaza(mensaje.resultado);
-	return mensaje.resultado == -1 ? false : true;
+	return mensaje.resultado == -1 || mensaje.resultado == 0 ? false : true;
 }
 
 bool AdministracionCliente::solicitarSalida(Auto* automovil) {
@@ -134,12 +136,13 @@ int AdministracionCliente::consultarCantidadFacturado(int estacionamiento) {
 	pid_t pid = getpid();
 
 	Mensaje::Mensaje mensaje = prepararMensajeServidor(estacionamiento);
+	Mensaje::Mensaje respuesta;
 	mensaje.tipo = Mensaje::TIPO_MONTO_FACTURADO;
 
 	colaServidor.escribir(mensaje);
-	colaServidor.leer(pid, &mensaje);
+	colaServidor.leer(pid, &respuesta);
 
-	return mensaje.resultado;
+	return respuesta.resultado;
 }
 
 int AdministracionCliente::getCantidadEstacionamientos() {

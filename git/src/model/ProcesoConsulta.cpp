@@ -86,9 +86,10 @@ void ProcesoConsulta::consultarMontoFacturado(int estacionamiento) {
 	if (estacionamiento >= cantidadEstacionamientos) {
 		cout << "Estacionamiento invalido (" << estacionamiento << ") Rango [0,"
 				<< cantidadEstacionamientos - 1 << "]" << endl;
+	} else {
+		cout << "Monto facturado : " << this->administracionCliente->consultarCantidadFacturado(estacionamiento) << endl;
+		cout.flush();
 	}
-	cout << "Monto facturado : " << this->administracionCliente->consultarCantidadFacturado(estacionamiento) << endl;
-	cout.flush();
 }
 
 void ProcesoConsulta::ejecutar() {

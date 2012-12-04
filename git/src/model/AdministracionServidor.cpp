@@ -24,7 +24,7 @@ AdministracionServidor::~AdministracionServidor() {
 void AdministracionServidor::crearEstacionamientos() {
 
 	stringstream info;
-	info << "Proceso administracion servidor: se van a crear " << this->tamanio
+	info << "Proceso administracion servidor: se van a crear " << this->cantidadEstacionamientos
 			<< " estacionamientos.";
 	Log::getLog()->logMensaje(info.str());
 	info.str("");
@@ -65,8 +65,14 @@ void AdministracionServidor::procesarMensaje(Mensaje::Mensaje &mensaje) {
 }
 
 void AdministracionServidor::procesarLiberarPlaza(Mensaje::Mensaje mensaje) {
-	this->estacionamientos[mensaje.estacionamiento]->desocuparLugar(
-			mensaje.plaza);
+	int resultado =
+			this->estacionamientos[mensaje.estacionamiento]->desocuparLugar(
+					mensaje.plaza);
+
+	stringstream info;
+	info
+			<< "Proceso administracion servidor: se proceso el pedido de liberar la plaza ["
+			<< mensaje.plaza << "]";
 }
 
 void AdministracionServidor::procesarSolicitarLugar(Mensaje::Mensaje mensaje) {
@@ -83,7 +89,7 @@ void AdministracionServidor::procesarSolicitarLugar(Mensaje::Mensaje mensaje) {
 	stringstream info;
 	info
 			<< "Proceso administracion servidor: se proceso la consulta procesar lugar al proceso ["
-			<< respuesta.mtype << "]";
+			<< respuesta.mtype << "] con el resultado {" << resultado << "}";
 
 	Log::getLog()->logMensaje(info.str());
 }

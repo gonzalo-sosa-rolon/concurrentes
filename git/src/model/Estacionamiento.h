@@ -4,6 +4,7 @@
 #include <sstream>
 #include <string>
 #include <iostream>
+#include <vector>
 #include "Plaza.h"
 #include "../MemoriaCompartida.h"
 #include "../util/Cola.h"
@@ -36,7 +37,7 @@ public:
 	bool ocuparPlaza(int pos, int tiempo, long autoId);
 	long desocuparLugar(int posicion);
 
-	Plaza getPlaza(int pos);
+	Plaza* getPlaza(int pos);
 	Lock* getLockPlaza(int pos);
 	bool solicitarLugar();
 	int seleccionarPlaza(int tiempo, long autoId);
@@ -46,13 +47,13 @@ private:
 	int cantidadEntradas;
 	int cantidadSalidas;
 
-	MemoriaCompartida<double> cantidadFacturado;
+	int cantidadFacturado;
 	Lock* lockCantidadFacturado;
 
-	MemoriaCompartida<int> cantidadDeAutos;
+	int cantidadDeAutos;
 	Lock* lockCantidadDeAutos;
 
-	MemoriaCompartida<Plaza> plazas;
+	vector<Plaza*> plazas;
 	Lock** lockPlazas;
 
 	void innitLocks();

@@ -12,44 +12,18 @@ Estacionamiento::Estacionamiento(int tamanio, int precio, int cantidadEntradas,
 	this->cantidadEntradas = cantidadEntradas;
 	this->cantidadSalidas = cantidadSalidas;
 
-	int error;
-	error = this->cantidadDeAutos.crear(
-			Estacionamiento::PATH_TOKEN_MEMORIA_COMPARTIDA, 'a', 1);
-
-	if (error) {
-		imprimirError(error);
-		exit(error);
-	}
-
-	this->cantidadDeAutos.escribir(0, 0);
-
-	error = this->cantidadFacturado.crear(
-			Estacionamiento::PATH_TOKEN_MEMORIA_COMPARTIDA, 'b', 1);
-
-	if (error) {
-		imprimirError(error);
-		exit(error);
-	}
-
-	this->cantidadFacturado.escribir(0, 0);
-
-	error = this->plazas.crear(Estacionamiento::PATH_TOKEN_MEMORIA_COMPARTIDA,
-			'S', tamanio);
-
-	if (error) {
-		imprimirError(error);
-		exit(error);
-	}
+	this->cantidadDeAutos = 0;
+	this->cantidadFacturado = 0;
 
 	initPlazas();
 	innitLocks();
 }
 
 void Estacionamiento::initPlazas() {
-	Plaza plaza;
-	plaza.incializar();
 	for (int i = 0; i < tamanio; i++) {
-		this->plazas.escribir(i, plaza);
+		Plaza* plaza = new Plaza();
+		plaza->incializar();
+		this->plazas.push_back(plaza);
 	}
 }
 
@@ -58,9 +32,11 @@ int Estacionamiento::getTamanio() {
 }
 
 Estacionamiento::~Estacionamiento() {
-	this->cantidadDeAutos.liberar();
-	this->cantidadFacturado.liberar();
-	this->plazas.liberar();
+
+	for (int i = 0; i < tamanio; i++) {
+		delete plazas[i];
+	}
+
 	eliminarLocks();
 }
 
@@ -75,7 +51,7 @@ int Estacionamiento::getCantidadDeAutos() {
 		exit(error);
 	}
 
-	resultado = this->cantidadDeAutos.leer(0);
+	resultado = this->cantidadDeAutos;
 	error = this->lockCantidadDeAutos->liberarLock();
 
 	if (error) {
@@ -95,8 +71,7 @@ void Estacionamiento::sumarUnAuto() {
 		exit(error);
 	}
 
-	int resultado = this->cantidadDeAutos.leer(0);
-	this->cantidadDeAutos.escribir(0, ++resultado);
+	this->cantidadDeAutos++;
 
 	error = this->lockCantidadDeAutos->liberarLock();
 
@@ -115,8 +90,7 @@ void Estacionamiento::restarUnAuto() {
 		exit(error);
 	}
 
-	int resultado = this->cantidadDeAutos.leer(0);
-	this->cantidadDeAutos.escribir(0, --resultado);
+	this->cantidadDeAutos--;
 
 	error = this->lockCantidadDeAutos->liberarLock();
 
@@ -131,7 +105,7 @@ int Estacionamiento::getCantidadFacturado() {
 
 	int error = this->lockCantidadFacturado->tomarLock();
 
-	resultado = this->cantidadFacturado.leer(0);
+	resultado = this->cantidadFacturado;
 	error = this->lockCantidadFacturado->liberarLock();
 
 	if (error) {
@@ -153,10 +127,10 @@ bool Estacionamiento::estaVacio() {
 bool Estacionamiento::ocuparPlaza(int pos, int tiempo, long autoId) {
 	bool resultado = false;
 
-	Plaza plaza = this->plazas.leer(pos);
-	if (!plaza.getOcupado()) {
-		plaza.ocupar(tiempo, time(NULL), autoId);
-		this->plazas.escribir(pos, plaza);
+	Plaza *plaza = this->plazas[pos];
+	if (!plaza->getOcupado()) {
+		//TODO ver por que no le pasan el tiempo aca
+		plaza->ocupar(tiempo, time(NULL), autoId);
 		resultado = true;
 	}
 
@@ -165,14 +139,13 @@ bool Estacionamiento::ocuparPlaza(int pos, int tiempo, long autoId) {
 
 long Estacionamiento::desocuparLugar(int posicion) {
 
-	Plaza plaza = this->getPlaza(posicion);
+	Plaza* plaza = this->getPlaza(posicion);
 
-	if (plaza.getOcupado()) {
-		this->facturar(plaza.getTiempoEstadia());
-		plaza.setOcupado(false);
-		this->plazas.escribir(posicion, plaza);
+	if (plaza->getOcupado()) {
+		this->facturar(plaza->getTiempoEstadia());
+		plaza->setOcupado(false);
 		this->restarUnAuto();
-		return plaza.getAutoId();
+		return plaza->getAutoId();
 	}
 	return 0;
 }
@@ -181,8 +154,8 @@ Lock* Estacionamiento::getLockPlaza(int pos) {
 	return this->lockPlazas[pos];
 }
 
-Plaza Estacionamiento::getPlaza(int pos) {
-	return this->plazas.leer(pos);
+Plaza *Estacionamiento::getPlaza(int pos) {
+	return this->plazas[pos];
 }
 
 void Estacionamiento::facturar(int segundos) {
@@ -193,8 +166,7 @@ void Estacionamiento::facturar(int segundos) {
 }
 
 void Estacionamiento::incrementarFacturacion(int cantidadFacturada) {
-	int resultado = this->cantidadFacturado.leer(0) + cantidadFacturada;
-	this->cantidadFacturado.escribir(0, resultado);
+	this->cantidadFacturado += cantidadFacturada;
 }
 
 void Estacionamiento::innitLocks() {
@@ -216,7 +188,7 @@ int Estacionamiento::seleccionarPlaza(int tiempo, long autoId) {
 	for (int i = 0; i < this->getTamanio(); i++) {
 		Lock* lockPlaza = this->tomarLockPlaza(i);
 
-		if (!this->getPlaza(i).getOcupado()) {
+		if (!this->getPlaza(i)->getOcupado()) {
 
 			this->ocuparPlaza(i, tiempo, autoId);
 			resultado = i;
@@ -283,10 +255,10 @@ bool Estacionamiento::solicitarLugar() {
 		exit(error);
 	}
 
-	int cantidad = this->cantidadDeAutos.leer(0);
+	int cantidad = this->cantidadDeAutos;
 
 	if (cantidad < tamanio) {
-		this->cantidadDeAutos.escribir(0, ++cantidad);
+		this->cantidadDeAutos++;
 		resultado = true;
 	}
 

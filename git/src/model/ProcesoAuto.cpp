@@ -16,11 +16,14 @@ void ProcesoAuto::ejecutar() {
 	info << "Auto: [" << this->autoDelProceso->getId() << "]: solicita lugar";
 	Log::getLog()->logMensaje(info.str());
 	info.str("");
+	int resultado = 0;
 
-	if (this->autoDelProceso->solicitarLugar()) {
+	resultado = this->autoDelProceso->solicitarLugar();
+
+	if (resultado) {
 
 		info << "Auto: [" << this->autoDelProceso->getId()
-				<< "]: Entra al estacionamiento.";
+				<< "]: Entra al estacionamiento. " << resultado;
 		Log::getLog()->logMensaje(info.str());
 		info.str("");
 
