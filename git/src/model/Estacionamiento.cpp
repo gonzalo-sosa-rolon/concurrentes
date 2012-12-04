@@ -110,22 +110,17 @@ void Estacionamiento::incrementarFacturacion(int cantidadFacturada) {
 
 int Estacionamiento::seleccionarPlaza(int tiempo, long autoId) {
 
-	int resultado = -1;
-
 	for (int i = 0; i < this->getTamanio(); i++) {
 		if (!this->getPlaza(i)->getOcupado()) {
 
 			this->ocuparPlaza(i, tiempo, autoId);
-			resultado = i;
 			logOcupePlaza(i, autoId);
 
-			resultado = true;
-
-			break;
+			return i;
 		}
 	}
 
-	return resultado;
+	return -1;
 }
 
 void Estacionamiento::logOcupePlaza(int nroPlaza, int idAuto) {
@@ -142,16 +137,12 @@ void Estacionamiento::logOcupePlaza(int nroPlaza, int idAuto) {
  */
 bool Estacionamiento::solicitarLugar() {
 
-	bool resultado = false;
-
-	int cantidad = this->cantidadDeAutos;
-
-	if (cantidad < tamanio) {
+	if (this->cantidadDeAutos < tamanio) {
 		this->cantidadDeAutos++;
-		resultado = true;
+		return true;
 	}
 
-	return resultado;
+	return false;
 }
 
 void Estacionamiento::imprimirError(int error) {

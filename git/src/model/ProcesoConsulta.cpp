@@ -5,8 +5,6 @@ ProcesoConsulta::ProcesoConsulta(AdministracionCliente *administracionCliente) {
 
 	this->administracionCliente = administracionCliente;
 	this->cantidadEstacionamientos = administracionCliente->getCantidadEstacionamientos();
-
-	SignalHandler::getInstance()->registrarHandler(SIGINT, &sigint_handler);
 }
 
 ProcesoConsulta::~ProcesoConsulta() {
@@ -96,9 +94,13 @@ void ProcesoConsulta::ejecutar() {
 
 	string opcion;
 
-	while (!this->sigint_handler.getGracefulQuit()) {
+	cout << "Pid ProcesoConsulta=" << getpid() << endl;
+
+	while (!this->terminarProceso()) {
 		this->imprimirOpciones();
 		opcion = this->leerOpcion();
-		this->ejecutarOpcion(opcion);
+		if (!this->terminarProceso()) {
+			this->ejecutarOpcion(opcion);
+		}
 	}
 }

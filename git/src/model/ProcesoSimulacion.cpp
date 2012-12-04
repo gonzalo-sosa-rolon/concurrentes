@@ -1,15 +1,10 @@
 #include "ProcesoSimulacion.h"
 
-ProcesoSimulacion::ProcesoSimulacion(int tiempoEjecucion, AdministracionCliente* administracionCliente, pid_t* idsAFinalizar, int cantidadIds) {
+ProcesoSimulacion::ProcesoSimulacion(int tiempoEjecucion, AdministracionCliente* administracionCliente, std::vector<pid_t> &ids)
+			: idsAFinalizar(ids) {
 	this->tiempoEjecucion = tiempoEjecucion;
 	this->administracionCliente = administracionCliente;
 
-	this->idsAFinalizar = new pid_t[cantidadIds];
-	this->cantidadIds = cantidadIds;
-
-	for (int i = 0; i < cantidadIds; i++) {
-		this->idsAFinalizar[i] = idsAFinalizar[i];
-	}
 }
 
 ProcesoSimulacion::~ProcesoSimulacion() {
@@ -19,14 +14,14 @@ ProcesoSimulacion::~ProcesoSimulacion() {
 void ProcesoSimulacion::ejecutar() {
 	stringstream info;
 
-	cout << "Comienzo de la ejecucion por " << tiempoEjecucion << " segundos" << endl;
+	cout << "Comienzo de la ejecucion por " << tiempoEjecucion << " segundos (Pid ProcesoSimulacion=" << getpid() << ")" << endl;
 	sleep(tiempoEjecucion);
 
 	info << "Finalizando Ejecucion, enviando seniales a procesos";
 	Log::getLog()->logMensaje(info.str());
 	info.str("");
 
-	for (int i = 0; i < this->cantidadIds; i++) {
+	for (unsigned int i = 0; i < this->idsAFinalizar.size(); i++) {
 		kill(idsAFinalizar[i], SIGINT);
 	}
 

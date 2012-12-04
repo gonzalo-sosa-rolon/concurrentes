@@ -52,9 +52,9 @@ void AdministracionServidor::procesarMensaje(Mensaje::Mensaje &mensaje) {
 	case Mensaje::TIPO_OCUPAR_PLAZA:
 		procesarOcuparPlaza(mensaje);
 		break;
-	case Mensaje::TIPO_SALIR:
-		procesarSalir(mensaje);
-		break;
+//	case Mensaje::TIPO_SALIR:
+//		procesarSalir(mensaje);
+//		break;
 	case Mensaje::TIPO_CANTIDAD_AUTOS:
 		consultaCantidadDeAutos(mensaje);
 		break;
@@ -65,19 +65,16 @@ void AdministracionServidor::procesarMensaje(Mensaje::Mensaje &mensaje) {
 }
 
 void AdministracionServidor::procesarLiberarPlaza(Mensaje::Mensaje mensaje) {
-	int resultado =
-			this->estacionamientos[mensaje.estacionamiento]->desocuparLugar(
-					mensaje.plaza);
+	int resultado =	this->estacionamientos[mensaje.estacionamiento]->desocuparLugar(mensaje.plaza);
 
 	stringstream info;
-	info
-			<< "Proceso administracion servidor: se proceso el pedido de liberar la plaza ["
+	info << "Proceso administracion servidor: se proceso el pedido de liberar la plaza ["
 			<< mensaje.plaza << "]";
+	Log::getLog()->logMensaje(info.str());
 }
 
 void AdministracionServidor::procesarSolicitarLugar(Mensaje::Mensaje mensaje) {
-	bool resultado =
-			this->estacionamientos[mensaje.estacionamiento]->solicitarLugar();
+	bool resultado = this->estacionamientos[mensaje.estacionamiento]->solicitarLugar();
 
 	Mensaje::Mensaje respuesta;
 
@@ -87,15 +84,13 @@ void AdministracionServidor::procesarSolicitarLugar(Mensaje::Mensaje mensaje) {
 	colaDeMensajes.escribir(respuesta);
 
 	stringstream info;
-	info
-			<< "Proceso administracion servidor: se proceso la consulta procesar lugar al proceso ["
+	info << "Proceso administracion servidor: se proceso la consulta procesar lugar al proceso ["
 			<< respuesta.mtype << "] con el resultado {" << resultado << "}";
 
 	Log::getLog()->logMensaje(info.str());
 }
 
-void AdministracionServidor::procesarEstacionamientosVacios(
-		Mensaje::Mensaje mensaje) {
+void AdministracionServidor::procesarEstacionamientosVacios(	Mensaje::Mensaje mensaje) {
 	bool resultado = this->estacionamientosVacios();
 	Mensaje::Mensaje respuesta;
 
@@ -107,21 +102,28 @@ void AdministracionServidor::procesarEstacionamientosVacios(
 
 void AdministracionServidor::procesarOcuparPlaza(Mensaje::Mensaje mensaje) {
 
-	int resultado =
-			this->estacionamientos[mensaje.estacionamiento]->seleccionarPlaza(
+	int plaza = this->estacionamientos[mensaje.estacionamiento]->seleccionarPlaza(
 					mensaje.tiempo, mensaje.automovil);
 
 	Mensaje::Mensaje respuesta;
+	stringstream info;
 
-	respuesta.resultado = resultado;
+	if (plaza == -1) {
+		respuesta.resultado = -1;
+		info << "Proceso administracion servidor: Error buscando plaza, no hay ninguna disponible";
+		Log::getLog()->logMensaje(info.str());
+	} else {
+		respuesta.resultado = 0;
+		info << "Proceso administracion servidor: se proceso la consulta ocupar plaza para el proceso ["
+					<< mensaje.pid << "]. Plaza ocupada [" << plaza << "]";
+			Log::getLog()->logMensaje(info.str());
+	}
+	respuesta.plaza = plaza;
 	respuesta.mtype = mensaje.pid;
 
 	colaDeMensajes.escribir(respuesta);
 
-	stringstream info;
-	info
-			<< "Proceso administracion servidor: se proceso la consulta ocupar plaza para el proceso ["
-			<< respuesta.mtype << "]";
+
 }
 
 void AdministracionServidor::procesarSalir(Mensaje::Mensaje mensaje) {
@@ -152,9 +154,8 @@ void AdministracionServidor::consultaCantidadDeAutos(Mensaje::Mensaje mensaje) {
 	colaDeMensajes.escribir(respuesta);
 
 	stringstream info;
-	info
-			<< "Proceso administracion servidor: se proceso la consulta cantidad de autos para el proceso ["
-			<< respuesta.mtype << "]";
+	info << "Proceso administracion servidor: se proceso la consulta cantidad de autos para el proceso [" << respuesta.mtype << "]";
+	Log::getLog()->logMensaje(info.str());
 
 }
 
@@ -170,23 +171,29 @@ void AdministracionServidor::consultaMontoFacturado(Mensaje::Mensaje mensaje) {
 	colaDeMensajes.escribir(respuesta);
 
 	stringstream info;
-	info
-			<< "Proceso administracion servidor: se proceso la consulta monto facturado para el proceso ["
-			<< respuesta.mtype << "]";
+	info << "Proceso administracion servidor: se proceso la consulta monto facturado para el proceso ["	<< respuesta.mtype << "]";
+	Log::getLog()->logMensaje(info.str());
 }
 
 void AdministracionServidor::ejecutar() {
 
 	stringstream info;
+	cout << "Pid AdministracionServidor=" << getpid() << endl;
 
 	while (!this->terminarProceso() || !this->estacionamientosVacios()) {
-		Log::getLog()->logMensaje(info.str());
 
 		Mensaje::Mensaje mensaje;
 		int resultado = colaDeMensajes.leer(Mensaje::MENSAJE_SERVIDOR,
 				&mensaje);
+
+		if ((resultado == -1) && (!this->terminarProceso())) {
+			info << "********************** ADM GENERAL - ERROR: " << strerror(errno);
+			Log::getLog()->logMensaje(info.str());
+			info.str("");
+		}
 		//TODO ver que hacer con el resultado
 		this->procesarMensaje(mensaje);
 	}
+
 }
 

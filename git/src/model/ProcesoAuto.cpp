@@ -36,7 +36,12 @@ void ProcesoAuto::ejecutar() {
 				<< "]: Ya entro, ocupa la plaza y a dormir.";
 		Log::getLog()->logMensaje(info.str());
 		info.str("");
-		this->autoDelProceso->ocuparPlaza();
+		bool resultado = this->autoDelProceso->ocuparPlaza();
+
+		info << "*******************Auto: Ocupar lugar, resultado [" << resultado << "]";
+		Log::getLog()->logMensaje(info.str());
+		info.str("");
+
 		this->autoDelProceso->aparcar();
 
 		info << "Auto: [" << this->autoDelProceso->getId()

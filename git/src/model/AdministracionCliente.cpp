@@ -23,15 +23,7 @@ AdministracionCliente::AdministracionCliente(int cantidadEstacionamientos,
 }
 
 AdministracionCliente::~AdministracionCliente() {
-	for (int i = 0; i < cantidadEstacionamientos; i++) {
 
-		this->colasEntrada[i]->destruir();
-		delete this->colasEntrada[i];
-
-		this->colasSalida[i]->destruir();
-		delete this->colasSalida[i];
-		colaServidor.destruir();
-	}
 }
 
 bool AdministracionCliente::solicitarLugar(Auto* automovil) {
@@ -96,8 +88,8 @@ bool AdministracionCliente::ocuparPlaza(Auto* automovil) {
 	colaServidor.escribir(mensaje);
 	colaServidor.leer(pid, &mensaje);
 
-	automovil->setNumeroPlaza(mensaje.resultado);
-	return mensaje.resultado == -1 || mensaje.resultado == 0 ? false : true;
+	automovil->setNumeroPlaza(mensaje.plaza);
+	return mensaje.resultado == -1 ? false : true;
 }
 
 bool AdministracionCliente::solicitarSalida(Auto* automovil) {
@@ -174,5 +166,13 @@ int AdministracionCliente::consultarCantidadAutos(int estacionamiento) {
 }
 
 bool AdministracionCliente::salir(Auto* automovil) {
-	return false; //TODO ver esto
+	int estacionamiento = automovil->getEstacionamiento();
+	Mensaje::Mensaje mensaje = prepararMensajeServidor(estacionamiento);
+
+	mensaje.tipo = Mensaje::TIPO_SALIR;
+	mensaje.plaza = automovil->getNumeroPlaza();
+
+	colaServidor.escribir(mensaje);
+
+	return true;
 }

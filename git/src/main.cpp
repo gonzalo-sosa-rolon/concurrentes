@@ -4,6 +4,7 @@
 #include <stdio.h>
 #include <string>
 #include <unistd.h>
+#include <vector>
 
 #include "model/Estacionamiento.h"
 #include "model/ProcesoGeneradorAutos.h"
@@ -34,7 +35,7 @@ int main(int argc, char **argv) {
 
 	AdministracionCliente administracionCliente(cantidadEstacionamientos,
 			capacidad, precio);
-	pid_t idsAFinalizar[6];
+	std::vector<pid_t> idsAFinalizar;
 
 	id = fork();
 
@@ -42,7 +43,7 @@ int main(int argc, char **argv) {
 		ProcesoGeneradorAutos procesoGenerador(&administracionCliente);
 		procesoGenerador.ejecutar();
 	} else {
-		idsAFinalizar[0] = id;
+		idsAFinalizar.push_back(id);
 	}
 
 	if (id) {
@@ -54,11 +55,11 @@ int main(int argc, char **argv) {
 						(char*) Mensaje::PATH_TOKEN_COLAS_ENTRADA, i);
 				procEntrada.ejecutar();
 				break;
+			} else {
+				idsAFinalizar.push_back(id);
 			}
 		}
 
-	} else {
-		idsAFinalizar[1] = id;
 	}
 
 	if (id) {
@@ -71,35 +72,34 @@ int main(int argc, char **argv) {
 						(char*) Mensaje::PATH_TOKEN_COLAS_SALIDA, i);
 				procSalida.ejecutar();
 				break;
+			} else {
+				idsAFinalizar.push_back(id);
 			}
 		}
-	} else {
-		idsAFinalizar[2] = id;
 	}
 
 	if (id) {
 		id = fork();
-		idsAFinalizar[3] = id;
 
 		if (!id) {
-			AdministracionServidor administracionServidor(
-					cantidadEstacionamientos, capacidad, precio);
+			AdministracionServidor administracionServidor(cantidadEstacionamientos, capacidad, precio);
 			administracionServidor.ejecutar();
 		}
+		idsAFinalizar.push_back(id);
 	}
 
 	if (id) {
+
 		id = fork();
 
-		if (id) {
-			idsAFinalizar[4] = id;
-			ProcesoSimulacion procesoSimulacion(tiempo, &administracionCliente,
-					idsAFinalizar, 5);
-			procesoSimulacion.ejecutar();
-
-		} else {
+		if (!id) {
 			ProcesoConsulta procesoConsulta(&administracionCliente);
 			procesoConsulta.ejecutar();
+
+		} else {
+			//idsAFinalizar.push_back(id); // TODO revisar si hay q agregar este pid para q mate al proceso consulta
+			ProcesoSimulacion procesoSimulacion(tiempo, &administracionCliente,	idsAFinalizar);
+			procesoSimulacion.ejecutar();
 		}
 	}
 

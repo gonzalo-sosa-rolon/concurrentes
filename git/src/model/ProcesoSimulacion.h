@@ -4,6 +4,7 @@
 #include "Proceso.h"
 #include <string>
 #include <unistd.h>
+#include <vector>
 #include "../signals/EventHandler.h"
 #include "../signals/SignalHandler.h"
 #include "../signals/SIGINT_Handler.h"
@@ -18,12 +19,11 @@ using namespace std;
 class ProcesoSimulacion : public Proceso {
 private:
 	int tiempoEjecucion;
-	pid_t* idsAFinalizar;
-	int cantidadIds;
+	std::vector<pid_t> idsAFinalizar;
 	AdministracionCliente* administracionCliente;
 public:
 
-	ProcesoSimulacion(int tiempoEjecucion, AdministracionCliente* administracionCliente, pid_t* idsAFinalizar, int cantidadIds);
+	ProcesoSimulacion(int tiempoEjecucion, AdministracionCliente* administracionCliente, std::vector<pid_t> &idsAFinalizar);
 	virtual ~ProcesoSimulacion();
 	virtual void ejecutar();
 };

@@ -2,6 +2,7 @@
 #define ADMINISTRACIONSERVIDOR_H_
 
 #include <vector>
+#include <errno.h>
 #include "Proceso.h"
 #include "Mensaje.h"
 #include "../util/Cola.h"

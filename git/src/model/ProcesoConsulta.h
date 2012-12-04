@@ -15,7 +15,6 @@ using namespace std;
 
 class ProcesoConsulta: public Proceso {
 private:
-	SIGINT_Handler sigint_handler;
 	int cantidadEstacionamientos;
 	AdministracionCliente *administracionCliente;
 public:
