@@ -16,7 +16,6 @@ Estacionamiento::Estacionamiento(int tamanio, int precio, int cantidadEntradas,
 	this->cantidadFacturado = 0;
 
 	initPlazas();
-	innitLocks();
 }
 
 void Estacionamiento::initPlazas() {
@@ -36,83 +35,27 @@ Estacionamiento::~Estacionamiento() {
 	for (int i = 0; i < tamanio; i++) {
 		delete plazas[i];
 	}
-
-	eliminarLocks();
 }
 
 int Estacionamiento::getCantidadDeAutos() {
 	int resultado;
-	int error = 0;
-
-	error = this->lockCantidadDeAutos->tomarLock();
-
-	if (error) {
-		imprimirErrorLock();
-		exit(error);
-	}
 
 	resultado = this->cantidadDeAutos;
-	error = this->lockCantidadDeAutos->liberarLock();
-
-	if (error) {
-		imprimirErrorLock();
-		exit(error);
-	}
 
 	return resultado;
 }
 
 void Estacionamiento::sumarUnAuto() {
-
-	int error = this->lockCantidadDeAutos->tomarLock();
-
-	if (error) {
-		imprimirErrorLock();
-		exit(error);
-	}
-
 	this->cantidadDeAutos++;
-
-	error = this->lockCantidadDeAutos->liberarLock();
-
-	if (error) {
-		imprimirErrorLock();
-		exit(error);
-	}
 }
 
 void Estacionamiento::restarUnAuto() {
-
-	int error = this->lockCantidadDeAutos->tomarLock();
-
-	if (error) {
-		imprimirErrorLock();
-		exit(error);
-	}
-
 	this->cantidadDeAutos--;
-
-	error = this->lockCantidadDeAutos->liberarLock();
-
-	if (error) {
-		imprimirErrorLock();
-		exit(error);
-	}
 }
 
 int Estacionamiento::getCantidadFacturado() {
 	int resultado;
-
-	int error = this->lockCantidadFacturado->tomarLock();
-
 	resultado = this->cantidadFacturado;
-	error = this->lockCantidadFacturado->liberarLock();
-
-	if (error) {
-		imprimirErrorLock();
-		exit(error);
-	}
-
 	return resultado;
 }
 
@@ -150,10 +93,6 @@ long Estacionamiento::desocuparLugar(int posicion) {
 	return 0;
 }
 
-Lock* Estacionamiento::getLockPlaza(int pos) {
-	return this->lockPlazas[pos];
-}
-
 Plaza *Estacionamiento::getPlaza(int pos) {
 	return this->plazas[pos];
 }
@@ -169,37 +108,21 @@ void Estacionamiento::incrementarFacturacion(int cantidadFacturada) {
 	this->cantidadFacturado += cantidadFacturada;
 }
 
-void Estacionamiento::innitLocks() {
-
-	lockCantidadFacturado = new Lock((char*) "lockCantidadFacturado");
-	lockCantidadDeAutos = new Lock((char*) "lockCantidadDeAutos");
-
-	lockPlazas = new Lock*[tamanio];
-
-	for (int i = 0; i < tamanio; i++) {
-		lockPlazas[i] = new Lock(getNombreLockPlaza(i));
-	}
-}
-
 int Estacionamiento::seleccionarPlaza(int tiempo, long autoId) {
 
 	int resultado = -1;
 
 	for (int i = 0; i < this->getTamanio(); i++) {
-		Lock* lockPlaza = this->tomarLockPlaza(i);
-
 		if (!this->getPlaza(i)->getOcupado()) {
 
 			this->ocuparPlaza(i, tiempo, autoId);
 			resultado = i;
 			logOcupePlaza(i, autoId);
 
-			liberarLockPlaza(i, lockPlaza);
 			resultado = true;
 
 			break;
 		}
-		liberarLockPlaza(i, lockPlaza);
 	}
 
 	return resultado;
@@ -213,33 +136,6 @@ void Estacionamiento::logOcupePlaza(int nroPlaza, int idAuto) {
 	Log::getLog()->logMensaje(info.str());
 }
 
-Lock* Estacionamiento::tomarLockPlaza(int nroDePlaza) {
-	Lock* lockPlaza = this->getLockPlaza(nroDePlaza);
-	int error = lockPlaza->tomarLock();
-
-	if (error) {
-		stringstream errorMsg;
-		errorMsg
-				<< "Entrada : Se produjo un error al intentar tomar el lock de la plaza "
-				<< nroDePlaza + 1 << endl;
-		Log::getLog()->logError(errorMsg.str());
-		exit(error);
-	}
-	return lockPlaza;
-}
-
-void Estacionamiento::liberarLockPlaza(int nroDePlaza, Lock* lockPlaza) {
-	int error = lockPlaza->liberarLock();
-
-	if (error) {
-		stringstream errorMsg;
-		errorMsg
-				<< "Entrada : Se produjo un error al intentar liberar el lock de la plaza "
-				<< nroDePlaza + 1 << endl;
-		Log::getLog()->logError(errorMsg.str());
-		exit(error);
-	}
-}
 
 /**
  * (cantidad < tamanio) ? cantidad++
@@ -248,13 +144,6 @@ bool Estacionamiento::solicitarLugar() {
 
 	bool resultado = false;
 
-	int error = this->lockCantidadDeAutos->tomarLock();
-
-	if (error) {
-		imprimirErrorLock();
-		exit(error);
-	}
-
 	int cantidad = this->cantidadDeAutos;
 
 	if (cantidad < tamanio) {
@@ -262,37 +151,7 @@ bool Estacionamiento::solicitarLugar() {
 		resultado = true;
 	}
 
-	error = this->lockCantidadDeAutos->liberarLock();
-
-	if (error) {
-		imprimirErrorLock();
-		exit(error);
-	}
-
 	return resultado;
-}
-
-void Estacionamiento::eliminarLocks() {
-
-	delete lockCantidadFacturado;
-	delete lockCantidadDeAutos;
-
-	for (int i = 0; i < tamanio; i++) {
-		delete lockPlazas[i];
-	}
-	delete lockPlazas;
-}
-
-char* Estacionamiento::getNombreLockPlaza(int i) {
-	stringstream lockPlaza;
-	lockPlaza << "plaza_" << i + 1;
-
-	return (char*) lockPlaza.str().c_str();
-}
-
-void Estacionamiento::imprimirErrorLock() {
-	Log::getLog()->logError(
-			"Error: se ha producido un error al intentar tomar o liberar un lock.");
 }
 
 void Estacionamiento::imprimirError(int error) {
