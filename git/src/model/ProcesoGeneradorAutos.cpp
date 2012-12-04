@@ -24,6 +24,7 @@ void ProcesoGeneradorAutos::ejecutar() {
 		id = fork();
 
 		if (!id) {
+			srand ( time(NULL) );
 			int estacionamiento = NumberUtil::getRandom(0,
 					this->administracionCliente->getCantidadEstacionamientos());
 			info
@@ -31,7 +32,7 @@ void ProcesoGeneradorAutos::ejecutar() {
 					<< estacionamiento << "]";
 			Log::getLog()->logMensaje(info.str());
 			info.str("");
-			ProcesoAuto procesoAuto(administracionCliente, 0); //TODO estacionamiento); //TODO loguear esto
+			ProcesoAuto procesoAuto(administracionCliente, estacionamiento);
 			procesoAuto.ejecutar();
 			return;
 		} else {
