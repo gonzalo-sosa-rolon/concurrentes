@@ -111,6 +111,13 @@ bool AdministracionCliente::liberarSalida(Auto* automovil) {
 	return colasSalida[estacionamiento]->escribir(solicitud);
 }
 
+void AdministracionCliente::liberarColas() {
+	for (int i = 0; i < cantidadEstacionamientos; i++) {
+		this->colasEntrada[i]->destruir();
+		this->colasSalida[i]->destruir();
+	}
+}
+
 bool AdministracionCliente::descocuparLugar(Auto* automovil) {
 
 	int estacionamiento = automovil->getEstacionamiento();

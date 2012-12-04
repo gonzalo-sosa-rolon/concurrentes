@@ -1,6 +1,6 @@
 #include "ProcesoGeneradorAutos.h"
 #include "AdministracionCliente.h"
-const int ProcesoGeneradorAutos::TIEMPO_ENTRE_AUTOS = 5;
+const int ProcesoGeneradorAutos::TIEMPO_ENTRE_AUTOS = 3;
 
 ProcesoGeneradorAutos::ProcesoGeneradorAutos(
 		AdministracionCliente* administracionCliente) {
@@ -24,7 +24,7 @@ void ProcesoGeneradorAutos::ejecutar() {
 		id = fork();
 
 		if (!id) {
-			srand ( time(NULL) );
+			srand(time(NULL));
 			int estacionamiento = NumberUtil::getRandom(0,
 					this->administracionCliente->getCantidadEstacionamientos());
 			info
@@ -42,10 +42,9 @@ void ProcesoGeneradorAutos::ejecutar() {
 			info.str("");
 			idsProcesosAutos.push_back(id);
 			// Los autos llegan cada tiempo random
-//			sleep(
-//					NumberUtil::getRandom(2,
-//							ProcesoGeneradorAutos::TIEMPO_ENTRE_AUTOS));
-			sleep(1); //TODO
+			sleep(
+					NumberUtil::getRandom(ProcesoGeneradorAutos::TIEMPO_ENTRE_AUTOS));
+
 		}
 
 	}

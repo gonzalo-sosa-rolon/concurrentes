@@ -41,6 +41,8 @@ public:
 
 	int getCantidadEstacionamientos();
 	bool estacionamientosVacios();
+
+	void liberarColas();
 private:
 	Mensaje::Mensaje prepararMensajeServidor(int estacionamiento);
 };

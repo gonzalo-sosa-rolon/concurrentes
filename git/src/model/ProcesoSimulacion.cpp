@@ -34,5 +34,6 @@ void ProcesoSimulacion::ejecutar() {
 	kill(pidAdminServidor, SIGINT);
 	kill(idProcesoConsulta, SIGINT);
 
+	this->administracionCliente->liberarColas();
 	cout << "Finalizacion de la ejecucion" << endl;
 }
