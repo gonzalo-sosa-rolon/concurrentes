@@ -5,7 +5,7 @@ const char* AdministracionCliente::PATH_TOKEN_MEMORIA_COMPARTIDA = "/bin/ls";
 
 AdministracionCliente::AdministracionCliente(int cantidadEstacionamientos,
 		int tamanio, int precio, int cantidadEntradas, int cantidadSalidas) :
-		colaServidor((char*) Mensaje::PATH_TOKEN_COLA_SERVIDOR, 3) {
+		colaServidor((char*) Mensaje::PATH_TOKEN_COLA_SERVIDOR, 50) {
 	this->tamanio = tamanio;
 	this->cantidadEntradas = cantidadEntradas;
 	this->cantidadSalidas = cantidadSalidas;

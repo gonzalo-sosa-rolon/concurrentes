@@ -24,7 +24,7 @@ void ProcesoAuto::ejecutar() {
 	if (resultado) {
 
 		info << "Auto: [" << this->autoDelProceso->getId()
-				<< "]: Entra al estacionamiento. " << resultado;
+				<< "]: Entra al estacionamiento.";
 		Log::getLog()->logMensaje(info.str());
 		info.str("");
 

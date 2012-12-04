@@ -73,7 +73,8 @@ void ProcesoPuerta::liberarEntrada() {
 	int resultado = colaDeAutos.leer(Mensaje::LIBERAR_PUERTA, &liberado);
 	cantidadEntradasOcupadas--;
 
-	info << nombre << ": Libere el auto [" << liberado.pid << "]" << ". Resultado " << resultado;
+	info << nombre << ": Libere el auto [" << liberado.pid << "]" << ". Resultado " << resultado << " errno " << errno;
+
 	Log::getLog()->logMensaje(info.str());
 	info.str("");
 

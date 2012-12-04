@@ -11,6 +11,7 @@ const int Auto::TIEMPO_LLEGAR_SALIDA = 2;
 const int Auto::TIEMPO_APARCAR = 15;
 
 Auto::Auto(AdministracionCliente* administracionCliente, int estacionamiento) {
+	srand ( time(NULL) );
 	this->estacionamiento = estacionamiento;
 	this->id = NumberUtil::getRandom(RAND_MAX);
 	this->tiempo = NumberUtil::getRandom(ParserParametros::TIEMPO_ESTADIA_MIN_DEFAULT, ParserParametros::TIEMPO_ESTADIA_MAX_DEFAULT);

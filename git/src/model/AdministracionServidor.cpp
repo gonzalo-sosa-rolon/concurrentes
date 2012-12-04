@@ -5,7 +5,7 @@
 
 AdministracionServidor::AdministracionServidor(int cantidadEstacionamientos,
 		int tamanio, int precio) :
-		colaDeMensajes((char*) Mensaje::PATH_TOKEN_COLA_SERVIDOR, 3) {
+		colaDeMensajes((char*) Mensaje::PATH_TOKEN_COLA_SERVIDOR, 50) {
 	this->cantidadEstacionamientos = cantidadEstacionamientos;
 	this->tamanio = tamanio;
 	this->precio = precio;
