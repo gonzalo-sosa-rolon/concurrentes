@@ -28,12 +28,14 @@ void ProcesoSimulacion::ejecutar() {
 		kill(idsAFinalizar[i], SIGINT);
 	}
 
+
+	int result = 0;
 	for (unsigned int i = 0; i < this->idsAFinalizar.size(); i++) {
-		wait(0); //TODO ver que onda un wait sin pid
+		wait(&result); //TODO ver que onda un wait sin pid
 	}
 	kill(pidAdminServidor, SIGINT);
 	kill(idProcesoConsulta, SIGINT);
 
-	this->administracionCliente->liberarColas();
+	//this->administracionCliente->liberarColas(); NO LIBERAR LAS COLAS!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 	cout << "Finalizacion de la ejecucion" << endl;
 }

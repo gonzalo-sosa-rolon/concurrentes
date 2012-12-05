@@ -195,5 +195,8 @@ void AdministracionServidor::ejecutar() {
 		this->procesarMensaje(mensaje);
 	}
 
+	info << "Proceso administracion servidor: Finalizando ejecución";
+	Log::getLog()->logMensaje(info.str());
+	info.str("");
 }
 

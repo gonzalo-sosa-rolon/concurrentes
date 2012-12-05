@@ -99,7 +99,7 @@ int main(int argc, char **argv) {
 			procesoConsulta.ejecutar();
 
 		} else {
-			//idsAFinalizar.push_back(id); // TODO revisar si hay q agregar este pid para q mate al proceso consulta
+			idsAFinalizar.push_back(id); // TODO revisar si hay q agregar este pid para q mate al proceso consulta
 			ProcesoSimulacion procesoSimulacion(tiempo, &administracionCliente,	idsAFinalizar, pidAdminServidor, id);
 			procesoSimulacion.ejecutar();
 		}

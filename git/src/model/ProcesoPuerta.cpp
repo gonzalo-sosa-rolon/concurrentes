@@ -51,6 +51,12 @@ void ProcesoPuerta::ejecutar() {
 
 void ProcesoPuerta::procesarIngresoOEgreso() {
 	Mensaje::Mensaje msg = leerTomarOLiberar();
+	std::stringstream info;
+
+	info << getNombre() << ": Lei mensaje, mtype = [" << msg.mtype << "]";
+	Log::getLog()->logMensaje(info.str());
+	info.str("");
+
 	if (msg.mtype == Mensaje::TOMAR_PUERTA) {
 		ocuparPuerta(msg);
 	} else if (msg.mtype == Mensaje::LIBERAR_PUERTA) {

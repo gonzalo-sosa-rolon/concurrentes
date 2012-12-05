@@ -5,6 +5,7 @@
 #include <string>
 #include <unistd.h>
 #include <vector>
+#include <sys/wait.h>
 #include "../signals/EventHandler.h"
 #include "../signals/SignalHandler.h"
 #include "../signals/SIGINT_Handler.h"

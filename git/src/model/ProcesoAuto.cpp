@@ -49,14 +49,14 @@ void ProcesoAuto::ejecutar() {
 		Log::getLog()->logMensaje(info.str());
 		info.str("");
 
+		this->autoDelProceso->tomarSalida();
+
 		this->autoDelProceso->desocuparPlaza();
 
-		info << "Auto: [" << this->autoDelProceso->getId()
-				<< "]: desocupo su lugar.";
+		info << "Auto: [" << this->autoDelProceso->getId() << "]: desocupo su lugar.";
 		Log::getLog()->logMensaje(info.str());
 		info.str("");
 
-		this->autoDelProceso->tomarSalida();
 		this->autoDelProceso->salir();
 		this->autoDelProceso->liberarSalida();
 
