@@ -23,9 +23,8 @@ protected:
 
 private:
 	AdministracionCliente* adminCliente;
-	int nroEstacionamiento;
-
 	int getCantidadAutos();
+
 };
 
 #endif /* PROCESOSALIDA_H_ */

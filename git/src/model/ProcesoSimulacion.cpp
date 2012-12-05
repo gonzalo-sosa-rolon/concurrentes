@@ -17,7 +17,7 @@ ProcesoSimulacion::~ProcesoSimulacion() {
 void ProcesoSimulacion::ejecutar() {
 	stringstream info;
 
-	cout << "Comienzo de la ejecucion por " << tiempoEjecucion << " segundos (Pid ProcesoSimulacion=" << getpid() << ")" << endl;
+	cout << "Comienzo de la ejecucion por " << tiempoEjecucion << " segundos" << endl;
 	sleep(tiempoEjecucion);
 
 	info << "Finalizando Ejecucion, enviando seniales a procesos";
@@ -31,11 +31,10 @@ void ProcesoSimulacion::ejecutar() {
 
 	int result = 0;
 	for (unsigned int i = 0; i < this->idsAFinalizar.size(); i++) {
-		wait(&result); //TODO ver que onda un wait sin pid
+		wait(&result);
 	}
 	kill(pidAdminServidor, SIGINT);
 	kill(idProcesoConsulta, SIGINT);
 
-	//this->administracionCliente->liberarColas(); NO LIBERAR LAS COLAS!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 	cout << "Finalizacion de la ejecucion" << endl;
 }

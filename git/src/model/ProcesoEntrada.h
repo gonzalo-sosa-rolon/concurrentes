@@ -12,7 +12,7 @@
 
 class ProcesoEntrada: public ProcesoPuerta {
 public:
-	ProcesoEntrada(int cantidadEntradas, char* path, char key);
+	ProcesoEntrada(int cantidadEntradas, char* path, char key, int nroEstacinamiento);
 	virtual ~ProcesoEntrada();
 
 protected:

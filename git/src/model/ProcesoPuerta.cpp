@@ -1,10 +1,10 @@
 #include "ProcesoPuerta.h"
-#include "Estacionamiento.h" //TODO Estaria bueno sacar este include
 
-ProcesoPuerta::ProcesoPuerta(int cantidadEntradas, char* path, char key)
+ProcesoPuerta::ProcesoPuerta(int cantidadEntradas, char* path, char key, int nroEstacionamiento)
 									: colaDeAutos(path, key) {
 	this->cantidadEntradas = cantidadEntradas;
 	this->cantidadEntradasOcupadas = 0;
+	this->nroEstacionamiento = nroEstacionamiento;
 }
 
 ProcesoPuerta::~ProcesoPuerta() {
@@ -16,8 +16,6 @@ string ProcesoPuerta::getNombre() {
 }
 
 void ProcesoPuerta::ejecutar() {
-	//TODO Emprolijar logs
-
 	stringstream info;
 
 	info << getNombre() << ": Inicio de ejecucion, pid = [" << getpid() << "]";
@@ -92,10 +90,6 @@ Mensaje::Mensaje ProcesoPuerta::leerMensaje(int mtype) {
 }
 
 void ProcesoPuerta::ocuparPuerta(Mensaje::Mensaje &msg) {
-
-	//TODO sacar numeros magicos
-	//TODO Emprolijar logs
-
 	stringstream info;
 	msg.mtype = msg.pid;
 	int resultado = colaDeAutos.escribir(msg);
@@ -106,7 +100,7 @@ void ProcesoPuerta::ocuparPuerta(Mensaje::Mensaje &msg) {
 	info.str("");
 
 	if ((resultado == -1) && (!this->terminarProceso())) {
-		info << getNombre() << "********************** OCUPAR - ERROR: " << strerror(errno);
+		info << getNombre() << " - ERROR: " << strerror(errno);
 		Log::getLog()->logMensaje(info.str());
 		info.str("");
 

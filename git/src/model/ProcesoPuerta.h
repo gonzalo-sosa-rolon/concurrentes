@@ -16,13 +16,14 @@ using namespace std;
 class ProcesoPuerta: public Proceso {
 
 public:
-	ProcesoPuerta(int numeroDeEntrada, char* path, char key);
+	ProcesoPuerta(int numeroDeEntrada, char* path, char key, int nroEstacinamiento);
 	virtual ~ProcesoPuerta();
 	virtual void ejecutar();
 
 protected:
 	int cantidadEntradas;
 	int cantidadEntradasOcupadas;
+	int nroEstacionamiento;
 	Cola<Mensaje::Mensaje> colaDeAutos;
 
 

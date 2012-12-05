@@ -32,15 +32,17 @@ void ProcesoAuto::ejecutar() {
 		this->autoDelProceso->entrar();
 		this->autoDelProceso->liberarEntrada();
 
-		info << "Auto: [" << this->autoDelProceso->getId()
-				<< "]: Ya entro, ocupa la plaza y a dormir.";
+		info << "Auto: [" << this->autoDelProceso->getId() << "]: Ya entré, ocupo la plaza y a dormir.";
 		Log::getLog()->logMensaje(info.str());
 		info.str("");
 		bool resultado = this->autoDelProceso->ocuparPlaza();
 
-		info << "*******************Auto: Ocupar lugar, resultado [" << resultado << "]";
-		Log::getLog()->logMensaje(info.str());
-		info.str("");
+		if (resultado == false) {
+			info << "Auto: Errir al ocupar lugar, terminando ejecución";
+			Log::getLog()->logMensaje(info.str());
+			info.str("");
+			exit(1);
+		}
 
 		this->autoDelProceso->aparcar();
 
@@ -49,25 +51,22 @@ void ProcesoAuto::ejecutar() {
 		Log::getLog()->logMensaje(info.str());
 		info.str("");
 
-		this->autoDelProceso->tomarSalida();
-
 		this->autoDelProceso->desocuparPlaza();
 
 		info << "Auto: [" << this->autoDelProceso->getId() << "]: desocupo su lugar.";
 		Log::getLog()->logMensaje(info.str());
 		info.str("");
 
+		this->autoDelProceso->tomarSalida();
 		this->autoDelProceso->salir();
 		this->autoDelProceso->liberarSalida();
 
-		info << "Auto: [" << this->autoDelProceso->getId()
-				<< "]: salio del estacionamiento.";
+		info << "Auto: [" << this->autoDelProceso->getId() << "]: salio del estacionamiento.";
 		Log::getLog()->logMensaje(info.str());
 		info.str("");
 
 	} else {
-		info << "Auto: [" << this->autoDelProceso->getId()
-				<< "]: el auto se retira porque el estacionamiento esta lleno";
+		info << "Auto: [" << this->autoDelProceso->getId() << "]: el auto se retira porque el estacionamiento esta lleno";
 		Log::getLog()->logMensaje(info.str());
 	}
 }

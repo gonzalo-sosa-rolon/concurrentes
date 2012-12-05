@@ -11,7 +11,7 @@ class Estacionamiento;
 
 using namespace std;
 
-class AdministracionServidor : public Proceso {
+class AdministradorGeneral : public Proceso {
 private:
 	int cantidadEstacionamientos;
 	int tamanio;
@@ -19,8 +19,8 @@ private:
 	vector<Estacionamiento*> estacionamientos;
 	Cola<Mensaje::Mensaje> colaDeMensajes;
 public:
-	AdministracionServidor(int cantidadEstacionamientos, int tamanio, int precio);
-	virtual ~AdministracionServidor();
+	AdministradorGeneral(int cantidadEstacionamientos, int tamanio, int precio);
+	virtual ~AdministradorGeneral();
 	virtual void ejecutar();
 private:
 	void crearEstacionamientos();

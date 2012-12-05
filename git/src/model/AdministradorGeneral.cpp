@@ -1,9 +1,9 @@
-#include "AdministracionServidor.h"
+#include "AdministradorGeneral.h"
 #include "Estacionamiento.h"
 #include "../util/Log.h"
 #include <iostream>
 
-AdministracionServidor::AdministracionServidor(int cantidadEstacionamientos,
+AdministradorGeneral::AdministradorGeneral(int cantidadEstacionamientos,
 		int tamanio, int precio) :
 		colaDeMensajes((char*) Mensaje::PATH_TOKEN_COLA_SERVIDOR, 50) {
 	this->cantidadEstacionamientos = cantidadEstacionamientos;
@@ -12,7 +12,7 @@ AdministracionServidor::AdministracionServidor(int cantidadEstacionamientos,
 	this->crearEstacionamientos();
 }
 
-AdministracionServidor::~AdministracionServidor() {
+AdministradorGeneral::~AdministradorGeneral() {
 
 	for (int i = 0; i < cantidadEstacionamientos; i++) {
 		delete this->estacionamientos[i];
@@ -21,7 +21,7 @@ AdministracionServidor::~AdministracionServidor() {
 	colaDeMensajes.destruir();
 }
 
-void AdministracionServidor::crearEstacionamientos() {
+void AdministradorGeneral::crearEstacionamientos() {
 
 	stringstream info;
 	info << "Proceso administracion servidor: se van a crear "
@@ -40,7 +40,7 @@ void AdministracionServidor::crearEstacionamientos() {
 	info.str("");
 }
 
-void AdministracionServidor::procesarMensaje(Mensaje::Mensaje &mensaje) {
+void AdministradorGeneral::procesarMensaje(Mensaje::Mensaje &mensaje) {
 
 	switch (mensaje.tipo) {
 	case Mensaje::TIPO_SOLICITAR_LUGAR:
@@ -52,9 +52,9 @@ void AdministracionServidor::procesarMensaje(Mensaje::Mensaje &mensaje) {
 	case Mensaje::TIPO_OCUPAR_PLAZA:
 		procesarOcuparPlaza(mensaje);
 		break;
-//	case Mensaje::TIPO_SALIR:
-//		procesarSalir(mensaje);
-//		break;
+	case Mensaje::TIPO_SALIR:
+		procesarSalir(mensaje);
+		break;
 	case Mensaje::TIPO_CANTIDAD_AUTOS:
 		consultaCantidadDeAutos(mensaje);
 		break;
@@ -64,7 +64,7 @@ void AdministracionServidor::procesarMensaje(Mensaje::Mensaje &mensaje) {
 	}
 }
 
-void AdministracionServidor::procesarLiberarPlaza(Mensaje::Mensaje mensaje) {
+void AdministradorGeneral::procesarLiberarPlaza(Mensaje::Mensaje mensaje) {
 	int resultado =	this->estacionamientos[mensaje.estacionamiento]->desocuparLugar(mensaje.plaza);
 
 	stringstream info;
@@ -73,7 +73,7 @@ void AdministracionServidor::procesarLiberarPlaza(Mensaje::Mensaje mensaje) {
 	Log::getLog()->logMensaje(info.str());
 }
 
-void AdministracionServidor::procesarSolicitarLugar(Mensaje::Mensaje mensaje) {
+void AdministradorGeneral::procesarSolicitarLugar(Mensaje::Mensaje mensaje) {
 	bool resultado = this->estacionamientos[mensaje.estacionamiento]->solicitarLugar();
 
 	Mensaje::Mensaje respuesta;
@@ -90,7 +90,7 @@ void AdministracionServidor::procesarSolicitarLugar(Mensaje::Mensaje mensaje) {
 	Log::getLog()->logMensaje(info.str());
 }
 
-void AdministracionServidor::procesarEstacionamientosVacios(	Mensaje::Mensaje mensaje) {
+void AdministradorGeneral::procesarEstacionamientosVacios(	Mensaje::Mensaje mensaje) {
 	bool resultado = this->estacionamientosVacios();
 	Mensaje::Mensaje respuesta;
 
@@ -100,7 +100,7 @@ void AdministracionServidor::procesarEstacionamientosVacios(	Mensaje::Mensaje me
 	colaDeMensajes.escribir(respuesta);
 }
 
-void AdministracionServidor::procesarOcuparPlaza(Mensaje::Mensaje mensaje) {
+void AdministradorGeneral::procesarOcuparPlaza(Mensaje::Mensaje mensaje) {
 
 	int plaza = this->estacionamientos[mensaje.estacionamiento]->seleccionarPlaza(
 					mensaje.tiempo, mensaje.automovil);
@@ -122,15 +122,13 @@ void AdministracionServidor::procesarOcuparPlaza(Mensaje::Mensaje mensaje) {
 	respuesta.mtype = mensaje.pid;
 
 	colaDeMensajes.escribir(respuesta);
-
-
 }
 
-void AdministracionServidor::procesarSalir(Mensaje::Mensaje mensaje) {
-
+void AdministradorGeneral::procesarSalir(Mensaje::Mensaje mensaje) {
+	this->estacionamientos[mensaje.estacionamiento]->salirDelEstacionamiento();
 }
 
-bool AdministracionServidor::estacionamientosVacios() {
+bool AdministradorGeneral::estacionamientosVacios() {
 
 	bool resultado = true;
 
@@ -141,10 +139,9 @@ bool AdministracionServidor::estacionamientosVacios() {
 	return resultado;
 }
 
-void AdministracionServidor::consultaCantidadDeAutos(Mensaje::Mensaje mensaje) {
+void AdministradorGeneral::consultaCantidadDeAutos(Mensaje::Mensaje mensaje) {
 
-	int resultado =
-			this->estacionamientos[mensaje.estacionamiento]->getCantidadDeAutos();
+	int resultado = this->estacionamientos[mensaje.estacionamiento]->getCantidadDeAutos();
 
 	Mensaje::Mensaje respuesta;
 
@@ -159,7 +156,7 @@ void AdministracionServidor::consultaCantidadDeAutos(Mensaje::Mensaje mensaje) {
 
 }
 
-void AdministracionServidor::consultaMontoFacturado(Mensaje::Mensaje mensaje) {
+void AdministradorGeneral::consultaMontoFacturado(Mensaje::Mensaje mensaje) {
 	int resultado =
 			this->estacionamientos[mensaje.estacionamiento]->getCantidadFacturado();
 
@@ -175,23 +172,21 @@ void AdministracionServidor::consultaMontoFacturado(Mensaje::Mensaje mensaje) {
 	Log::getLog()->logMensaje(info.str());
 }
 
-void AdministracionServidor::ejecutar() {
+void AdministradorGeneral::ejecutar() {
 
 	stringstream info;
-	cout << "Pid AdministracionServidor=" << getpid() << endl;
 
 	while (!this->terminarProceso() || !this->estacionamientosVacios()) {
 
 		Mensaje::Mensaje mensaje;
-		int resultado = colaDeMensajes.leer(Mensaje::MENSAJE_SERVIDOR,
-				&mensaje);
+		int resultado = colaDeMensajes.leer(Mensaje::MENSAJE_SERVIDOR, &mensaje);
 
 		if ((resultado == -1) && (!this->terminarProceso())) {
-			info << "********************** ADM GENERAL - ERROR: " << strerror(errno);
+			info << "Administrador General - ERROR: " << strerror(errno);
 			Log::getLog()->logMensaje(info.str());
 			info.str("");
 		}
-		//TODO ver que hacer con el resultado
+
 		this->procesarMensaje(mensaje);
 	}
 

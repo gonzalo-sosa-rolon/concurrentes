@@ -91,10 +91,7 @@ void ProcesoConsulta::consultarMontoFacturado(int estacionamiento) {
 }
 
 void ProcesoConsulta::ejecutar() {
-
 	string opcion;
-
-	cout << "Pid ProcesoConsulta=" << getpid() << endl;
 
 	while (!this->terminarProceso()) {
 		this->imprimirOpciones();

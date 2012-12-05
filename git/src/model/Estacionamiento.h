@@ -39,6 +39,8 @@ public:
 	Plaza* getPlaza(int pos);
 	bool solicitarLugar();
 	int seleccionarPlaza(int tiempo, long autoId);
+
+	void salirDelEstacionamiento();
 private:
 	int tamanio;
 	int precio;

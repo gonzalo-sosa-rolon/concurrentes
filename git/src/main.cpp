@@ -14,7 +14,7 @@
 #include "model/ProcesoSalida.h"
 #include "model/ProcesoPuerta.h"
 #include "model/ProcesoSimulacion.h"
-#include "model/AdministracionServidor.h"
+#include "model/AdministradorGeneral.h"
 #include "util/ParserParametros.h"
 #include "util/Lock.h"
 #include "util/Log.h"
@@ -35,8 +35,7 @@ int main(int argc, char **argv) {
 
 	pid_t id;
 
-	AdministracionCliente administracionCliente(cantidadEstacionamientos,
-			capacidad, precio);
+	AdministracionCliente administracionCliente(cantidadEstacionamientos, capacidad, precio);
 	std::vector<pid_t> idsAFinalizar;
 
 	id = fork();
@@ -53,7 +52,7 @@ int main(int argc, char **argv) {
 			id = fork();
 
 			if (!id) {
-				ProcesoEntrada procEntrada(3, (char*) Mensaje::PATH_TOKEN_COLAS_ENTRADA, i);
+				ProcesoEntrada procEntrada(3, (char*) Mensaje::PATH_TOKEN_COLAS_ENTRADA, i, i);
 				procEntrada.ejecutar();
 				break;
 			} else {
@@ -84,7 +83,7 @@ int main(int argc, char **argv) {
 		id = fork();
 
 		if (!id) {
-			AdministracionServidor administracionServidor(cantidadEstacionamientos, capacidad, precio);
+			AdministradorGeneral administracionServidor(cantidadEstacionamientos, capacidad, precio);
 			administracionServidor.ejecutar();
 		}
 		pidAdminServidor = id;
@@ -99,7 +98,7 @@ int main(int argc, char **argv) {
 			procesoConsulta.ejecutar();
 
 		} else {
-			idsAFinalizar.push_back(id); // TODO revisar si hay q agregar este pid para q mate al proceso consulta
+			idsAFinalizar.push_back(id);
 			ProcesoSimulacion procesoSimulacion(tiempo, &administracionCliente,	idsAFinalizar, pidAdminServidor, id);
 			procesoSimulacion.ejecutar();
 		}

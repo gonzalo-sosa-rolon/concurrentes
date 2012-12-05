@@ -7,8 +7,8 @@
 
 #include "ProcesoEntrada.h"
 
-ProcesoEntrada::ProcesoEntrada(int cantidadEntradas, char* path, char key)
-	:ProcesoPuerta(cantidadEntradas, path, key) {
+ProcesoEntrada::ProcesoEntrada(int cantidadEntradas, char* path, char key, int nroEstacinamiento)
+	:ProcesoPuerta(cantidadEntradas, path, key, nroEstacinamiento) {
 
 }
 
@@ -27,5 +27,7 @@ void ProcesoEntrada::terminarEjecucion() {
 }
 
 std::string ProcesoEntrada::getNombre() {
-	return string("Entrada");
+	std::stringstream nombre;
+	nombre << "Entrada " << this->nroEstacionamiento;
+	return nombre.str();
 }

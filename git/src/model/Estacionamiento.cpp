@@ -87,11 +87,16 @@ long Estacionamiento::desocuparLugar(int posicion) {
 	if (plaza->getOcupado()) {
 		this->facturar(plaza->getTiempoEstadia());
 		plaza->setOcupado(false);
-		this->restarUnAuto();
+		//this->restarUnAuto();
 		return plaza->getAutoId();
 	}
 	return 0;
 }
+
+void Estacionamiento::salirDelEstacionamiento() {
+	this->restarUnAuto();
+}
+
 
 Plaza *Estacionamiento::getPlaza(int pos) {
 	return this->plazas[pos];

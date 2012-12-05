@@ -9,11 +9,9 @@
 
 ProcesoSalida::ProcesoSalida(int cantidadEntradas, char* path, char key,
 		AdministracionCliente* administracionCliente, int nroEstacionamiento)
-		:ProcesoPuerta(cantidadEntradas, path, key) {
+		:ProcesoPuerta(cantidadEntradas, path, key, nroEstacionamiento) {
 
 	this->adminCliente = administracionCliente;
-	this->nroEstacionamiento = nroEstacionamiento;
-
 }
 
 ProcesoSalida::~ProcesoSalida() {
@@ -56,6 +54,8 @@ void ProcesoSalida::terminarEjecucion() {
 }
 
 std::string ProcesoSalida::getNombre() {
-	return string("Salida");
+	std::stringstream nombre;
+	nombre << "Salida " << this->nroEstacionamiento;
+	return nombre.str();
 }
 
